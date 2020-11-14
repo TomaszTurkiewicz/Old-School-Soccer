@@ -4,12 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
-import androidx.constraintlayout.solver.state.State
 import androidx.constraintlayout.widget.ConstraintSet
 import com.tt.oldschoolsoccer.classes.Functions
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Color.TRANSPARENT
 import android.graphics.Shader
 import android.util.TypedValue
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -118,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToSinglePlayerActivityOnClick(view: View) {
-        val intent = Intent(this,GameActivity::class.java)
+        val intent = Intent(this,ChooseGameLevelActivity::class.java)
         startActivity(intent)
         finish()
     }

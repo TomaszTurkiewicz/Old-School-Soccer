@@ -12,5 +12,14 @@ class Functions {
                 editor.apply()
             }
         }
+
+        fun readScreenUnit(context: Context?):Int{
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("ScreenUnit",Context.MODE_PRIVATE)
+                return sharedPreferences.getInt("ScreenUnit",-1)
+            }
+        return -1
+        }
+
     }
 }
