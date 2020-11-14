@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Old School Soccer</string>
+    <string name="singleplayer">SINGLEPLAYER</string>
 </resources>

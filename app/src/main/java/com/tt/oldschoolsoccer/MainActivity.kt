@@ -8,10 +8,14 @@ import androidx.constraintlayout.solver.state.State
 import androidx.constraintlayout.widget.ConstraintSet
 import com.tt.oldschoolsoccer.classes.Functions
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Color.TRANSPARENT
 import android.graphics.Shader
+import android.util.TypedValue
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R.drawable
+import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -21,6 +25,10 @@ class MainActivity : AppCompatActivity() {
     private var screenHeight=0
     private var screenWidth=0
     private var screenUnit=0
+    private var buttonsHeight=0
+    private var buttonsWidth=0
+    private var marginLeft=0
+    private var marginTop=0
 
 
 
@@ -38,6 +46,36 @@ class MainActivity : AppCompatActivity() {
     private fun makeUI() {
         getScreenSizeAndSaveToSharedPreferences()
         setBackgroundGrid()
+        setButtonsUI()
+        makeConstraintLayout()
+
+
+        // todo make singleplayer button
+        // todo go to activity single game
+        // todo make ui for single player activity
+        // todo make logic for single player game
+    }
+
+
+
+    private fun setButtonsUI() {
+        buttonsWidth=16*screenUnit
+        buttonsHeight=4*screenUnit
+        marginTop=buttonsHeight/2
+        marginLeft=2*screenUnit
+        single_player_button_main_activity.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        single_player_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        single_player_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+    }
+
+    private fun makeConstraintLayout() {
+        val set:ConstraintSet = ConstraintSet()
+        set.clone(main_layout)
+
+        set.connect(single_player_button_main_activity.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,marginTop)
+        set.connect(single_player_button_main_activity.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
+
+        set.applyTo(main_layout)
     }
 
     private fun setBackgroundGrid() {
@@ -78,9 +116,16 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    fun goToSinglePlayerActivityOnClick(view: View) {
+        val intent = Intent(this,GameActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
 
 /*
+* todo CHANGE TO FRAGMENT!!!!
 * todo connect to firebase (picture, user, login)
 * todo add admob
 * todo odczyt z shared preferences kratki
