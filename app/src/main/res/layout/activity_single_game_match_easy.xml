@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        android:background="@drawable/ic_baseline_add_24" />
 
     <ImageView
         android:id="@+id/easyMoveUpRightButton"

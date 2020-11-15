@@ -1,5 +1,6 @@
 package com.tt.oldschoolsoccer
 
+import android.graphics.Point
 import android.graphics.Shader
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,23 +8,66 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import com.tt.oldschoolsoccer.classes.EasyGameField
 import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.drawable.Ball
 import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
+import com.tt.oldschoolsoccer.drawable.Test
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_choose_game_level.*
 import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
 class SingleGameMatchEasy : AppCompatActivity() {
     var screenUnit:Int=0
-    var buttonsWidth=0
-    var buttonsHeight=0
-    var marginTop=0
-    var marginLeft=0
+    var field = EasyGameField()
+    var ballPosition = Point()
+
+    var test = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fullScreen()
         setContentView(R.layout.activity_single_game_match_easy)
         makeUI()
+
+        gameLogic()
+
+        test()
+    }
+
+    private fun test() {
+        val y=test/9
+        val x = test%9
+
+        field_easy.setImageDrawable(Test(this,field.field[x][y], screenUnit.toDouble()))
+
+    }
+
+    private fun gameLogic() {
+        generateField()
+        displayBall()
+
+    }
+
+    private fun displayBall() {
+
+        for(i in 0..8){
+            for(j in 0..12){
+                if (field.field[i][j].ball){
+                    field_easy.setImageDrawable(Ball(this,field.field[i][j], screenUnit.toDouble()))
+                    ballPosition.x=i
+                    ballPosition.y=j
+                }
+            }
+        }
+
+
+    }
+
+    private fun generateField() {
+
+        field.generate()
+
     }
 
     private fun makeUI() {
@@ -32,6 +76,21 @@ class SingleGameMatchEasy : AppCompatActivity() {
         setViewSizes()
         setConstraintLayout()
         setDrawable()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
+        easyMoveUpButton.setOnClickListener {
+            ballPosition = field.moveUp()
+            displayBall()
+        }
+
+        easyMoveRightButton.setOnClickListener {
+            test+=1
+            test()
+
+        }
+
     }
 
     private fun setDrawable() {

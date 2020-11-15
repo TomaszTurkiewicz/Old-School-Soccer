@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="pen_light">#CCCCCC</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="test">#00FFFFFF</color>
+    <color name="test">#FF5900</color>
 </resources>
