@@ -32,7 +32,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
         gameLogic()
 
-        test()
+  //      test()
     }
 
     private fun test() {
@@ -81,16 +81,96 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun setOnClickListeners() {
         easyMoveUpButton.setOnClickListener {
-            ballPosition = field.moveUp()
+            field.moveUp()
             displayBall()
+            updateButtons()
         }
-
+        easyMoveUpRightButton.setOnClickListener {
+            field.moveUpRight()
+            displayBall()
+            updateButtons()
+        }
         easyMoveRightButton.setOnClickListener {
-            test+=1
-            test()
-
+            field.moveRight()
+            displayBall()
+            updateButtons()
         }
+        easyMoveDownRightButton.setOnClickListener {
+            field.moveDownRight()
+            displayBall()
+            updateButtons()
+        }
+        easyMoveDownButton.setOnClickListener {
+            field.moveDown()
+            displayBall()
+            updateButtons()
+        }
+        easyMoveDownLeftButton.setOnClickListener {
+            field.moveDownLeft()
+            displayBall()
+            updateButtons()
+        }
+        easyMoveLeftButton.setOnClickListener {
+            field.moveLeft()
+            displayBall()
+            updateButtons()
+        }
+        easyMoveUpLeftButton.setOnClickListener {
+            field.moveUpLeft()
+            displayBall()
+            updateButtons()
+        }
+    }
 
+    private fun updateButtons() {
+        if(field.field[ballPosition.x][ballPosition.y].moveUp!=null){
+            easyMoveUpButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveUpButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveUpRight!=null){
+            easyMoveUpRightButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveUpRightButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveRight!=null){
+            easyMoveRightButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveRightButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveDownRight!=null){
+            easyMoveDownRightButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveDownRightButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveDown!=null){
+            easyMoveDownButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveDownButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveDownLeft!=null){
+            easyMoveDownLeftButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveDownLeftButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveLeft!=null){
+            easyMoveLeftButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveLeftButton.visibility=View.GONE
+        }
+        if(field.field[ballPosition.x][ballPosition.y].moveUpLeft!=null){
+            easyMoveUpLeftButton.visibility=View.VISIBLE
+        }
+        else{
+            easyMoveUpLeftButton.visibility=View.GONE
+        }
     }
 
     private fun setDrawable() {

@@ -27,8 +27,35 @@ class Test(private val context: Context, private val currentPoint:PointOnField,p
             path.lineTo((currentPoint.x*screenUnit).toFloat(), ((currentPoint.y-1)*screenUnit).toFloat())
             path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
         }
+        if(currentPoint.moveUpRight!=null){
+            path.lineTo(((currentPoint.x+1)*screenUnit).toFloat(), ((currentPoint.y-1)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveRight!=null){
+            path.lineTo(((currentPoint.x+1)*screenUnit).toFloat(), ((currentPoint.y)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveDownRight!=null){
+            path.lineTo(((currentPoint.x+1)*screenUnit).toFloat(), ((currentPoint.y+1)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveDown!=null){
+            path.lineTo((currentPoint.x*screenUnit).toFloat(), ((currentPoint.y+1)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveDownLeft!=null){
+            path.lineTo(((currentPoint.x-1)*screenUnit).toFloat(), ((currentPoint.y+1)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveLeft!=null){
+            path.lineTo(((currentPoint.x-1)*screenUnit).toFloat(), ((currentPoint.y)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
+        if(currentPoint.moveUpLeft!=null){
+            path.lineTo(((currentPoint.x-1)*screenUnit).toFloat(), ((currentPoint.y-1)*screenUnit).toFloat())
+            path.moveTo((currentPoint.x*screenUnit).toFloat(), (currentPoint.y*screenUnit).toFloat())
+        }
 
-        // Todo finish drawing test
 
         canvas.drawPath(path,paint)
 

@@ -83,17 +83,107 @@ class EasyGameField {
 
     }
 
-    fun moveUp(): Point{
+    fun moveUp():Boolean{
         for(i in 0..8){
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
                     field[i][j-1].ball=true
-                    return Point(i,j)
+                    return true
                 }
             }
         }
-        return Point(0,0)
+        return false
+    }
+
+    fun moveUpRight():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i+1][j-1].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun moveRight():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i+1][j].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    fun moveDownRight():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i+1][j+1].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun moveDown():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i][j+1].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun moveDownLeft():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i-1][j+1].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun moveLeft():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i-1][j].ball=true
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun moveUpLeft():Boolean{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    field[i][j].ball=false
+                    field[i-1][j-1].ball=true
+                    return true
+                }
+            }
+        }
+        return false
     }
 
 
