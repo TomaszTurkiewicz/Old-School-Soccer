@@ -54,7 +54,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         for(i in 0..8){
             for(j in 0..12){
                 if (field.field[i][j].ball){
-                    field_easy.setImageDrawable(Ball(this,field.field[i][j], screenUnit.toDouble()))
+                    ball_easy.setImageDrawable(Ball(this,field.field[i][j], screenUnit.toDouble()))
                     ballPosition.x=i
                     ballPosition.y=j
                 }
@@ -185,6 +185,9 @@ class SingleGameMatchEasy : AppCompatActivity() {
         set.connect(field_easy.id,ConstraintSet.TOP,single_game_match_easy.id,ConstraintSet.TOP,screenUnit)
         set.connect(field_easy.id,ConstraintSet.LEFT,single_game_match_easy.id,ConstraintSet.LEFT,screenUnit)
 
+        set.connect(ball_easy.id,ConstraintSet.TOP,single_game_match_easy.id,ConstraintSet.TOP,screenUnit)
+        set.connect(ball_easy.id,ConstraintSet.LEFT,single_game_match_easy.id,ConstraintSet.LEFT,screenUnit)
+
         set.connect(easyMiddle.id,ConstraintSet.TOP,single_game_match_easy.id,ConstraintSet.TOP,26*screenUnit)
         set.connect(easyMiddle.id,ConstraintSet.LEFT,single_game_match_easy.id,ConstraintSet.LEFT,9*screenUnit)
 
@@ -218,6 +221,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun setViewSizes() {
         field_easy.layoutParams = ConstraintLayout.LayoutParams(10*screenUnit,14*screenUnit)
+        ball_easy.layoutParams = ConstraintLayout.LayoutParams(10*screenUnit,14*screenUnit)
         easyMoveUpButton.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         easyMoveUpRightButton.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         easyMoveRightButton.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
