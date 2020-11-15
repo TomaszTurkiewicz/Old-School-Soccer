@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         makeUI()
 
+        val intent = Intent(this,SingleGameMatchEasy::class.java)
+        startActivity(intent)
+        finish()
+
 
 
 

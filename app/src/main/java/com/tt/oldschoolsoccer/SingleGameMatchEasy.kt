@@ -1,20 +1,19 @@
 package com.tt.oldschoolsoccer
 
-import android.content.Intent
 import android.graphics.Shader
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.drawable.ButtonDrawable
+import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_choose_game_level.*
+import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
-class ChooseGameLevelActivity : AppCompatActivity() {
+class SingleGameMatchEasy : AppCompatActivity() {
     var screenUnit:Int=0
     var buttonsWidth=0
     var buttonsHeight=0
@@ -23,48 +22,42 @@ class ChooseGameLevelActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fullScreen()
-        setContentView(R.layout.activity_choose_game_level)
+        setContentView(R.layout.activity_single_game_match_easy)
         makeUI()
-
     }
 
     private fun makeUI() {
-        screenUnit=Functions.readScreenUnit(this)
+        screenUnit= Functions.readScreenUnit(this)
         makeBackgroundGrid()
-        makeButtonsUI()
-        makeConstraintLayout()
+        setViewSizes()
+        setConstraintLayout()
+        setDrawable()
     }
 
-    private fun makeConstraintLayout() {
-        val set: ConstraintSet = ConstraintSet()
-        set.clone(choose_game_level)
-
-        set.connect(easy_game.id,
-            ConstraintSet.TOP,choose_game_level.id,
-            ConstraintSet.TOP,marginTop)
-        set.connect(easy_game.id,
-            ConstraintSet.LEFT,choose_game_level.id,
-            ConstraintSet.LEFT,marginLeft)
-
-        set.applyTo(choose_game_level)
+    private fun setDrawable() {
+        field_easy.background = FieldEasyDrawable(this, screenUnit.toDouble())
 
     }
 
-    private fun makeButtonsUI() {
-        buttonsWidth=16*screenUnit
-        buttonsHeight=4*screenUnit
-        marginTop=buttonsHeight/2
-        marginLeft=2*screenUnit
-        easy_game.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        easy_game.background= ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        easy_game.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+    private fun setConstraintLayout() {
+        val set = ConstraintSet()
+        set.clone(single_game_match_easy)
+
+        set.connect(field_easy.id,ConstraintSet.TOP,single_game_match_easy.id,ConstraintSet.TOP,screenUnit)
+        set.connect(field_easy.id,ConstraintSet.LEFT,single_game_match_easy.id,ConstraintSet.LEFT,screenUnit)
+
+        set.applyTo(single_game_match_easy)
+
+    }
+
+    private fun setViewSizes() {
+        field_easy.layoutParams = ConstraintLayout.LayoutParams(10*screenUnit,14*screenUnit)
 
     }
 
     private fun makeBackgroundGrid() {
-        choose_game_level.background = TileDrawable((ContextCompat.getDrawable(this, R.drawable.background)!!),
-            Shader.TileMode.REPEAT,screenUnit)
-
+        single_game_match_easy.background = TileDrawable((ContextCompat.getDrawable(this, R.drawable.background)!!),
+                Shader.TileMode.REPEAT,screenUnit)
     }
 
     private fun fullScreen() {
@@ -86,13 +79,5 @@ class ChooseGameLevelActivity : AppCompatActivity() {
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
             }
         }
-
-    }
-
-    fun goToEasyGameSinglePlayer(view: View) {
-
-        val intent = Intent(this,SingleGameMatchEasy::class.java)
-        startActivity(intent)
-        finish()
     }
 }
