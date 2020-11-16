@@ -10,11 +10,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.classes.EasyGameField
 import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.drawable.Ball
-import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
-import com.tt.oldschoolsoccer.drawable.Test
-import com.tt.oldschoolsoccer.drawable.TileDrawable
-import kotlinx.android.synthetic.main.activity_choose_game_level.*
+import com.tt.oldschoolsoccer.drawable.*
 import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
 class SingleGameMatchEasy : AppCompatActivity() {
@@ -39,7 +35,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         val y=test/9
         val x = test%9
 
-        field_easy.setImageDrawable(Test(this,field.field[x][y], screenUnit.toDouble()))
+        field_easy.setImageDrawable(TestDrawable(this,field.field[x][y], screenUnit.toDouble()))
 
     }
 
@@ -54,7 +50,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         for(i in 0..8){
             for(j in 0..12){
                 if (field.field[i][j].ball){
-                    ball_easy.setImageDrawable(Ball(this,field.field[i][j], screenUnit.toDouble()))
+                    ball_easy.setImageDrawable(BallDrawable(this,field.field[i][j], screenUnit.toDouble()))
                     ballPosition.x=i
                     ballPosition.y=j
                 }
@@ -83,43 +79,55 @@ class SingleGameMatchEasy : AppCompatActivity() {
         easyMoveUpButton.setOnClickListener {
             field.moveUp()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveUpRightButton.setOnClickListener {
             field.moveUpRight()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveRightButton.setOnClickListener {
             field.moveRight()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveDownRightButton.setOnClickListener {
             field.moveDownRight()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveDownButton.setOnClickListener {
             field.moveDown()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveDownLeftButton.setOnClickListener {
             field.moveDownLeft()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveLeftButton.setOnClickListener {
             field.moveLeft()
             displayBall()
+            updateMoves()
             updateButtons()
         }
         easyMoveUpLeftButton.setOnClickListener {
             field.moveUpLeft()
             displayBall()
+            updateMoves()
             updateButtons()
         }
+    }
+
+    private fun updateMoves() {
+        field_easy.setImageDrawable(MovesEasyDrawable(this,field, screenUnit.toDouble()))
     }
 
     private fun updateButtons() {

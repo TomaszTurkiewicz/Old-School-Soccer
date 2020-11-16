@@ -88,7 +88,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveUp=true
                     field[i][j-1].ball=true
+                    field[i][j-1].moveDown=true
                     return true
                 }
             }
@@ -101,7 +103,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveUpRight=true
                     field[i+1][j-1].ball=true
+                    field[i+1][j-1].moveDownLeft=true
                     return true
                 }
             }
@@ -114,7 +118,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveRight=true
                     field[i+1][j].ball=true
+                    field[i+1][j].moveLeft=true
                     return true
                 }
             }
@@ -126,7 +132,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveDownRight=true
                     field[i+1][j+1].ball=true
+                    field[i+1][j+1].moveUpLeft=true
                     return true
                 }
             }
@@ -139,7 +147,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveDown=true
                     field[i][j+1].ball=true
+                    field[i][j+1].moveUp=true
                     return true
                 }
             }
@@ -152,7 +162,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveDownLeft=true
                     field[i-1][j+1].ball=true
+                    field[i-1][j+1].moveUpRight=true
                     return true
                 }
             }
@@ -165,7 +177,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveLeft=true
                     field[i-1][j].ball=true
+                    field[i-1][j].moveRight=true
                     return true
                 }
             }
@@ -178,7 +192,9 @@ class EasyGameField {
             for(j in 0..12){
                 if(field[i][j].ball){
                     field[i][j].ball=false
+                    field[i][j].moveUpLeft=true
                     field[i-1][j-1].ball=true
+                    field[i-1][j-1].moveDownRight=true
                     return true
                 }
             }

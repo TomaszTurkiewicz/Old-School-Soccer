@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.PointOnField
 
-class Test(private val context: Context, private val currentPoint:PointOnField,private val screenUnit:Double):Drawable() {
+class TestDrawable(private val context: Context, private val currentPoint:PointOnField, private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth:Double = screenUnit/10
 
