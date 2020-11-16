@@ -131,53 +131,54 @@ class SingleGameMatchEasy : AppCompatActivity() {
     }
 
     private fun updateButtons() {
-        if(field.field[ballPosition.x][ballPosition.y].moveUp!=null){
-            easyMoveUpButton.visibility=View.VISIBLE
-        }
-        else{
-            easyMoveUpButton.visibility=View.GONE
+        easyMoveUpButton.visibility=View.GONE
+        easyMoveUpRightButton.visibility=View.GONE
+        easyMoveRightButton.visibility=View.GONE
+        easyMoveDownRightButton.visibility=View.GONE
+        easyMoveDownButton.visibility=View.GONE
+        easyMoveDownLeftButton.visibility=View.GONE
+        easyMoveLeftButton.visibility=View.GONE
+        easyMoveUpLeftButton.visibility=View.GONE
+
+        if(field.field[ballPosition.x][ballPosition.y].moveUp!=null) {
+            if (!field.field[ballPosition.x][ballPosition.y].moveUp!!) {
+                easyMoveUpButton.visibility = View.VISIBLE
+            }
         }
         if(field.field[ballPosition.x][ballPosition.y].moveUpRight!=null){
-            easyMoveUpRightButton.visibility=View.VISIBLE
-        }
-        else{
-            easyMoveUpRightButton.visibility=View.GONE
+            if(!field.field[ballPosition.x][ballPosition.y].moveUpRight!!){
+                easyMoveUpRightButton.visibility=View.VISIBLE
+            }
         }
         if(field.field[ballPosition.x][ballPosition.y].moveRight!=null){
+            if(!field.field[ballPosition.x][ballPosition.y].moveRight!!){
             easyMoveRightButton.visibility=View.VISIBLE
-        }
-        else{
-            easyMoveRightButton.visibility=View.GONE
+            }
         }
         if(field.field[ballPosition.x][ballPosition.y].moveDownRight!=null){
+        if(!field.field[ballPosition.x][ballPosition.y].moveDownRight!!){
             easyMoveDownRightButton.visibility=View.VISIBLE
         }
-        else{
-            easyMoveDownRightButton.visibility=View.GONE
         }
         if(field.field[ballPosition.x][ballPosition.y].moveDown!=null){
+        if(!field.field[ballPosition.x][ballPosition.y].moveDown!!){
             easyMoveDownButton.visibility=View.VISIBLE
         }
-        else{
-            easyMoveDownButton.visibility=View.GONE
         }
         if(field.field[ballPosition.x][ballPosition.y].moveDownLeft!=null){
+        if(!field.field[ballPosition.x][ballPosition.y].moveDownLeft!!){
             easyMoveDownLeftButton.visibility=View.VISIBLE
         }
-        else{
-            easyMoveDownLeftButton.visibility=View.GONE
         }
         if(field.field[ballPosition.x][ballPosition.y].moveLeft!=null){
+        if(!field.field[ballPosition.x][ballPosition.y].moveLeft!!){
             easyMoveLeftButton.visibility=View.VISIBLE
         }
-        else{
-            easyMoveLeftButton.visibility=View.GONE
         }
         if(field.field[ballPosition.x][ballPosition.y].moveUpLeft!=null){
+        if(!field.field[ballPosition.x][ballPosition.y].moveUpLeft!!){
             easyMoveUpLeftButton.visibility=View.VISIBLE
         }
-        else{
-            easyMoveUpLeftButton.visibility=View.GONE
         }
     }
 
