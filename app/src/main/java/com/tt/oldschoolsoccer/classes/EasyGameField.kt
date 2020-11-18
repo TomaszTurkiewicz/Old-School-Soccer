@@ -1,11 +1,14 @@
 package com.tt.oldschoolsoccer.classes
 
 import android.graphics.Point
+import kotlin.properties.Delegates
 
 class EasyGameField {
     lateinit var field:Array<Array<PointOnField>>
+    var myMove:Boolean = true
 
     fun generate(){
+
         field = Array(9) { Array(13) { PointOnField() } }
 
         for(i in 0..8){
@@ -201,6 +204,76 @@ class EasyGameField {
             }
         }
         return false
+    }
+
+    fun checkIfStuckAndNextMove(direction:Int):StuckAndNextMove{
+        var up=true
+        var upRight=true
+        var right=true
+        var downRight=true
+        var down=true
+        var downLeft=true
+        var left=true
+        var upLeft=true
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                  if(field[i][j].moveUp!=null){
+                      up=field[i][j].moveUp!!
+                  }
+                    if(field[i][j].moveUpRight!=null){
+                        upRight=field[i][j].moveUpRight!!
+                    }
+                    if(field[i][j].moveRight!=null){
+                        right=field[i][j].moveRight!!
+                    }
+                    if(field[i][j].moveDownRight!=null){
+                        downRight=field[i][j].moveDownRight!!
+                    }
+                    if(field[i][j].moveDown!=null){
+                        down=field[i][j].moveDown!!
+                    }
+                    if(field[i][j].moveDownLeft!=null){
+                        downLeft=field[i][j].moveDownLeft!!
+                    }
+                    if(field[i][j].moveLeft!=null){
+                        left=field[i][j].moveLeft!!
+                    }
+                    if(field[i][j].moveUpLeft!=null){
+                        upLeft=field[i][j].moveUpLeft!!
+                    }
+                }
+            }
+        }
+
+        val stuck = up and (upRight and (right and (downRight and (down and(downLeft and(left and (upLeft)))))))
+        if(direction==Static.UP){
+            down=false
+        }
+        if(direction==Static.UP_RIGHT){
+            downLeft=false
+        }
+        if(direction==Static.RIGHT){
+            left=false
+        }
+        if(direction==Static.DOWN_RIGHT){
+            upLeft=false
+        }
+        if(direction==Static.DOWN){
+            up=false
+        }
+        if(direction==Static.DOWN_LEFT){
+            upRight=false
+        }
+        if(direction==Static.LEFT){
+            right=false
+        }
+        if(direction==Static.UP_LEFT){
+            downRight=false
+        }
+        val nextMove = up or (upRight or (right or (downRight or (down or(downLeft or(left or (upLeft)))))))
+
+        return StuckAndNextMove(nextMove,stuck)
     }
 
 

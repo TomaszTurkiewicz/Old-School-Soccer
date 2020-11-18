@@ -4,12 +4,14 @@ import android.graphics.Point
 import android.graphics.Shader
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.classes.EasyGameField
 import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.classes.Static
 import com.tt.oldschoolsoccer.drawable.*
 import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
@@ -19,6 +21,8 @@ class SingleGameMatchEasy : AppCompatActivity() {
     var ballPosition = Point()
 
     var test = 0
+
+    private val gameLoopHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +46,24 @@ class SingleGameMatchEasy : AppCompatActivity() {
     private fun gameLogic() {
         generateField()
         displayBall()
+        gameLoop().run()
 
+
+    }
+
+    private fun gameLoop():Runnable = Runnable {
+        if(field.myMove){
+            gameLoopHandler.removeCallbacksAndMessages(null)
+        }
+        else{
+            //todo make logic for move
+
+            field.moveDown()
+            updateUI()
+            //todo check if stuck and next move
+            // todo in no stuck and no next move change player
+            field.myMove=!field.myMove
+        }
     }
 
     private fun displayBall() {
@@ -80,57 +101,79 @@ class SingleGameMatchEasy : AppCompatActivity() {
             field.moveUp()
             displayBall()
             updateMoves()
-            updateButtons()
+            checkNextMove(Static.UP)
+
+
         }
         easyMoveUpRightButton.setOnClickListener {
             field.moveUpRight()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.UP_RIGHT)
         }
         easyMoveRightButton.setOnClickListener {
             field.moveRight()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.RIGHT)
         }
         easyMoveDownRightButton.setOnClickListener {
             field.moveDownRight()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.DOWN_RIGHT)
         }
         easyMoveDownButton.setOnClickListener {
             field.moveDown()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.DOWN)
         }
         easyMoveDownLeftButton.setOnClickListener {
             field.moveDownLeft()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.DOWN_LEFT)
         }
         easyMoveLeftButton.setOnClickListener {
             field.moveLeft()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.LEFT)
         }
         easyMoveUpLeftButton.setOnClickListener {
             field.moveUpLeft()
             displayBall()
             updateMoves()
             updateButtons()
+            checkNextMove(Static.UP_LEFT)
         }
     }
 
-    private fun updateMoves() {
-        field_easy.setImageDrawable(MovesEasyDrawable(this,field, screenUnit.toDouble()))
+    private fun checkNextMove(direction:Int) {
+        val nextMove = field.checkIfStuckAndNextMove(direction)
+        if(nextMove.stuck){
+            gameLoopHandler.removeCallbacksAndMessages(this)
+            finish()
+        }
+        if(nextMove.nextMove){
+            updateButtons()
+        }else{
+            disableButtons()
+            field.myMove=!field.myMove
+            gameLoopHandler.postDelayed(gameLoop(),1000)
+        }
+
+
     }
 
-    private fun updateButtons() {
+    private fun disableButtons() {
         easyMoveUpButton.visibility=View.GONE
         easyMoveUpRightButton.visibility=View.GONE
         easyMoveRightButton.visibility=View.GONE
@@ -139,6 +182,15 @@ class SingleGameMatchEasy : AppCompatActivity() {
         easyMoveDownLeftButton.visibility=View.GONE
         easyMoveLeftButton.visibility=View.GONE
         easyMoveUpLeftButton.visibility=View.GONE
+
+    }
+
+    private fun updateMoves() {
+        field_easy.setImageDrawable(MovesEasyDrawable(this,field, screenUnit.toDouble()))
+    }
+
+    private fun updateButtons() {
+        disableButtons()
 
         if(field.field[ballPosition.x][ballPosition.y].moveUp!=null) {
             if (!field.field[ballPosition.x][ballPosition.y].moveUp!!) {
@@ -267,5 +319,11 @@ class SingleGameMatchEasy : AppCompatActivity() {
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
             }
         }
+    }
+
+    private fun updateUI(){
+        displayBall()
+        updateMoves()
+        updateButtons()
     }
 }

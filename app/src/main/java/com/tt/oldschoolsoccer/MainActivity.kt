@@ -51,10 +51,10 @@ class MainActivity : AppCompatActivity() {
         makeConstraintLayout()
 
 
-        // todo make singleplayer button
-        // todo go to activity single game
+
+
         // todo make ui for single player activity
-        // todo make logic for single player game
+        // todo make logic for single player game!!!
     }
 
 
@@ -126,7 +126,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 /*
-* todo CHANGE TO FRAGMENT!!!!
 * todo connect to firebase (picture, user, login)
 * todo add admob
 * todo odczyt z shared preferences kratki
