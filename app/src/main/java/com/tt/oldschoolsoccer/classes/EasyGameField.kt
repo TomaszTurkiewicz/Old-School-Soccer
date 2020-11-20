@@ -276,6 +276,77 @@ class EasyGameField {
         return StuckAndNextMove(nextMove,stuck)
     }
 
+    fun checkIfMoveInDirectionIsAvailable(pointOnField: PointOnField,direction: Int):Boolean{
+        if(direction==Static.DOWN){
+            if(pointOnField.moveDown!=null){
+                if(pointOnField.moveDown==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.DOWN_LEFT){
+            if(pointOnField.moveDownLeft!=null){
+                if(pointOnField.moveDownLeft==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.DOWN_RIGHT){
+            if(pointOnField.moveDownRight!=null){
+                if(pointOnField.moveDownRight==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.LEFT){
+            if(pointOnField.moveLeft!=null){
+                if(pointOnField.moveLeft==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.RIGHT){
+            if(pointOnField.moveRight!=null){
+                if(pointOnField.moveRight==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.UP){
+            if(pointOnField.moveUp!=null){
+                if(pointOnField.moveUp==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.UP_RIGHT){
+            if(pointOnField.moveUpRight!=null){
+                if(pointOnField.moveUpRight==false){
+                    return true
+                }
+            }
+        }
+        if(direction==Static.UP_LEFT){
+            if(pointOnField.moveUpLeft!=null){
+                if(pointOnField.moveUpLeft==false){
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun findBall():Point{
+        for(i in 0..8){
+            for(j in 0..12){
+                if(field[i][j].ball){
+                    return Point(i,j)
+                }
+            }
+        }
+        return Point(-1,-1)
+    }
+
 
 
 }

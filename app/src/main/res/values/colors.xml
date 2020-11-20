@@ -10,4 +10,6 @@
     <color name="pen_light">#CCCCCC</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="test">#FF5900</color>
+    <color name="win">#158A00</color>
+    <color name="lost">#CF0000</color>
 </resources>
