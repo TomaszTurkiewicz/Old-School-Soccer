@@ -10,5 +10,9 @@ class Static {
         const val DOWN_LEFT = 5
         const val LEFT = 6
         const val UP_LEFT = 7
+
+        const val NO_ONE = 0
+        const val PLAYER = 1
+        const val PHONE = 2
     }
 }
