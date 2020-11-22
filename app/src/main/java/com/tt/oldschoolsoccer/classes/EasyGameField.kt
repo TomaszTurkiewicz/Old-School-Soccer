@@ -86,10 +86,12 @@ class EasyGameField {
 
     }
 
-    fun moveUp(myTurn:Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+
+
+    fun moveUp(myTurn:Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveUp.moveDirection=true
                     field[i][j-1].ball=true
@@ -102,17 +104,12 @@ class EasyGameField {
                         field[i][j].moveUp.playerMove=Static.PHONE
                         field[i][j-1].moveDown.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveUpRight(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveUpRight(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveUpRight.moveDirection=true
                     field[i+1][j-1].ball=true
@@ -125,17 +122,12 @@ class EasyGameField {
                         field[i][j].moveUpRight.playerMove=Static.PHONE
                         field[i+1][j-1].moveDownLeft.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveRight(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveRight(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveRight.moveDirection=true
                     field[i+1][j].ball=true
@@ -148,17 +140,12 @@ class EasyGameField {
                         field[i][j].moveRight.playerMove=Static.PHONE
                         field[i+1][j].moveLeft.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveDownRight(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveDownRight(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveDownRight.moveDirection=true
                     field[i+1][j+1].ball=true
@@ -171,17 +158,12 @@ class EasyGameField {
                         field[i][j].moveDownRight.playerMove=Static.PHONE
                         field[i+1][j+1].moveUpLeft.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveDown(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveDown(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveDown.moveDirection=true
                     field[i][j+1].ball=true
@@ -194,17 +176,12 @@ class EasyGameField {
                         field[i][j].moveDown.playerMove=Static.PHONE
                         field[i][j+1].moveUp.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveDownLeft(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveDownLeft(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveDownLeft.moveDirection=true
                     field[i-1][j+1].ball=true
@@ -217,40 +194,30 @@ class EasyGameField {
                         field[i][j].moveDownLeft.playerMove=Static.PHONE
                         field[i-1][j+1].moveUpRight.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
-    fun moveLeft(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
-                    field[i][j].ball=false
-                    field[i][j].moveLeft.moveDirection=true
-                    field[i-1][j].ball=true
-                    field[i-1][j].moveRight.moveDirection=true
-                    if(myTurn){
-                        field[i][j].moveLeft.playerMove=Static.PLAYER
-                        field[i-1][j].moveRight.playerMove=Static.PLAYER
-                    }
-                    else{
-                        field[i][j].moveLeft.playerMove=Static.PHONE
-                        field[i-1][j].moveRight.playerMove=Static.PHONE
-                    }
-                    return true
-                }
-            }
+    fun moveLeft(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
+        field[i][j].ball=false
+        field[i][j].moveLeft.moveDirection=true
+        field[i-1][j].ball=true
+        field[i-1][j].moveRight.moveDirection=true
+        if(myTurn){
+            field[i][j].moveLeft.playerMove=Static.PLAYER
+            field[i-1][j].moveRight.playerMove=Static.PLAYER
         }
-        return false
+        else{
+            field[i][j].moveLeft.playerMove=Static.PHONE
+            field[i-1][j].moveRight.playerMove=Static.PHONE
+        }
     }
 
-    fun moveUpLeft(myTurn: Boolean):Boolean{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
+    fun moveUpLeft(myTurn: Boolean){
+        val ball = findBall()
+        val i = ball.x
+        val j = ball.y
                     field[i][j].ball=false
                     field[i][j].moveUpLeft.moveDirection=true
                     field[i-1][j-1].ball=true
@@ -263,11 +230,6 @@ class EasyGameField {
                         field[i][j].moveUpLeft.playerMove=Static.PHONE
                         field[i-1][j-1].moveDownRight.playerMove=Static.PHONE
                     }
-                    return true
-                }
-            }
-        }
-        return false
     }
 
     fun checkIfStuckAndNextMove(direction:Int):StuckAndNextMove{
