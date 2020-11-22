@@ -391,6 +391,15 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun setDrawable() {
         field_easy.background = FieldEasyDrawable(this, screenUnit.toDouble())
+        easyMoveDownButton.background = ContextCompat.getDrawable(this,R.drawable.down)
+        easyMoveDownRightButton.background = ContextCompat.getDrawable(this,R.drawable.down_right)
+        easyMoveRightButton.background = ContextCompat.getDrawable(this,R.drawable.right)
+        easyMoveUpRightButton.background = ContextCompat.getDrawable(this,R.drawable.up_right)
+        easyMoveUpButton.background = ContextCompat.getDrawable(this,R.drawable.up)
+        easyMoveUpLeftButton.background = ContextCompat.getDrawable(this,R.drawable.up_left)
+        easyMoveLeftButton.background = ContextCompat.getDrawable(this,R.drawable.left)
+        easyMoveDownLeftButton.background = ContextCompat.getDrawable(this,R.drawable.down_left)
+
 
     }
 
@@ -484,6 +493,5 @@ todo lost animation
 todo win animation
 todo user points
 todo stuck animation
-todo arrows drawable
 todo back button
  */

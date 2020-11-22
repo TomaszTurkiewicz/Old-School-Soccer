@@ -26,64 +26,56 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageView
         android:id="@+id/easyMoveUpRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveDownRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveDownButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveDownLeftButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveLeftButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMoveUpLeftButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@drawable/ic_baseline_add_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
         android:id="@+id/easyMiddle"
