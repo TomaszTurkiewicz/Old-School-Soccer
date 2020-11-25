@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         makeUI()
 
-        val intent = Intent(this,SingleGameMatchEasy::class.java)
-        startActivity(intent)
-        finish()
+//        val intent = Intent(this,SingleGameMatchEasy::class.java)
+//        startActivity(intent)
+//        finish()
 
 
 
@@ -54,7 +54,10 @@ class MainActivity : AppCompatActivity() {
 
 
         // todo make ui for single player activity
-        // todo make logic for single player game!!!
+        // todo samouczek
+        // todo different types of games (single, liga, tournament)
+        // todo make logic for single player game normal (choosing best moves and checking if phone can score)!!!
+        // todo make logic for single player game (checking if phone can score if not blocking user moves)!!!
     }
 
 
@@ -64,17 +67,17 @@ class MainActivity : AppCompatActivity() {
         buttonsHeight=4*screenUnit
         marginTop=buttonsHeight/2
         marginLeft=2*screenUnit
-        single_player_button_main_activity.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        single_player_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        single_player_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        choose_game_type_button_main_activity.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        choose_game_type_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        choose_game_type_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
     }
 
     private fun makeConstraintLayout() {
         val set:ConstraintSet = ConstraintSet()
         set.clone(main_layout)
 
-        set.connect(single_player_button_main_activity.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,marginTop)
-        set.connect(single_player_button_main_activity.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
+        set.connect(choose_game_type_button_main_activity.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,marginTop)
+        set.connect(choose_game_type_button_main_activity.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
 
         set.applyTo(main_layout)
     }
@@ -118,8 +121,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun goToSinglePlayerActivityOnClick(view: View) {
-        val intent = Intent(this,ChooseGameLevelActivity::class.java)
+    fun goToChooseGameTypeActivityOnClick(view: View) {
+        val intent = Intent(this,ChooseGameType::class.java)
         startActivity(intent)
         finish()
     }

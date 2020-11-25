@@ -117,9 +117,9 @@ class SingleGameMatchEasy : AppCompatActivity() {
         val ball = field.findBall()
             when (ball.x) {
                 -1 -> finish()
-                0, 1, 2, 3 -> moveDownRightPhone(ball)
-                4 -> moveDownPhone(ball)
-                5, 6, 7, 8 -> moveDownLeftPhone(ball)
+                0, 1, 2 -> moveDownRightPhone(ball)
+                3, 4, 5 -> moveDownPhone(ball)
+                6, 7, 8 -> moveDownLeftPhone(ball)
             }
 
 
