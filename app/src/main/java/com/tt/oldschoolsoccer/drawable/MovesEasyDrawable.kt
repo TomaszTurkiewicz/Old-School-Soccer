@@ -3,13 +3,12 @@ package com.tt.oldschoolsoccer.drawable
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.view.inspector.StaticInspectionCompanionProvider
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
-import com.tt.oldschoolsoccer.classes.EasyGameField
+import com.tt.oldschoolsoccer.classes.GameField
 import com.tt.oldschoolsoccer.classes.Static
 
-class MovesEasyDrawable(private val context: Context, private val field:EasyGameField, private val screenUnit:Double):Drawable() {
+class MovesEasyDrawable(private val context: Context, private val field:GameField, private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth = screenUnit/15
 

@@ -14,5 +14,10 @@ class Static {
         const val NO_ONE = 0
         const val PLAYER = 1
         const val PHONE = 2
+
+        const val EASY = 0
+        const val NORMAL = 1
+        const val HARD = 2
+
     }
 }

@@ -3,26 +3,24 @@ package com.tt.oldschoolsoccer.classes
 import android.graphics.Point
 import kotlin.properties.Delegates
 
-class EasyGameField {
+class GameField {
     lateinit var field:Array<Array<PointOnField>>
     var myMove:Boolean = true
+    var level = -1
 
-    fun generate(){
-
-        field = Array(9) { Array(13) { PointOnField() } }
-
-        for(i in 0..8){
-            for(j in 0..12){
-                field[i][j].x=i+1
-                field[i][j].y=j+1
+    fun generate(gameLevel:Int){
+        if(gameLevel!=Static.HARD) {
+            field = Array(9) { Array(13) { PointOnField() } }
+            for (i in 0..8) {
+                for (j in 0..12) {
+                    field[i][j].x = i + 1
+                    field[i][j].y = j + 1
+                }
             }
+            field[4][6].ball = true
+            setAvaileblesMoves()
         }
-        field[4][6].ball=true
-
-        setAvaileblesMoves()
-
-
-
+        level=gameLevel
     }
 
     private fun setAvaileblesMoves() {
@@ -85,8 +83,6 @@ class EasyGameField {
         field[8][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
 
     }
-
-
 
     fun moveUp(myTurn:Boolean){
         val ball = findBall()
@@ -362,16 +358,20 @@ class EasyGameField {
         return false
     }
 
-    fun findBall():Point{
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
-                    return Point(i,j)
+    fun findBall():Point {
+        if (level != Static.HARD) {
+            for (i in 0..8) {
+                for (j in 0..12) {
+                    if (field[i][j].ball) {
+                        return Point(i, j)
+                    }
                 }
             }
         }
-        return Point(-1,-1)
+            return Point(-1, -1)
+
     }
+
 
 
 

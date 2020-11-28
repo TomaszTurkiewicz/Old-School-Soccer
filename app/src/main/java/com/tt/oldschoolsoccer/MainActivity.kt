@@ -67,9 +67,14 @@ class MainActivity : AppCompatActivity() {
         buttonsHeight=4*screenUnit
         marginTop=buttonsHeight/2
         marginLeft=2*screenUnit
+
         choose_game_type_button_main_activity.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         choose_game_type_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         choose_game_type_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        login_logout_Image_view.layoutParams = ConstraintLayout.LayoutParams(3 * screenUnit,3 * screenUnit)
+        login_logout_Image_view.background = ContextCompat.getDrawable(this,R.drawable.account_grey)
+
+        // todo login button logic and changing colors
     }
 
     private fun makeConstraintLayout() {

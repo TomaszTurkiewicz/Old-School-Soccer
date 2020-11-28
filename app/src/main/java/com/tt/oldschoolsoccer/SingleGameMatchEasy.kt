@@ -9,7 +9,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import com.tt.oldschoolsoccer.classes.EasyGameField
+import com.tt.oldschoolsoccer.classes.GameField
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.Static
 import com.tt.oldschoolsoccer.drawable.*
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
 class SingleGameMatchEasy : AppCompatActivity() {
     var screenUnit:Int=0
-    var field = EasyGameField()
+    var field = GameField()
 //    var ballPosition = Point()
 
     var test = 0
@@ -250,7 +250,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun generateField() {
 
-        field.generate()
+        field.generate(Static.EASY)
 
     }
 
