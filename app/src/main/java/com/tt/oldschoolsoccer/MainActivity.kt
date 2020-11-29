@@ -20,8 +20,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R.drawable
+import com.tt.oldschoolsoccer.classes.LoggedInStatus
+import com.tt.oldschoolsoccer.classes.User
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -135,7 +141,56 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUserInDataBase(user: FirebaseUser) {
-        // todo !!!!
+        val dbRef = Firebase.database.getReference("User").child(user.uid)
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()){
+                    // doesn't exist - create record in database
+                    val userDB = User(id = user.uid)
+                    dbRef.setValue(userDB)
+                    checkUserInDataBase(user)
+                }
+                else{
+                    // exists so check if sharedpreferences are the same as firebase
+                    //todo sprawdź czy w shared preferences jest to samo co w firebase
+                    val fUser = snapshot.getValue(User::class.java)
+                    val shpUser = Functions.readUserFromSharedPreferences(this@MainActivity,user.uid)
+                    if(fUser!=null){
+                        if(!fUser.userName.equals(shpUser.userName)){
+                            shpUser.userName = fUser.userName
+                        }
+                        if(shpUser.easyGame.numberOfGames>fUser.easyGame.numberOfGames){
+                            fUser.easyGame = shpUser.easyGame
+                        }else{
+                            shpUser.easyGame = fUser.easyGame
+                        }
+                        if(shpUser.normalGame.numberOfGames>fUser.normalGame.numberOfGames){
+                            fUser.normalGame = shpUser.normalGame
+                        }else{
+                            shpUser.normalGame = fUser.normalGame
+                        }
+                        if(shpUser.hardGame.numberOfGames>fUser.hardGame.numberOfGames){
+                            fUser.hardGame = shpUser.hardGame
+                        }else{
+                            shpUser.hardGame = fUser.hardGame
+                        }
+                        if(shpUser.multiGame.numberOfGames>fUser.multiGame.numberOfGames){
+                            fUser.multiGame = shpUser.multiGame
+                        }else{
+                            shpUser.multiGame = fUser.multiGame
+                        }
+                        dbRef.setValue(fUser)
+                        Functions.saveUserToSharedPreferences(this@MainActivity,shpUser)
+                        Functions.saveLoggedStateToSharedPreferences(this@MainActivity, loggedInStatus = LoggedInStatus(true,user.uid))
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // do nothing
+            }
+        })
     }
 
 
