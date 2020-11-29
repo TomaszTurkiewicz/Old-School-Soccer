@@ -8,13 +8,24 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.tt.oldschoolsoccer.classes.Functions
 import android.content.Intent
 import android.graphics.Shader
+import android.util.Log
 import android.util.TypedValue
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R.drawable
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private var buttonsWidth=0
     private var marginLeft=0
     private var marginTop=0
+    private lateinit var auth:FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
 
 
@@ -33,7 +46,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         fullScreen()
         setContentView(R.layout.activity_main)
+        auth=Firebase.auth
         makeUI()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        googleSignInClient = GoogleSignIn.getClient(this,gso)
 
 //        val intent = Intent(this,SingleGameMatchEasy::class.java)
 //        startActivity(intent)
@@ -49,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         setBackgroundGrid()
         setButtonsUI()
         makeConstraintLayout()
+        setButtonsOnClickListeners()
 
 
 
@@ -60,6 +81,62 @@ class MainActivity : AppCompatActivity() {
         // todo make logic for single player game (checking if phone can score if not blocking user moves)!!!
     }
 
+    private fun setButtonsOnClickListeners() {
+        login_logout_Image_view.setOnClickListener {
+            if(auth.currentUser!=null){
+                signOut()
+            }else{
+                signIn()
+            }
+        }
+
+    }
+
+    private fun signOut() {
+        auth.signOut()
+        //todo clear sharedpreferences about user login status
+        updateLoginUI()
+    }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode:Int, resultCode: Int, data: Intent?){
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == RC_SIGN_IN){
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try{
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+            }catch (e:ApiException){
+                Log.w("TAG","Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken,null)
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this){ task ->
+                    if(task.isSuccessful){
+                        val user = Firebase.auth.currentUser
+                        if(user!=null){
+                            checkUserInDataBase(user)
+                            updateLoginUI()
+                        }
+                    }else{
+                        updateLoginUI()
+                        // todo clear login status from shared preferences just in case
+                    }
+                }
+
+    }
+
+    private fun checkUserInDataBase(user: FirebaseUser) {
+        // todo !!!!
+    }
 
 
     private fun setButtonsUI() {
@@ -72,16 +149,29 @@ class MainActivity : AppCompatActivity() {
         choose_game_type_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         choose_game_type_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         login_logout_Image_view.layoutParams = ConstraintLayout.LayoutParams(3 * screenUnit,3 * screenUnit)
-        login_logout_Image_view.background = ContextCompat.getDrawable(this,R.drawable.account_grey)
 
-        // todo login button logic and changing colors
+        updateLoginUI()
+
+
+    }
+
+    private fun updateLoginUI() {
+        if(auth.currentUser!=null){
+            login_logout_Image_view.background = ContextCompat.getDrawable(this,R.drawable.account_green)
+        }else {
+            login_logout_Image_view.background = ContextCompat.getDrawable(this, R.drawable.account_grey)
+        }
+
     }
 
     private fun makeConstraintLayout() {
         val set:ConstraintSet = ConstraintSet()
         set.clone(main_layout)
 
-        set.connect(choose_game_type_button_main_activity.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,marginTop)
+        set.connect(login_logout_Image_view.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(login_logout_Image_view.id,ConstraintSet.RIGHT,main_layout.id,ConstraintSet.RIGHT,marginLeft)
+
+        set.connect(choose_game_type_button_main_activity.id,ConstraintSet.TOP,login_logout_Image_view.id,ConstraintSet.BOTTOM,marginTop)
         set.connect(choose_game_type_button_main_activity.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
 
         set.applyTo(main_layout)
@@ -130,6 +220,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this,ChooseGameType::class.java)
         startActivity(intent)
         finish()
+    }
+
+    companion object{
+        private const val RC_SIGN_IN = 9001
     }
 }
 
