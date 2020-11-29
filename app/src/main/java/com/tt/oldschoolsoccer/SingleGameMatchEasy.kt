@@ -491,7 +491,8 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
 todo lost animation
 todo win animation
-todo user points
+todo user points and number of games
 todo stuck animation
 todo back button
+todo read game from shared preferences and save game to shared preferences
  */

@@ -80,10 +80,20 @@ class Functions {
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("LOGGED_IN",Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-                editor.putBoolean("Logged_IN",loggedInStatus.loggedIn)
+                editor.putBoolean("LOGGED_IN",loggedInStatus.loggedIn)
                 editor.putString("USER_ID",loggedInStatus.userid)
                 editor.apply()
             }
+        }
+
+        fun readLoggedStateFromSharedPreferences(context: Context?):LoggedInStatus{
+            val loggedInStatus = LoggedInStatus()
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("LOGGED_IN", Context.MODE_PRIVATE)
+                loggedInStatus.loggedIn = sharedPreferences.getBoolean("LOGGED_IN",false)
+                loggedInStatus.userid = sharedPreferences.getString("USER_ID","").toString()
+            }
+            return loggedInStatus
         }
 
     }

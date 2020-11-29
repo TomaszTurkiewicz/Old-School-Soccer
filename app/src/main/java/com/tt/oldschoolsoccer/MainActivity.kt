@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun signOut() {
         auth.signOut()
-        //todo clear sharedpreferences about user login status
+        Functions.saveLoggedStateToSharedPreferences(this,LoggedInStatus())
         updateLoginUI()
     }
 
@@ -129,12 +129,14 @@ class MainActivity : AppCompatActivity() {
                     if(task.isSuccessful){
                         val user = Firebase.auth.currentUser
                         if(user!=null){
+                            Functions.saveLoggedStateToSharedPreferences(this,LoggedInStatus(true,user.uid))
                             checkUserInDataBase(user)
-                            updateLoginUI()
+
+
                         }
                     }else{
                         updateLoginUI()
-                        // todo clear login status from shared preferences just in case
+                        Functions.saveLoggedStateToSharedPreferences(this,LoggedInStatus())
                     }
                 }
 
@@ -152,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 else{
                     // exists so check if sharedpreferences are the same as firebase
-                    //todo sprawdź czy w shared preferences jest to samo co w firebase
                     val fUser = snapshot.getValue(User::class.java)
                     val shpUser = Functions.readUserFromSharedPreferences(this@MainActivity,user.uid)
                     if(fUser!=null){
@@ -182,6 +183,7 @@ class MainActivity : AppCompatActivity() {
                         dbRef.setValue(fUser)
                         Functions.saveUserToSharedPreferences(this@MainActivity,shpUser)
                         Functions.saveLoggedStateToSharedPreferences(this@MainActivity, loggedInStatus = LoggedInStatus(true,user.uid))
+                        updateLoginUI()
                     }
 
                 }
@@ -204,6 +206,8 @@ class MainActivity : AppCompatActivity() {
         choose_game_type_button_main_activity.background=ButtonDrawable(this, (buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         choose_game_type_button_main_activity.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         login_logout_Image_view.layoutParams = ConstraintLayout.LayoutParams(3 * screenUnit,3 * screenUnit)
+        user_name.layoutParams = ConstraintLayout.LayoutParams(12*screenUnit,3*screenUnit)
+        user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
         updateLoginUI()
 
@@ -211,10 +215,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateLoginUI() {
-        if(auth.currentUser!=null){
-            login_logout_Image_view.background = ContextCompat.getDrawable(this,R.drawable.account_green)
+        val loggedInStatus = Functions.readLoggedStateFromSharedPreferences(this)
+
+        if(loggedInStatus.loggedIn){
+            login_logout_Image_view.background = ContextCompat.getDrawable(this, drawable.account_green)
+            user_name.visibility = View.VISIBLE
+            val tUser = Functions.readUserFromSharedPreferences(this,loggedInStatus.userid)
+            user_name.text = tUser.userName
+
         }else {
-            login_logout_Image_view.background = ContextCompat.getDrawable(this, R.drawable.account_grey)
+            login_logout_Image_view.background = ContextCompat.getDrawable(this, drawable.account_grey)
+            user_name.visibility = View.GONE
         }
 
     }
@@ -225,6 +236,9 @@ class MainActivity : AppCompatActivity() {
 
         set.connect(login_logout_Image_view.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,screenUnit)
         set.connect(login_logout_Image_view.id,ConstraintSet.RIGHT,main_layout.id,ConstraintSet.RIGHT,marginLeft)
+
+        set.connect(user_name.id,ConstraintSet.TOP,main_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(user_name.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
 
         set.connect(choose_game_type_button_main_activity.id,ConstraintSet.TOP,login_logout_Image_view.id,ConstraintSet.BOTTOM,marginTop)
         set.connect(choose_game_type_button_main_activity.id,ConstraintSet.LEFT,main_layout.id,ConstraintSet.LEFT,marginLeft)
@@ -285,13 +299,7 @@ class MainActivity : AppCompatActivity() {
 /*
 * todo connect to firebase (picture, user, login)
 * todo add admob
-* todo odczyt z shared preferences kratki
-* todo activity singleplayer
 * todo activity multiplayer
-* todo login logout
-* todo user class - store only points plus name
-* todo create kratka
-* todo create field
 * todo create game logic (move, checking if next move available, check if droga na bramkę dostępna)
 * todo samouczek koniecznie !!!
 * todo puchary (rozgrywki)
