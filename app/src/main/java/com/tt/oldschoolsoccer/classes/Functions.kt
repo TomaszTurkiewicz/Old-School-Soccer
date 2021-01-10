@@ -1,6 +1,7 @@
 package com.tt.oldschoolsoccer.classes
 
 import android.content.Context
+import android.view.inspector.StaticInspectionCompanionProvider
 
 class Functions {
     companion object{
@@ -96,5 +97,6 @@ class Functions {
             return loggedInStatus
         }
 
-    }
+
+}
 }

@@ -2,6 +2,7 @@ package com.tt.oldschoolsoccer
 
 import android.graphics.Point
 import android.graphics.Shader
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,47 +10,51 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import com.tt.oldschoolsoccer.classes.GameField
-import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.classes.Static
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.drawable.*
 import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
 
 class SingleGameMatchEasy : AppCompatActivity() {
     var screenUnit:Int=0
     var field = GameField()
-//    var ballPosition = Point()
-
-    var test = 0
     var nextMovePhone:Boolean=false
 
     private val gameLoopHandler = Handler()
+    var loggedInStatus = LoggedInStatus()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fullScreen()
         setContentView(R.layout.activity_single_game_match_easy)
         makeUI()
+        loggedInStatus = Functions.readLoggedStateFromSharedPreferences(this)
 
         gameLogic()
 
-  //      test()
-    }
 
-    private fun test() {
-        val y=test/9
-        val x = test%9
-
-        field_easy.setImageDrawable(TestDrawable(this,field.field[x][y], screenUnit.toDouble()))
 
     }
+
 
     private fun gameLogic() {
-        generateField()
-        displayBall()
+        field.generate(Static.EASY)
+
+        // todo savedGame from firebase
+            displayBall()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         gameLoop().run()
+    }
 
-
+    override fun onPause() {
+        super.onPause()
+        gameLoopHandler.removeCallbacksAndMessages(null)
     }
 
     private fun gameLoop():Runnable = Runnable {
@@ -239,6 +244,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun phoneMove(direction: Int, move: Unit){
         move
+        //todo save move
         val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
         nextMovePhone=stuckAndMovePhone.nextMove
     }
@@ -248,11 +254,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         ball_easy.setImageDrawable(BallDrawable(this,field.field[ball.x][ball.y], screenUnit.toDouble()))
     }
 
-    private fun generateField() {
 
-        field.generate(Static.EASY)
-
-    }
 
     private fun makeUI() {
         screenUnit= Functions.readScreenUnit(this)
@@ -299,6 +301,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
 
     private fun afterPress(direction: Int, move: Unit){
         move
+// todo save move
         displayBall()
         updateMoves()
         updateButtons()
@@ -347,45 +350,31 @@ class SingleGameMatchEasy : AppCompatActivity() {
     private fun updateButtons() {
         disableButtons()
         val ball = field.findBall()
-        if(field.field[ball.x][ball.y].moveUp.moveDirection!=null) {
-            if (!field.field[ball.x][ball.y].moveUp.moveDirection!!) {
+        if(field.field[ball.x][ball.y].moveUp==Static.MOVE_AVAILABLE) {
                 easyMoveUpButton.visibility = View.VISIBLE
-            }
+
         }
-        if(field.field[ball.x][ball.y].moveUpRight.moveDirection!=null){
-            if(!field.field[ball.x][ball.y].moveUpRight.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveUpRight==Static.MOVE_AVAILABLE){
                 easyMoveUpRightButton.visibility=View.VISIBLE
-            }
+
         }
-        if(field.field[ball.x][ball.y].moveRight.moveDirection!=null){
-            if(!field.field[ball.x][ball.y].moveRight.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveRight==Static.MOVE_AVAILABLE){
             easyMoveRightButton.visibility=View.VISIBLE
-            }
         }
-        if(field.field[ball.x][ball.y].moveDownRight.moveDirection!=null){
-        if(!field.field[ball.x][ball.y].moveDownRight.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveDownRight==Static.MOVE_AVAILABLE){
             easyMoveDownRightButton.visibility=View.VISIBLE
         }
-        }
-        if(field.field[ball.x][ball.y].moveDown.moveDirection!=null){
-        if(!field.field[ball.x][ball.y].moveDown.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveDown==Static.MOVE_AVAILABLE){
             easyMoveDownButton.visibility=View.VISIBLE
         }
-        }
-        if(field.field[ball.x][ball.y].moveDownLeft.moveDirection!=null){
-        if(!field.field[ball.x][ball.y].moveDownLeft.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveDownLeft==Static.MOVE_AVAILABLE){
             easyMoveDownLeftButton.visibility=View.VISIBLE
         }
-        }
-        if(field.field[ball.x][ball.y].moveLeft.moveDirection!=null){
-        if(!field.field[ball.x][ball.y].moveLeft.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveLeft==Static.MOVE_AVAILABLE){
             easyMoveLeftButton.visibility=View.VISIBLE
         }
-        }
-        if(field.field[ball.x][ball.y].moveUpLeft.moveDirection!=null){
-        if(!field.field[ball.x][ball.y].moveUpLeft.moveDirection!!){
+        if(field.field[ball.x][ball.y].moveUpLeft==Static.MOVE_AVAILABLE){
             easyMoveUpLeftButton.visibility=View.VISIBLE
-        }
         }
     }
 
@@ -485,7 +474,10 @@ class SingleGameMatchEasy : AppCompatActivity() {
         }
     }
 
+
 }
+
+
 
 /*
 

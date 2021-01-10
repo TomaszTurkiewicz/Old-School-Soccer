@@ -19,5 +19,14 @@ class Static {
         const val NORMAL = 1
         const val HARD = 2
 
+        const val NULL = 0
+        const val FALSE = 1
+        const val TRUE = 2
+
+        const val MOVE_FORBIDDEN = 0
+        const val MOVE_AVAILABLE = 1
+        const val MOVE_DONE_BY_ME = 2
+        const val MOVE_DONE_BY_PHONE = 3
+
     }
 }

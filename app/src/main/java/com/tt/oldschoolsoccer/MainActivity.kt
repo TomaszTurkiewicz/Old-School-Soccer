@@ -61,13 +61,6 @@ class MainActivity : AppCompatActivity() {
                 .build()
         googleSignInClient = GoogleSignIn.getClient(this,gso)
 
-//        val intent = Intent(this,SingleGameMatchEasy::class.java)
-//        startActivity(intent)
-//        finish()
-
-
-
-
     }
 
     private fun makeUI() {

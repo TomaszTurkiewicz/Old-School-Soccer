@@ -1,7 +1,7 @@
 package com.tt.oldschoolsoccer.classes
 
 import android.graphics.Point
-import kotlin.properties.Delegates
+import com.tt.oldschoolsoccer.database.PointOnField
 
 class GameField {
     lateinit var field:Array<Array<PointOnField>>
@@ -15,10 +15,12 @@ class GameField {
                 for (j in 0..12) {
                     field[i][j].x = i + 1
                     field[i][j].y = j + 1
+                    field[i][j].position = 9*j + i
                 }
             }
             field[4][6].ball = true
             setAvaileblesMoves()
+
         }
         level=gameLevel
     }
@@ -89,16 +91,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveUp.moveDirection=true
                     field[i][j-1].ball=true
-                    field[i][j-1].moveDown.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveUp.playerMove=Static.PLAYER
-                        field[i][j-1].moveDown.playerMove=Static.PLAYER
+                        field[i][j].moveUp = Static.MOVE_DONE_BY_ME
+                        field[i][j-1].moveDown = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveUp.playerMove=Static.PHONE
-                        field[i][j-1].moveDown.playerMove=Static.PHONE
+                        field[i][j].moveUp = Static.MOVE_DONE_BY_PHONE
+                        field[i][j-1].moveDown = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -107,16 +107,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveUpRight.moveDirection=true
                     field[i+1][j-1].ball=true
-                    field[i+1][j-1].moveDownLeft.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveUpRight.playerMove=Static.PLAYER
-                        field[i+1][j-1].moveDownLeft.playerMove=Static.PLAYER
+                        field[i][j].moveUpRight = Static.MOVE_DONE_BY_ME
+                        field[i+1][j-1].moveDownLeft = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveUpRight.playerMove=Static.PHONE
-                        field[i+1][j-1].moveDownLeft.playerMove=Static.PHONE
+                        field[i][j].moveUpRight = Static.MOVE_DONE_BY_PHONE
+                        field[i+1][j-1].moveDownLeft = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -125,16 +123,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveRight.moveDirection=true
                     field[i+1][j].ball=true
-                    field[i+1][j].moveLeft.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveRight.playerMove=Static.PLAYER
-                        field[i+1][j].moveLeft.playerMove=Static.PLAYER
+                        field[i][j].moveRight = Static.MOVE_DONE_BY_ME
+                        field[i+1][j].moveLeft = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveRight.playerMove=Static.PHONE
-                        field[i+1][j].moveLeft.playerMove=Static.PHONE
+                        field[i][j].moveRight = Static.MOVE_DONE_BY_PHONE
+                        field[i+1][j].moveLeft = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -143,16 +139,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveDownRight.moveDirection=true
                     field[i+1][j+1].ball=true
-                    field[i+1][j+1].moveUpLeft.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveDownRight.playerMove=Static.PLAYER
-                        field[i+1][j+1].moveUpLeft.playerMove=Static.PLAYER
+                        field[i][j].moveDownRight = Static.MOVE_DONE_BY_ME
+                        field[i+1][j+1].moveUpLeft = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveDownRight.playerMove=Static.PHONE
-                        field[i+1][j+1].moveUpLeft.playerMove=Static.PHONE
+                        field[i][j].moveDownRight = Static.MOVE_DONE_BY_PHONE
+                        field[i+1][j+1].moveUpLeft = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -161,16 +155,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveDown.moveDirection=true
                     field[i][j+1].ball=true
-                    field[i][j+1].moveUp.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveDown.playerMove=Static.PLAYER
-                        field[i][j+1].moveUp.playerMove=Static.PLAYER
+                        field[i][j].moveDown = Static.MOVE_DONE_BY_ME
+                        field[i][j+1].moveUp = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveDown.playerMove=Static.PHONE
-                        field[i][j+1].moveUp.playerMove=Static.PHONE
+                        field[i][j].moveDown = Static.MOVE_DONE_BY_PHONE
+                        field[i][j+1].moveUp = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -179,16 +171,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveDownLeft.moveDirection=true
                     field[i-1][j+1].ball=true
-                    field[i-1][j+1].moveUpRight.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveDownLeft.playerMove=Static.PLAYER
-                        field[i-1][j+1].moveUpRight.playerMove=Static.PLAYER
+                        field[i][j].moveDownLeft = Static.MOVE_DONE_BY_ME
+                        field[i-1][j+1].moveUpRight = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveDownLeft.playerMove=Static.PHONE
-                        field[i-1][j+1].moveUpRight.playerMove=Static.PHONE
+                        field[i][j].moveDownLeft = Static.MOVE_DONE_BY_PHONE
+                        field[i-1][j+1].moveUpRight = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -197,16 +187,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
         field[i][j].ball=false
-        field[i][j].moveLeft.moveDirection=true
         field[i-1][j].ball=true
-        field[i-1][j].moveRight.moveDirection=true
         if(myTurn){
-            field[i][j].moveLeft.playerMove=Static.PLAYER
-            field[i-1][j].moveRight.playerMove=Static.PLAYER
+            field[i][j].moveLeft = Static.MOVE_DONE_BY_ME
+            field[i-1][j].moveRight = Static.MOVE_DONE_BY_ME
         }
         else{
-            field[i][j].moveLeft.playerMove=Static.PHONE
-            field[i-1][j].moveRight.playerMove=Static.PHONE
+            field[i][j].moveLeft = Static.MOVE_DONE_BY_PHONE
+            field[i-1][j].moveRight = Static.MOVE_DONE_BY_PHONE
         }
     }
 
@@ -215,16 +203,14 @@ class GameField {
         val i = ball.x
         val j = ball.y
                     field[i][j].ball=false
-                    field[i][j].moveUpLeft.moveDirection=true
                     field[i-1][j-1].ball=true
-                    field[i-1][j-1].moveDownRight.moveDirection=true
                     if(myTurn){
-                        field[i][j].moveUpLeft.playerMove=Static.PLAYER
-                        field[i-1][j-1].moveDownRight.playerMove=Static.PLAYER
+                        field[i][j].moveUpLeft = Static.MOVE_DONE_BY_ME
+                        field[i-1][j-1].moveDownRight = Static.MOVE_DONE_BY_ME
                     }
                     else{
-                        field[i][j].moveUpLeft.playerMove=Static.PHONE
-                        field[i-1][j-1].moveDownRight.playerMove=Static.PHONE
+                        field[i][j].moveUpLeft = Static.MOVE_DONE_BY_PHONE
+                        field[i-1][j-1].moveDownRight = Static.MOVE_DONE_BY_PHONE
                     }
     }
 
@@ -240,29 +226,29 @@ class GameField {
         for(i in 0..8){
             for(j in 0..12){
                 if(field[i][j].ball){
-                  if(field[i][j].moveUp.moveDirection!=null){
-                      up=field[i][j].moveUp.moveDirection!!
-                  }
-                    if(field[i][j].moveUpRight.moveDirection!=null){
-                        upRight=field[i][j].moveUpRight.moveDirection!!
+                    if(field[i][j].moveUp==Static.MOVE_AVAILABLE){
+                        up = false
                     }
-                    if(field[i][j].moveRight.moveDirection!=null){
-                        right=field[i][j].moveRight.moveDirection!!
+                    if(field[i][j].moveUpRight==Static.MOVE_AVAILABLE){
+                        upRight= false
                     }
-                    if(field[i][j].moveDownRight.moveDirection!=null){
-                        downRight=field[i][j].moveDownRight.moveDirection!!
+                    if(field[i][j].moveRight==Static.MOVE_AVAILABLE){
+                        right=false
                     }
-                    if(field[i][j].moveDown.moveDirection!=null){
-                        down=field[i][j].moveDown.moveDirection!!
+                    if(field[i][j].moveDownRight==Static.MOVE_AVAILABLE){
+                        downRight=false
                     }
-                    if(field[i][j].moveDownLeft.moveDirection!=null){
-                        downLeft=field[i][j].moveDownLeft.moveDirection!!
+                    if(field[i][j].moveDown==Static.MOVE_AVAILABLE){
+                        down=false
                     }
-                    if(field[i][j].moveLeft.moveDirection!=null){
-                        left=field[i][j].moveLeft.moveDirection!!
+                    if(field[i][j].moveDownLeft==Static.MOVE_AVAILABLE){
+                        downLeft=false
                     }
-                    if(field[i][j].moveUpLeft.moveDirection!=null){
-                        upLeft=field[i][j].moveUpLeft.moveDirection!!
+                    if(field[i][j].moveLeft==Static.MOVE_AVAILABLE){
+                        left=false
+                    }
+                    if(field[i][j].moveUpLeft==Static.MOVE_AVAILABLE){
+                        upLeft=false
                     }
                 }
             }
@@ -298,61 +284,45 @@ class GameField {
         return StuckAndNextMove(nextMove,stuck)
     }
 
-    fun checkIfMoveInDirectionIsAvailable(pointOnField: PointOnField,direction: Int):Boolean{
+    fun checkIfMoveInDirectionIsAvailable(pointOnField: PointOnField, direction: Int):Boolean{
         if(direction==Static.DOWN){
-            if(pointOnField.moveDown.moveDirection!=null){
-                if(pointOnField.moveDown.moveDirection==false){
-                    return true
-                }
+            if(pointOnField.moveDown==Static.MOVE_AVAILABLE){
+                return true
             }
         }
         if(direction==Static.DOWN_LEFT){
-            if(pointOnField.moveDownLeft.moveDirection!=null){
-                if(pointOnField.moveDownLeft.moveDirection==false){
+            if(pointOnField.moveDownLeft==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.DOWN_RIGHT){
-            if(pointOnField.moveDownRight.moveDirection!=null){
-                if(pointOnField.moveDownRight.moveDirection==false){
+            if(pointOnField.moveDownRight==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.LEFT){
-            if(pointOnField.moveLeft.moveDirection!=null){
-                if(pointOnField.moveLeft.moveDirection==false){
+            if(pointOnField.moveLeft==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.RIGHT){
-            if(pointOnField.moveRight.moveDirection!=null){
-                if(pointOnField.moveRight.moveDirection==false){
+            if(pointOnField.moveRight==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.UP){
-            if(pointOnField.moveUp.moveDirection!=null){
-                if(pointOnField.moveUp.moveDirection==false){
+            if(pointOnField.moveUp==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.UP_RIGHT){
-            if(pointOnField.moveUpRight.moveDirection!=null){
-                if(pointOnField.moveUpRight.moveDirection==false){
+            if(pointOnField.moveUpRight==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         if(direction==Static.UP_LEFT){
-            if(pointOnField.moveUpLeft.moveDirection!=null){
-                if(pointOnField.moveUpLeft.moveDirection==false){
+            if(pointOnField.moveUpLeft==Static.MOVE_AVAILABLE){
                     return true
-                }
             }
         }
         return false

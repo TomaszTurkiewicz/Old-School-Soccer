@@ -5,9 +5,9 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
-import com.tt.oldschoolsoccer.classes.PointOnField
+import com.tt.oldschoolsoccer.database.PointOnField
 
-class TestDrawable(private val context: Context, private val currentPoint:PointOnField, private val screenUnit:Double):Drawable() {
+class TestDrawable(private val context: Context, private val currentPoint: PointOnField, private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth:Double = screenUnit/10
 

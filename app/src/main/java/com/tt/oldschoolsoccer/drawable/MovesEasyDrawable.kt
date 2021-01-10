@@ -23,30 +23,26 @@ class MovesEasyDrawable(private val context: Context, private val field:GameFiel
 
         for(i in 0..8){
             for(j in 0..12){
-                if(field.field[i][j].moveUp.moveDirection!=null){
-                    if(field.field[i][j].moveUp.moveDirection!! and (field.field[i][j].moveUp.playerMove==Static.PLAYER) ){
+
+                    if(field.field[i][j].moveUp==Static.MOVE_DONE_BY_ME){
                         path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
                         path.lineTo((field.field[i][j-1].x*screenUnit).toFloat(), (field.field[i][j-1].y*screenUnit).toFloat())
                     }
-                }
-                if(field.field[i][j].moveUpRight.moveDirection!=null){
-                    if(field.field[i][j].moveUpRight.moveDirection!! and (field.field[i][j].moveUpRight.playerMove==Static.PLAYER)){
+
+                    if(field.field[i][j].moveUpRight==Static.MOVE_DONE_BY_ME){
                         path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
                         path.lineTo((field.field[i+1][j-1].x*screenUnit).toFloat(), (field.field[i+1][j-1].y*screenUnit).toFloat())
                     }
-                }
-                if(field.field[i][j].moveRight.moveDirection!=null){
-                    if(field.field[i][j].moveRight.moveDirection!! and (field.field[i][j].moveRight.playerMove==Static.PLAYER)){
+
+                    if(field.field[i][j].moveRight==Static.MOVE_DONE_BY_ME){
                         path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
                         path.lineTo((field.field[i+1][j].x*screenUnit).toFloat(), (field.field[i+1][j].y*screenUnit).toFloat())
                     }
-                }
-                if(field.field[i][j].moveDownRight.moveDirection!=null){
-                    if(field.field[i][j].moveDownRight.moveDirection!! and (field.field[i][j].moveDownRight.playerMove==Static.PLAYER)){
+
+                    if(field.field[i][j].moveDownRight==Static.MOVE_DONE_BY_ME){
                         path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
                         path.lineTo((field.field[i+1][j+1].x*screenUnit).toFloat(), (field.field[i+1][j+1].y*screenUnit).toFloat())
                     }
-                }
 //                if(field.field[i][j].moveDown.moveDirection!=null){
 //                    if(field.field[i][j].moveDown.moveDirection!!){
 //                        path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
@@ -80,30 +76,26 @@ class MovesEasyDrawable(private val context: Context, private val field:GameFiel
         val path2 = Path()
         for(i in 0..8) {
             for (j in 0..12) {
-                if (field.field[i][j].moveUp.moveDirection != null) {
-                    if (field.field[i][j].moveUp.moveDirection!! and (field.field[i][j].moveUp.playerMove == Static.PHONE)) {
+
+                    if (field.field[i][j].moveUp==Static.MOVE_DONE_BY_PHONE) {
                         path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                         path2.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
                     }
-                }
-                if (field.field[i][j].moveUpRight.moveDirection != null) {
-                    if (field.field[i][j].moveUpRight.moveDirection!! and (field.field[i][j].moveUpRight.playerMove == Static.PHONE)) {
+
+                    if (field.field[i][j].moveUpRight==Static.MOVE_DONE_BY_PHONE) {
                         path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                         path2.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
                     }
-                }
-                if (field.field[i][j].moveRight.moveDirection != null) {
-                    if (field.field[i][j].moveRight.moveDirection!! and (field.field[i][j].moveRight.playerMove == Static.PHONE)) {
+
+                    if (field.field[i][j].moveRight==Static.MOVE_DONE_BY_PHONE) {
                         path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                         path2.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
                     }
-                }
-                if (field.field[i][j].moveDownRight.moveDirection != null) {
-                    if (field.field[i][j].moveDownRight.moveDirection!! and (field.field[i][j].moveDownRight.playerMove == Static.PHONE)) {
+
+                    if (field.field[i][j].moveDownRight==Static.MOVE_DONE_BY_PHONE) {
                         path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                         path2.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
                     }
-                }
             }
         }
         canvas.drawPath(path2,paint)
