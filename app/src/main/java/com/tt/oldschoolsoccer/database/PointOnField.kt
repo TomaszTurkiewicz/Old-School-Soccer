@@ -4,7 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.tt.oldschoolsoccer.classes.Static
 
-class PointOnField(
+@Entity
+data class PointOnField(
+                        @PrimaryKey(autoGenerate = false)
                         var position: Int = 0,
                         var moveUp: Int = Static.MOVE_AVAILABLE,
                         var moveUpRight: Int = Static.MOVE_AVAILABLE,
