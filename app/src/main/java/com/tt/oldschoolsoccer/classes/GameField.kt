@@ -8,6 +8,12 @@ class GameField {
     var myMove:Boolean = true
     var level = -1
 
+
+    /**
+     * generate empty football field with ball in the middle
+     * EASY and NORMAL are small
+     * HARD is bigger
+     */
     fun generate(gameLevel:Int){
         if(gameLevel!=Static.HARD) {
             field = Array(9) { Array(13) { PointOnField() } }
@@ -25,6 +31,11 @@ class GameField {
         level=gameLevel
     }
 
+
+    /**
+     * setting available moves so ball cannot go outside borders
+     * EASY and NORMAL
+      */
     private fun setAvaileblesMoves() {
         field[0][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
         field[1][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
@@ -86,6 +97,10 @@ class GameField {
 
     }
 
+    /**
+     * move up (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveUp(myTurn:Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -107,6 +122,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move up right (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveUpRight(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -128,6 +147,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move right (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveRight(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -149,6 +172,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move down right (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveDownRight(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -170,6 +197,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move down (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveDown(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -191,6 +222,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move down left (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveDownLeft(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -212,6 +247,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * move left (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveLeft(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -233,6 +272,11 @@ class GameField {
         return pointsAfterMove
     }
 
+
+    /**
+     * move up left (player move)
+     * returning two points before and after move so they can be stored in database later
+     */
     fun moveUpLeft(myTurn: Boolean):PointsAfterMove{
         val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
@@ -254,6 +298,10 @@ class GameField {
         return pointsAfterMove
     }
 
+    /**
+     * checks if ball stuck (no move available in any direction) and if another move is available
+     * point is at the border of field or someone already made move to/from this point in any direction
+     */
     fun checkIfStuckAndNextMove(direction:Int):StuckAndNextMove{
         var up=true
         var upRight=true
@@ -263,6 +311,7 @@ class GameField {
         var downLeft=true
         var left=true
         var upLeft=true
+        //todo poprawić tę loopę using findball
         for(i in 0..8){
             for(j in 0..12){
                 if(field[i][j].ball){
@@ -294,7 +343,11 @@ class GameField {
             }
         }
 
+        /**
+         * if everything is true - stuck is true
+         */
         val stuck = up and (upRight and (right and (downRight and (down and(downLeft and(left and (upLeft)))))))
+
         if(direction==Static.UP){
             down=false
         }
@@ -319,55 +372,50 @@ class GameField {
         if(direction==Static.UP_LEFT){
             downRight=false
         }
+
+        /**
+         * if any is true (except the last one we did) we have another move
+         */
         val nextMove = up or (upRight or (right or (downRight or (down or(downLeft or(left or (upLeft)))))))
 
         return StuckAndNextMove(nextMove,stuck)
     }
 
-    fun checkIfMoveInDirectionIsAvailable(pointOnField: PointOnField, direction: Int):Boolean{
-        if(direction==Static.DOWN){
+    /**
+     * checking if from given point on field we can make moves in every direction
+     */
+    fun checkIfMoveInDirectionIsAvailable(pointOnField: PointOnField):AvailableMoves{
+        val availableMoves = AvailableMoves()
             if(pointOnField.moveDown==Static.MOVE_AVAILABLE){
-                return true
+                availableMoves.down=true
             }
-        }
-        if(direction==Static.DOWN_LEFT){
             if(pointOnField.moveDownLeft==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.downLeft=true
             }
-        }
-        if(direction==Static.DOWN_RIGHT){
             if(pointOnField.moveDownRight==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.downRight=true
             }
-        }
-        if(direction==Static.LEFT){
             if(pointOnField.moveLeft==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.left=true
             }
-        }
-        if(direction==Static.RIGHT){
             if(pointOnField.moveRight==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.right=true
             }
-        }
-        if(direction==Static.UP){
             if(pointOnField.moveUp==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.up=true
             }
-        }
-        if(direction==Static.UP_RIGHT){
             if(pointOnField.moveUpRight==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.upRight=true
             }
-        }
-        if(direction==Static.UP_LEFT){
             if(pointOnField.moveUpLeft==Static.MOVE_AVAILABLE){
-                    return true
+                availableMoves.upLeft=true
             }
-        }
-        return false
+        return availableMoves
     }
 
+    /**
+     * finding ball coordinates
+     */
     fun findBall():Point {
         if (level != Static.HARD) {
             for (i in 0..8) {
@@ -382,6 +430,9 @@ class GameField {
 
     }
 
+    /**
+     * returning point on field
+     */
     fun getPoint(i:Int,j:Int):PointOnField{
         return field[i][j]
     }

@@ -6,6 +6,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+/**
+ * database
+ */
 @Database(
         entities = [PointOnField::class],
         version = 1
@@ -39,7 +42,3 @@ abstract class PointOnFieldEasyDatabase () : RoomDatabase() {
 
     }
 
-
-// todo insert data to database
-// todo update database
-// todo read database

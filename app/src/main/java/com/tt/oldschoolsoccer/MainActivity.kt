@@ -311,7 +311,6 @@ class MainActivity : AppCompatActivityCoroutine() {
 * todo connect to firebase (picture, user, login)
 * todo add admob
 * todo activity multiplayer
-* todo create game logic (move, checking if next move available, check if droga na bramkę dostępna)
 * todo samouczek koniecznie !!!
 * todo puchary (rozgrywki)
 * todo nagrody za strzelone branki i wygrane mecze

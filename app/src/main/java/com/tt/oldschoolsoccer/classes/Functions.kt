@@ -6,6 +6,9 @@ import android.view.inspector.StaticInspectionCompanionProvider
 class Functions {
     companion object{
 
+        /**
+         * saves ScreenUnit to shared preferences for making UI in different activities
+         */
         fun saveScreenUnit(context: Context?,screenUnit:Int){
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("ScreenUnit",Context.MODE_PRIVATE)
@@ -15,6 +18,9 @@ class Functions {
             }
         }
 
+        /**
+         * saves user statistics to shared preferences
+         */
         fun saveUserToSharedPreferences(context: Context?, user:User){
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences(user.id,Context.MODE_PRIVATE)
@@ -40,6 +46,9 @@ class Functions {
             }
         }
 
+        /**
+         * reads screenUnit from shared preferences
+         */
         fun readScreenUnit(context: Context?):Int{
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("ScreenUnit",Context.MODE_PRIVATE)
@@ -48,6 +57,9 @@ class Functions {
         return -1
         }
 
+        /**
+         * reads user statistics from shared preferences
+         */
         fun readUserFromSharedPreferences(context: Context?,userId:String):User{
             var userName = ""
             val easyGame:Game = Game()
@@ -77,6 +89,10 @@ class Functions {
             return User(userId,userName,easyGame, normalGame, hardGame, multiGame)
         }
 
+        /**
+         * saves info of last logged in user
+         * so even without internet still you can update your statistics
+         */
         fun saveLoggedStateToSharedPreferences(context: Context?,loggedInStatus: LoggedInStatus){
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("LOGGED_IN",Context.MODE_PRIVATE)
@@ -87,6 +103,9 @@ class Functions {
             }
         }
 
+        /**
+         * reads info about last logged in user
+         */
         fun readLoggedStateFromSharedPreferences(context: Context?):LoggedInStatus{
             val loggedInStatus = LoggedInStatus()
             if(context!=null){
@@ -97,6 +116,9 @@ class Functions {
             return loggedInStatus
         }
 
+        /**
+         * saves info if easy game has been saved (for user)
+         */
         fun saveEasyGameToSharedPreferences(context: Context?, saved: Boolean,userId: String){
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("EASY_GAME",Context.MODE_PRIVATE)
@@ -106,6 +128,9 @@ class Functions {
             }
         }
 
+        /**
+         * reads info if easy game has been saved to Room Database (for user)
+         */
         fun readEasyGameFromSharedPreferences(context: Context?,userId: String):Boolean{
             var savedGame = false
             if(context!=null){
@@ -115,6 +140,9 @@ class Functions {
             return savedGame
         }
 
+        /**
+         * reads if Room database was already created
+         */
         fun isRoomDatabaseCreatedFromSharedPreferences(context: Context?,userId: String):Boolean{
             var created = false
             if(context!=null){
@@ -124,6 +152,9 @@ class Functions {
             return created
         }
 
+        /**
+         * saves info that Room database was already created
+         */
         fun databaseCreatedToSharedPreferences(context: Context?, created: Boolean, userId: String){
             if(context!=null){
                 val sharedPreferences = context.getSharedPreferences("ROOM",Context.MODE_PRIVATE)

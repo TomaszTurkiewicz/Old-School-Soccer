@@ -7,6 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
+/**
+ *  class for coroutines
+ */
+
 abstract class AppCompatActivityCoroutine: AppCompatActivity(), CoroutineScope {
 
     private lateinit var job: Job

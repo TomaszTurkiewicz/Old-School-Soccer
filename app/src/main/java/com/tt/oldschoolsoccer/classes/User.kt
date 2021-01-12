@@ -1,5 +1,8 @@
 package com.tt.oldschoolsoccer.classes
 
+/**
+ * holding user info
+ */
  data class User (var id:String?,
                     var userName:String = "ANONYMOUS",
                     var easyGame:Game = Game(),

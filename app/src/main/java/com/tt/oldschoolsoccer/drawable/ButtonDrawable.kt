@@ -6,6 +6,9 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 
+/**
+ * drawing buttons in menu
+ */
 class ButtonDrawable (private val context:Context, private val width:Double, private val height:Double, private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth = 2*screenUnit/10

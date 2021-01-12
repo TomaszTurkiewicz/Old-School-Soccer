@@ -221,28 +221,29 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
 
 
     private fun moveDownLeftPhone(ball:Point) {
-        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_LEFT)){
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+        if(availableMoves.downLeft){
             phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
         }else{
-            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN)){
+            if(availableMoves.down){
                 phoneMove(Static.DOWN,field.moveDown(false))
             }else{
-                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_RIGHT)){
+                if(availableMoves.downRight){
                     phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
                 }else{
-                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.LEFT)){
+                    if(availableMoves.left){
                         phoneMove(Static.LEFT,field.moveLeft(false))
                     }else{
-                        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.RIGHT)){
+                        if(availableMoves.right){
                             phoneMove(Static.RIGHT,field.moveRight(false))
                         }else{
-                            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_LEFT)){
+                            if(availableMoves.upLeft){
                                 phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
                             }else{
-                                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_RIGHT)){
+                                if(availableMoves.upRight){
                                     phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
                                 }else{
-                                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
+                                    if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
                                         if(loggedInStatus.loggedIn) {
@@ -270,28 +271,29 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     }
 
     private fun moveDownPhone(ball:Point) {
-        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN)){
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+        if(availableMoves.down){
             phoneMove(Static.DOWN,field.moveDown(false))
         }else{
-            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_LEFT)){
+            if(availableMoves.downLeft){
                 phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
             }else{
-                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_RIGHT)){
+                if(availableMoves.downRight){
                     phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
                 }else{
-                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.LEFT)){
+                    if(availableMoves.left){
                         phoneMove(Static.LEFT,field.moveLeft(false))
                     }else{
-                        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.RIGHT)){
+                        if(availableMoves.right){
                             phoneMove(Static.RIGHT,field.moveRight(false))
                         }else{
-                            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_LEFT)){
+                            if(availableMoves.upLeft){
                                 phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
                             }else{
-                                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_RIGHT)){
+                                if(availableMoves.upRight){
                                     phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
                                 }else{
-                                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
+                                    if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
                                         if(loggedInStatus.loggedIn) {
@@ -313,28 +315,29 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     }
 
     private fun moveDownRightPhone(ball: Point) {
-        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_RIGHT)){
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+        if(availableMoves.downRight){
             phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
         }else{
-            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN)){
+            if(availableMoves.down){
                 phoneMove(Static.DOWN,field.moveDown(false))
             }else{
-                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.DOWN_LEFT)){
+                if(availableMoves.downLeft){
                     phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
                 }else{
-                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.RIGHT)){
+                    if(availableMoves.right){
                         phoneMove(Static.RIGHT,field.moveRight(false))
                     }else{
-                        if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.LEFT)){
+                        if(availableMoves.left){
                             phoneMove(Static.LEFT,field.moveLeft(false))
                         }else{
-                            if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_RIGHT)){
+                            if(availableMoves.upRight){
                                 phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
                             }else{
-                                if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP_LEFT)){
+                                if(availableMoves.upLeft){
                                     phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
                                 }else{
-                                    if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
+                                    if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
                                         if(loggedInStatus.loggedIn) {
@@ -357,7 +360,7 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
 
     private fun phoneMove(direction: Int, move: PointsAfterMove){
         val pointsAfterMove = move
-        //todo save move
+
         val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
 
 
@@ -502,30 +505,37 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     private fun updateButtons() {
         disableButtons()
         val ball = field.findBall()
-        if(field.field[ball.x][ball.y].moveUp==Static.MOVE_AVAILABLE) {
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+
+        if (availableMoves.up){
                 easyMoveUpButton.visibility = View.VISIBLE
-
         }
-        if(field.field[ball.x][ball.y].moveUpRight==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.upRight){
                 easyMoveUpRightButton.visibility=View.VISIBLE
-
         }
-        if(field.field[ball.x][ball.y].moveRight==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.right){
             easyMoveRightButton.visibility=View.VISIBLE
         }
-        if(field.field[ball.x][ball.y].moveDownRight==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.downRight){
             easyMoveDownRightButton.visibility=View.VISIBLE
         }
-        if(field.field[ball.x][ball.y].moveDown==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.down){
             easyMoveDownButton.visibility=View.VISIBLE
         }
-        if(field.field[ball.x][ball.y].moveDownLeft==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.downLeft){
             easyMoveDownLeftButton.visibility=View.VISIBLE
         }
-        if(field.field[ball.x][ball.y].moveLeft==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.left){
             easyMoveLeftButton.visibility=View.VISIBLE
         }
-        if(field.field[ball.x][ball.y].moveUpLeft==Static.MOVE_AVAILABLE){
+
+        if(availableMoves.upLeft){
             easyMoveUpLeftButton.visibility=View.VISIBLE
         }
     }
@@ -650,11 +660,8 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
 
 
 /*
-
 todo lost animation
 todo win animation
-todo user points and number of games
 todo stuck animation
 todo back button
-todo read game from shared preferences and save game to shared preferences
  */

@@ -5,6 +5,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.provider.MediaStore.Images.Media.getBitmap
 
+/**
+ * background lines
+ */
 class TileDrawable(drawable: Drawable,tileMode: Shader.TileMode,x:Int):Drawable() {
 
     private val paint=Paint()

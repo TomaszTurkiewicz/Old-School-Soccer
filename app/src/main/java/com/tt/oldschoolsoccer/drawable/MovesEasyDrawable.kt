@@ -8,6 +8,9 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.GameField
 import com.tt.oldschoolsoccer.classes.Static
 
+/**
+ * drawing lines where moves were done
+ */
 class MovesEasyDrawable(private val context: Context, private val field:GameField, private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth = screenUnit/15
@@ -43,30 +46,6 @@ class MovesEasyDrawable(private val context: Context, private val field:GameFiel
                         path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
                         path.lineTo((field.field[i+1][j+1].x*screenUnit).toFloat(), (field.field[i+1][j+1].y*screenUnit).toFloat())
                     }
-//                if(field.field[i][j].moveDown.moveDirection!=null){
-//                    if(field.field[i][j].moveDown.moveDirection!!){
-//                        path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
-//                        path.lineTo((field.field[i][j+1].x*screenUnit).toFloat(), (field.field[i][j+1].y*screenUnit).toFloat())
-//                    }
-//                }
-//                if(field.field[i][j].moveDownLeft.moveDirection!=null){
-//                    if(field.field[i][j].moveDownLeft.moveDirection!!){
-//                        path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
-//                        path.lineTo((field.field[i-1][j+1].x*screenUnit).toFloat(), (field.field[i-1][j+1].y*screenUnit).toFloat())
-//                    }
-//                }
-//                if(field.field[i][j].moveLeft.moveDirection!=null){
-//                    if(field.field[i][j].moveLeft.moveDirection!!){
-//                        path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
-//                        path.lineTo((field.field[i-1][j].x*screenUnit).toFloat(), (field.field[i-1][j].y*screenUnit).toFloat())
-//                    }
-//                }
-//                if(field.field[i][j].moveUpLeft.moveDirection!=null){
-//                    if(field.field[i][j].moveUpLeft.moveDirection!!){
-//                        path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
-//                        path.lineTo((field.field[i-1][j-1].x*screenUnit).toFloat(), (field.field[i-1][j-1].y*screenUnit).toFloat())
-//                    }
-//                }
             }
         }
 

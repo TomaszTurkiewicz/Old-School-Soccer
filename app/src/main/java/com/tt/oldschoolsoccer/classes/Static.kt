@@ -1,5 +1,8 @@
 package com.tt.oldschoolsoccer.classes
 
+/**
+ * loads of static to better understanding some functions
+ */
 class Static {
     companion object{
         const val UP = 0

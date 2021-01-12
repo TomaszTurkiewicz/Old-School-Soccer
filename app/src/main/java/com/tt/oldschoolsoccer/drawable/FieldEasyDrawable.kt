@@ -6,6 +6,9 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 
+/**
+ * drawing football field SMALL and NORMAL
+ */
 class FieldEasyDrawable(private val context: Context,private val screenUnit:Double):Drawable() {
     private val paint = Paint()
     private val lineWidth = screenUnit/10
