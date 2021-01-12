@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
-import com.tt.oldschoolsoccer.classes.Functions
 import android.content.Intent
 import android.graphics.Shader
 import android.util.Log
 import android.util.TypedValue
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,15 +26,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R.drawable
-import com.tt.oldschoolsoccer.classes.LoggedInStatus
-import com.tt.oldschoolsoccer.classes.User
+import com.tt.oldschoolsoccer.classes.*
+import com.tt.oldschoolsoccer.database.PointOnField
+import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.launch
 
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivityCoroutine() {
 
     private var screenHeight=0
     private var screenWidth=0
@@ -124,8 +125,25 @@ class MainActivity : AppCompatActivity() {
                         if(user!=null){
                             Functions.saveLoggedStateToSharedPreferences(this,LoggedInStatus(true,user.uid))
                             checkUserInDataBase(user)
-
-
+                            val databaseCreated = Functions.isRoomDatabaseCreatedFromSharedPreferences(this,user.uid)
+                            if(!databaseCreated){
+                                val field = GameField()
+                                field.generate(Static.EASY)
+                                launch {
+                                    for(i in 0..8){
+                                        for(j in 0..12){
+                                            val item = field.getPoint(i,j)
+                                            applicationContext?.let{
+                                                PointOnFieldEasyDatabase(it).getPointOnFiledDao().addPointOnField(item)
+                                            }
+                                        }
+                                    }
+                                    Toast.makeText(this@MainActivity,"DATABASE CREATED",Toast.LENGTH_LONG).show()
+                                    Functions.databaseCreatedToSharedPreferences(this@MainActivity,true,user.uid)
+                                }
+                            }else{
+                                Toast.makeText(this@MainActivity,"DATABASE ALREADY EXISTS",Toast.LENGTH_LONG).show()
+                            }
                         }
                     }else{
                         updateLoginUI()

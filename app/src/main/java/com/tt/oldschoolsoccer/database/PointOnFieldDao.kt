@@ -3,6 +3,7 @@ package com.tt.oldschoolsoccer.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 
 @Dao
@@ -13,5 +14,8 @@ interface PointOnFieldDao {
 
     @Query("SELECT * FROM pointOnField")
     suspend fun getAllPointsOnField() : List<PointOnField>
+
+    @Update
+    suspend fun updatePointOnField(pointOnField: PointOnField)
 
 }

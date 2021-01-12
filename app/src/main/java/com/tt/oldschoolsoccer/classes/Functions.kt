@@ -97,6 +97,41 @@ class Functions {
             return loggedInStatus
         }
 
+        fun saveEasyGameToSharedPreferences(context: Context?, saved: Boolean,userId: String){
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("EASY_GAME",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,saved)
+                editor.apply()
+            }
+        }
+
+        fun readEasyGameFromSharedPreferences(context: Context?,userId: String):Boolean{
+            var savedGame = false
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("EASY_GAME", Context.MODE_PRIVATE)
+                savedGame = sharedPreferences.getBoolean(userId,false)
+            }
+            return savedGame
+        }
+
+        fun isRoomDatabaseCreatedFromSharedPreferences(context: Context?,userId: String):Boolean{
+            var created = false
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("ROOM", Context.MODE_PRIVATE)
+                created = sharedPreferences.getBoolean(userId,false)
+            }
+            return created
+        }
+
+        fun databaseCreatedToSharedPreferences(context: Context?, created: Boolean, userId: String){
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("ROOM",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,created)
+                editor.apply()
+            }
+        }
 
 }
 }

@@ -86,7 +86,8 @@ class GameField {
 
     }
 
-    fun moveUp(myTurn:Boolean){
+    fun moveUp(myTurn:Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -100,9 +101,14 @@ class GameField {
                         field[i][j].moveUp = Static.MOVE_DONE_BY_PHONE
                         field[i][j-1].moveDown = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i][j-1]
+
+        return pointsAfterMove
     }
 
-    fun moveUpRight(myTurn: Boolean){
+    fun moveUpRight(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -116,9 +122,14 @@ class GameField {
                         field[i][j].moveUpRight = Static.MOVE_DONE_BY_PHONE
                         field[i+1][j-1].moveDownLeft = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i+1][j-1]
+
+        return pointsAfterMove
     }
 
-    fun moveRight(myTurn: Boolean){
+    fun moveRight(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -132,9 +143,14 @@ class GameField {
                         field[i][j].moveRight = Static.MOVE_DONE_BY_PHONE
                         field[i+1][j].moveLeft = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i+1][j]
+
+        return pointsAfterMove
     }
 
-    fun moveDownRight(myTurn: Boolean){
+    fun moveDownRight(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -148,9 +164,14 @@ class GameField {
                         field[i][j].moveDownRight = Static.MOVE_DONE_BY_PHONE
                         field[i+1][j+1].moveUpLeft = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i+1][j+1]
+
+        return pointsAfterMove
     }
 
-    fun moveDown(myTurn: Boolean){
+    fun moveDown(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -164,9 +185,14 @@ class GameField {
                         field[i][j].moveDown = Static.MOVE_DONE_BY_PHONE
                         field[i][j+1].moveUp = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i][j+1]
+
+        return pointsAfterMove
     }
 
-    fun moveDownLeft(myTurn: Boolean){
+    fun moveDownLeft(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -180,9 +206,14 @@ class GameField {
                         field[i][j].moveDownLeft = Static.MOVE_DONE_BY_PHONE
                         field[i-1][j+1].moveUpRight = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i-1][j+1]
+
+        return pointsAfterMove
     }
 
-    fun moveLeft(myTurn: Boolean){
+    fun moveLeft(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -196,9 +227,14 @@ class GameField {
             field[i][j].moveLeft = Static.MOVE_DONE_BY_PHONE
             field[i-1][j].moveRight = Static.MOVE_DONE_BY_PHONE
         }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i-1][j]
+
+        return pointsAfterMove
     }
 
-    fun moveUpLeft(myTurn: Boolean){
+    fun moveUpLeft(myTurn: Boolean):PointsAfterMove{
+        val pointsAfterMove = PointsAfterMove()
         val ball = findBall()
         val i = ball.x
         val j = ball.y
@@ -212,6 +248,10 @@ class GameField {
                         field[i][j].moveUpLeft = Static.MOVE_DONE_BY_PHONE
                         field[i-1][j-1].moveDownRight = Static.MOVE_DONE_BY_PHONE
                     }
+        pointsAfterMove.beforeMovePoint = field[i][j]
+        pointsAfterMove.afterMovePoint = field[i-1][j-1]
+
+        return pointsAfterMove
     }
 
     fun checkIfStuckAndNextMove(direction:Int):StuckAndNextMove{
@@ -340,6 +380,10 @@ class GameField {
         }
             return Point(-1, -1)
 
+    }
+
+    fun getPoint(i:Int,j:Int):PointOnField{
+        return field[i][j]
     }
 
 

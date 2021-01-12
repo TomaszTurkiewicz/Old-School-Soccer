@@ -7,22 +7,33 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.classes.*
+import com.tt.oldschoolsoccer.database.PointOnField
+import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import kotlinx.android.synthetic.main.activity_single_game_match_easy.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 
-class SingleGameMatchEasy : AppCompatActivity() {
+class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     var screenUnit:Int=0
     var field = GameField()
     var nextMovePhone:Boolean=false
 
+
+
     private val gameLoopHandler = Handler()
+    private val startGameHandler = Handler()
     var loggedInStatus = LoggedInStatus()
+    var fieldReady = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +42,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         makeUI()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(this)
 
+        disableButtons()
         gameLogic()
 
 
@@ -41,20 +53,83 @@ class SingleGameMatchEasy : AppCompatActivity() {
     private fun gameLogic() {
         field.generate(Static.EASY)
 
-        // todo savedGame from firebase
-            displayBall()
+        // if logged in
+        if(loggedInStatus.loggedIn) {
+            //check if game is saved for user
+            val savedGame = Functions.readEasyGameFromSharedPreferences(this, loggedInStatus.userid)
+            // if is saved - read from database
+            if (savedGame) {
+                launch {
+                    applicationContext?.let {
+                        val list = PointOnFieldEasyDatabase(it).getPointOnFiledDao().getAllPointsOnField()
 
+                        for (item in list) {
+                            val i = item.position % 9
+                            val j = item.position / 9
+
+                            field.field[i][j] = item
+                        }
+                    }
+
+                    fieldReady = true
+
+                }
+
+            }
+            //if is not saved update counter, shared preferences and database
+            else {
+
+
+                Functions.saveEasyGameToSharedPreferences(this, true, loggedInStatus.userid)
+
+                updateUserCounters(1,0,0,0)
+
+                launch {
+                    for (i in 0..8) {
+                        for (j in 0..12) {
+                            val item = field.getPoint(i, j)
+                            applicationContext?.let {
+                                PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(item)
+                            }
+                        }
+                    }
+
+                    fieldReady = true
+                }
+            }
+
+        }
+
+        //if not logged in
+        else{
+            fieldReady = true
+
+        }
+        displayBall()
     }
 
     override fun onResume() {
         super.onResume()
 
-        gameLoop().run()
+        startGame().run()
     }
 
     override fun onPause() {
         super.onPause()
         gameLoopHandler.removeCallbacksAndMessages(null)
+    }
+
+    private fun startGame():Runnable = Runnable {
+        if(fieldReady){
+
+            startGameHandler.removeCallbacksAndMessages(null)
+            updateMoves()
+            updateButtons()
+            displayBall()
+            gameLoop().run()
+        }else{
+            startGameHandler.postDelayed(startGame(),1000)
+        }
     }
 
     private fun gameLoop():Runnable = Runnable {
@@ -92,10 +167,22 @@ class SingleGameMatchEasy : AppCompatActivity() {
         val win3 = Point(5,0)
         when(ball){
             lost1,lost2,lost3 -> {
+                if(loggedInStatus.loggedIn) {
+
+                    updateUserCounters(0,0,0,1)
+
+                    clearDatabaseAndSharedPreferences()
+                }
                 lostAnimation()
                 return true
             }
             win1, win2, win3 -> {
+                if(loggedInStatus.loggedIn) {
+
+                    updateUserCounters(0,1,0,0)
+
+                    clearDatabaseAndSharedPreferences()
+                }
                 winAnimation()
                 return true
             }
@@ -158,7 +245,13 @@ class SingleGameMatchEasy : AppCompatActivity() {
                                     if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        finish()
+                                        if(loggedInStatus.loggedIn) {
+
+                                            updateUserCounters(0,0,1,0)
+
+                                            clearDatabaseAndSharedPreferences()
+                                        }
+                                        tieAnimation()
                                     }
                                 }
                             }
@@ -167,6 +260,13 @@ class SingleGameMatchEasy : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun tieAnimation() {
+
+        win.text = "TIE"
+        win.setTextColor(ContextCompat.getColor(this,R.color.test))
+
     }
 
     private fun moveDownPhone(ball:Point) {
@@ -194,7 +294,13 @@ class SingleGameMatchEasy : AppCompatActivity() {
                                     if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        finish()
+                                        if(loggedInStatus.loggedIn) {
+
+                                            updateUserCounters(0,0,1,0)
+
+                                            clearDatabaseAndSharedPreferences()
+                                        }
+                                        tieAnimation()
                                     }
                                 }
                             }
@@ -231,7 +337,14 @@ class SingleGameMatchEasy : AppCompatActivity() {
                                     if(field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y],Static.UP)){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        finish()
+                                        if(loggedInStatus.loggedIn) {
+
+                                            updateUserCounters(0,0,1,0)
+
+                                            clearDatabaseAndSharedPreferences()
+                                        }
+                                        tieAnimation()
+
                                     }
                                 }
                             }
@@ -242,11 +355,26 @@ class SingleGameMatchEasy : AppCompatActivity() {
         }
     }
 
-    private fun phoneMove(direction: Int, move: Unit){
-        move
+    private fun phoneMove(direction: Int, move: PointsAfterMove){
+        val pointsAfterMove = move
         //todo save move
         val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
+
+
+        if(loggedInStatus.loggedIn) {
+            launch {
+                applicationContext?.let {
+                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
+                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+
+
+                }
+            }
+        }
+
+
         nextMovePhone=stuckAndMovePhone.nextMove
+
     }
 
     private fun displayBall() {
@@ -283,7 +411,7 @@ class SingleGameMatchEasy : AppCompatActivity() {
         }
 
         easyMoveDownButton.setOnClickListener {
-            afterPress(Static.DOWN,field.moveDown(true))
+              afterPress(Static.DOWN,field.moveDown(true))
         }
 
         easyMoveDownLeftButton.setOnClickListener {
@@ -299,14 +427,27 @@ class SingleGameMatchEasy : AppCompatActivity() {
         }
     }
 
-    private fun afterPress(direction: Int, move: Unit){
-        move
-// todo save move
+    private fun afterPress(direction: Int, move: PointsAfterMove){
+        val pointsAfterMove = move
+
+        if(loggedInStatus.loggedIn){
+        launch {
+            applicationContext?.let {
+                PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
+                PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+
+            }
+        }
+        }
         displayBall()
         updateMoves()
         updateButtons()
         val endGame = checkWin()
         if (endGame) {
+            if(loggedInStatus.loggedIn) {
+
+                clearDatabaseAndSharedPreferences()
+            }
             gameLoopHandler.removeCallbacksAndMessages(null)
             disableButtons()
         } else {
@@ -314,11 +455,22 @@ class SingleGameMatchEasy : AppCompatActivity() {
         }
     }
 
+    private fun clearDatabaseAndSharedPreferences() {
+        Functions.saveEasyGameToSharedPreferences(this,false,loggedInStatus.userid)
+    }
+
     private fun checkNextMove(direction:Int) {
         val nextMove = field.checkIfStuckAndNextMove(direction)
         if(nextMove.stuck){
+
             gameLoopHandler.removeCallbacksAndMessages(this)
-            finish()
+            if(loggedInStatus.loggedIn) {
+
+                updateUserCounters(0, 0, 1, 0)
+                clearDatabaseAndSharedPreferences()
+
+            }
+            tieAnimation()
         }
         if(nextMove.nextMove){
             updateButtons()
@@ -472,6 +624,24 @@ class SingleGameMatchEasy : AppCompatActivity() {
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
             }
         }
+    }
+
+
+    /**
+     *  1) read user statistics from shared preferences
+     *  2) add one of counters
+     *  3) save back to shared preferences
+     *  4) update user statistics in Firebase
+     */
+    private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int){
+        val user = Functions.readUserFromSharedPreferences(this,loggedInStatus.userid)
+        user.easyGame.numberOfGames+=numbersOfGames
+        user.easyGame.win+=win
+        user.easyGame.tie+=tie
+        user.easyGame.lose+=lose
+        Functions.saveUserToSharedPreferences(this,user)
+        val dbRef = Firebase.database.getReference("User").child(loggedInStatus.userid)
+        dbRef.setValue(user)
     }
 
 

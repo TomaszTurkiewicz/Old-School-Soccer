@@ -10,9 +10,11 @@ import androidx.room.RoomDatabase
         entities = [PointOnField::class],
         version = 1
 )
-abstract class PointOnFieldEasyDatabase : RoomDatabase() {
+abstract class PointOnFieldEasyDatabase () : RoomDatabase() {
 
     abstract fun getPointOnFiledDao() : PointOnFieldDao
+
+
 
     companion object{
 
@@ -25,12 +27,19 @@ abstract class PointOnFieldEasyDatabase : RoomDatabase() {
             }
         }
 
-
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
                 context.applicationContext,
                 PointOnFieldEasyDatabase::class.java,
                 "easydatabase"
         ).build()
 
+        }
+
+
+
     }
-}
+
+
+// todo insert data to database
+// todo update database
+// todo read database
