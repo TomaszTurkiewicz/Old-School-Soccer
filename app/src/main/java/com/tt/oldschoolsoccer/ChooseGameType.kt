@@ -12,6 +12,13 @@ import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_choose_game_type.*
 import kotlinx.android.synthetic.main.activity_main.*
 
+
+/**
+ * activity for choosing game type
+ * single player
+ * multi player
+ * league
+ */
 class ChooseGameType : AppCompatActivity() {
 
     private var screenHeight=0

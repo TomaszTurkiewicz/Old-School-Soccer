@@ -26,9 +26,6 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     var screenUnit:Int=0
     var field = GameField()
     var nextMovePhone:Boolean=false
-
-
-
     private val gameLoopHandler = Handler()
     private val startGameHandler = Handler()
     var loggedInStatus = LoggedInStatus()
@@ -41,16 +38,20 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
         setContentView(R.layout.activity_single_game_match_easy)
         makeUI()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(this)
-
         disableButtons()
-        gameLogic()
-
-
+        createField()
 
     }
 
 
-    private fun gameLogic() {
+    /**
+     * create field (field.generate)
+     * check if logged in
+     * if not - set ready
+     * if yes - read from database if there is game saved and then set ready
+     * update also game counter if logged in and new game
+     */
+    private fun createField() {
         field.generate(Static.EASY)
 
         // if logged in
@@ -110,7 +111,6 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
 
     override fun onResume() {
         super.onResume()
-
         startGame().run()
     }
 
@@ -119,6 +119,10 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
         gameLoopHandler.removeCallbacksAndMessages(null)
     }
 
+
+    /**
+     * when field is ready start game loop
+     */
     private fun startGame():Runnable = Runnable {
         if(fieldReady){
 
@@ -132,26 +136,28 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
         }
     }
 
+    /**
+     * game loop
+     * switching between my move and phone move
+     */
     private fun gameLoop():Runnable = Runnable {
         if(field.myMove){
             gameLoopHandler.removeCallbacksAndMessages(null)
             updateButtons()
         }
         else{
-
             makeMovePhone()
             displayBall()
             updateMoves()
             val endGame = checkWin()
-
             if(endGame){
                 gameLoopHandler.removeCallbacksAndMessages(null)
             }
             else{
-            if(!nextMovePhone){
-                field.myMove = true
-            }
-            gameLoopHandler.postDelayed(gameLoop(),1000)
+                if(!nextMovePhone){
+                 field.myMove = true
+                }
+                gameLoopHandler.postDelayed(gameLoop(),1000)
             }
 
         }
@@ -369,15 +375,10 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
                 applicationContext?.let {
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
-
-
                 }
             }
         }
-
-
         nextMovePhone=stuckAndMovePhone.nextMove
-
     }
 
     private fun displayBall() {
@@ -386,7 +387,9 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
     }
 
 
-
+    /**
+     * make UI background, view sizes, constraints, drawable and onClickListeners
+     */
     private fun makeUI() {
         screenUnit= Functions.readScreenUnit(this)
         makeBackgroundGrid()
@@ -486,6 +489,9 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
 
     }
 
+    /**
+     * disable all 8 buttons (moving directions)
+     */
     private fun disableButtons() {
         easyMoveUpButton.visibility=View.GONE
         easyMoveUpRightButton.visibility=View.GONE
@@ -615,6 +621,9 @@ class SingleGameMatchEasy : AppCompatActivityCoroutine() {
                 Shader.TileMode.REPEAT,screenUnit)
     }
 
+    /**
+     * make full screen without navigation bar
+     */
     private fun fullScreen() {
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE

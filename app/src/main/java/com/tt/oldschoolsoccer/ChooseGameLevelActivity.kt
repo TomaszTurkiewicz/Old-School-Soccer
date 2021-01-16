@@ -14,6 +14,10 @@ import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.activity_choose_game_level.*
 
+
+/**
+ * choosing game level (easy, normal, hard)
+ */
 class ChooseGameLevelActivity : AppCompatActivity() {
     var screenUnit:Int=0
     var buttonsWidth=0
