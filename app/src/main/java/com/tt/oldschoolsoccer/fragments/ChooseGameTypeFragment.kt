@@ -17,7 +17,7 @@ import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
-class ChooseGameType : Fragment() {
+class ChooseGameTypeFragment : Fragment() {
 
     private var screenUnit:Int=0
     private var buttonsHeight=0
@@ -39,7 +39,20 @@ class ChooseGameType : Fragment() {
 
         makeUI(rootView)
 
+        setOnClickListeners(rootView)
+
         return rootView
+    }
+
+    private fun setOnClickListeners(rootView: View) {
+        rootView.fragment_choose_game_type_single_player_btn.setOnClickListener {
+            goToSinglePlayerChooseGameLevelFragment()
+        }
+
+    }
+
+    private fun goToSinglePlayerChooseGameLevelFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,SinglePlayerChooseGameLevelFragment()).commit()
     }
 
     private fun makeUI(rootView: View) {

@@ -297,7 +297,7 @@ class MainFragment : FragmentCoroutine() {
 
 
     private fun goToChooseGameTypeFragment() {
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,ChooseGameType()).commit()
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,ChooseGameTypeFragment()).commit()
     }
 
     companion object{

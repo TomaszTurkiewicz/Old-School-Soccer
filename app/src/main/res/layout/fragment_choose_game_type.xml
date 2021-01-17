@@ -5,7 +5,7 @@
     android:id="@+id/fragment_choose_game_type_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ChooseGameType">
+    tools:context=".fragments.ChooseGameTypeFragment">
 
     <TextView
         android:id="@+id/fragment_choose_game_type_single_player_btn"
