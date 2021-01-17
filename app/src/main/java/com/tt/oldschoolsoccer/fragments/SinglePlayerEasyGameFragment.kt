@@ -57,21 +57,31 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     override fun onResume() {
         super.onResume()
+        /**
+         * start game
+         */
         startGame().run()
     }
 
     override fun onPause() {
         super.onPause()
+        /**
+         * stop every runnable just in case
+         */
         gameLoopHandler.removeCallbacksAndMessages(null)
+        startGameHandler.removeCallbacksAndMessages(null)
     }
 
+    /**
+     * check if field is ready?
+     * not - wait 1 second check again
+     * yes - disable this runnable, update UI and start game loop
+     */
     private fun startGame():Runnable = Runnable {
         if(fieldReady){
-
             startGameHandler.removeCallbacksAndMessages(null)
-            updateMoves()
+            updateField()
             updateButtons()
-            displayBall()
             gameLoop().run()
         }else{
             startGameHandler.postDelayed(startGame(),1000)
@@ -130,6 +140,13 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * updating user statistics after:
+     * - new game
+     * - win
+     * - lose
+     * - tie
+     */
     private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int){
         val user = Functions.readUserFromSharedPreferences(requireContext(),loggedInStatus.userid)
         user.easyGame.numberOfGames+=numbersOfGames
@@ -185,6 +202,9 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * function after press any of direction buttons (player move)
+     */
     private fun afterPress(direction: Int, move: PointsAfterMove) {
         val pointsAfterMove = move
         if(loggedInStatus.loggedIn){
@@ -196,27 +216,25 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             }
         }
         updateField()
-        updateButtons()
+        disableButtons()
         val endGame = checkWin()
         if (endGame) {
             if(loggedInStatus.loggedIn) {
                 clearDatabaseAndSharedPreferences()
             }
             gameLoopHandler.removeCallbacksAndMessages(null)
-            disableButtons()
         } else {
             checkNextMove(direction)
         }
     }
 
+    /**
+     * checking if next move is available
+     */
     private fun checkNextMove(direction: Int) {
         val nextMove = field.checkIfStuckAndNextMove(direction)
         if(nextMove.stuck){
             gameLoopHandler.removeCallbacksAndMessages(this)
-            if(loggedInStatus.loggedIn) {
-                updateUserCounters(0, 0, 1, 0)
-                clearDatabaseAndSharedPreferences()
-            }
             tieAnimation()
         }
         if(nextMove.nextMove){
@@ -228,6 +246,9 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * loop for my move and phone move
+     */
     private fun gameLoop():Runnable = Runnable {
         if(field.myMove){
             gameLoopHandler.removeCallbacksAndMessages(null)
@@ -235,8 +256,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
         else{
             makeMovePhone()
-            displayBall()
-            updateMoves()
+            updateField()
             val endGame = checkWin()
             if(endGame){
                 gameLoopHandler.removeCallbacksAndMessages(null)
@@ -251,8 +271,10 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * phone move (different moves according to where ball is at this time)
+     */
     private fun makeMovePhone() {
-
         val ball = field.findBall()
         when (ball.x) {
             //todo change -1 to error
@@ -264,12 +286,14 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * making phone move
+     * update two points in database if logged in (before and after move)
+     * checking if phone has next move
+     */
     private fun phoneMove(direction: Int, move: PointsAfterMove){
         val pointsAfterMove = move
-
         val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
-
-
         if(loggedInStatus.loggedIn) {
             launch {
                 requireContext()?.let {
@@ -307,12 +331,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                                     if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        if(loggedInStatus.loggedIn) {
 
-                                            updateUserCounters(0,0,1,0)
-
-                                            clearDatabaseAndSharedPreferences()
-                                        }
                                         tieAnimation()
                                     }
                                 }
@@ -350,12 +369,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                                     if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        if(loggedInStatus.loggedIn) {
 
-                                            updateUserCounters(0,0,1,0)
-
-                                            clearDatabaseAndSharedPreferences()
-                                        }
                                         tieAnimation()
 
                                     }
@@ -394,12 +408,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                                     if(availableMoves.up){
                                         phoneMove(Static.UP,field.moveUp(false))
                                     }else{
-                                        if(loggedInStatus.loggedIn) {
 
-                                            updateUserCounters(0,0,1,0)
-
-                                            clearDatabaseAndSharedPreferences()
-                                        }
                                         tieAnimation()
                                     }
                                 }
@@ -412,6 +421,10 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     }
 
     private fun tieAnimation() {
+        if(loggedInStatus.loggedIn) {
+            updateUserCounters(0,0,1,0)
+            clearDatabaseAndSharedPreferences()
+        }
         rootView.fragment_single_player_easy_game_win.text = "TIE"
         rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.test))
     }
@@ -420,6 +433,9 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         Functions.saveEasyGameToSharedPreferences(requireContext(),false,loggedInStatus.userid)
     }
 
+    /**
+     * checking for winning and losing
+     */
     private fun checkWin(): Boolean {
         val ball = field.findBall()
         val lost1 = Point(3,12)
@@ -430,18 +446,12 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         val win3 = Point(5,0)
         when(ball){
             lost1,lost2,lost3 -> {
-                if(loggedInStatus.loggedIn) {
-                    updateUserCounters(0,0,0,1)
-                    clearDatabaseAndSharedPreferences()
-                }
+
                 lostAnimation()
                 return true
             }
             win1, win2, win3 -> {
-                if(loggedInStatus.loggedIn) {
-                    updateUserCounters(0,1,0,0)
-                    clearDatabaseAndSharedPreferences()
-                }
+
                 winAnimation()
                 return true
             }
@@ -450,11 +460,19 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     }
 
     private fun winAnimation() {
+        if(loggedInStatus.loggedIn) {
+            updateUserCounters(0,1,0,0)
+            clearDatabaseAndSharedPreferences()
+        }
         rootView.fragment_single_player_easy_game_win.text = "WIN"
         rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.win))
     }
 
     private fun lostAnimation() {
+        if(loggedInStatus.loggedIn) {
+            updateUserCounters(0,0,0,1)
+            clearDatabaseAndSharedPreferences()
+        }
         rootView.fragment_single_player_easy_game_win.text = "LOST"
         rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.lost))
     }
@@ -599,7 +617,6 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
 }
 /*
-todo przenieść update statystyk to animations functions
 todo lost animation
 todo win animation
 todo stuck animation
