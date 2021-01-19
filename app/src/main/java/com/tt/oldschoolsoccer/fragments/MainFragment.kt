@@ -1,5 +1,6 @@
 package com.tt.oldschoolsoccer.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Shader
 import android.os.Bundle
@@ -28,6 +29,8 @@ import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
+import com.tt.oldschoolsoccer.database.UserDB
+import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_main.view.*
@@ -70,16 +73,16 @@ class MainFragment : FragmentCoroutine() {
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_main,container,false)
 
-        makeUI(rootView!!)
+        makeUI()
 
-        setOnClickListeners(rootView)
+        setOnClickListeners()
 
         updateLoginUI()
 
         return rootView
     }
 
-    private fun setOnClickListeners(rootView: View?) {
+    private fun setOnClickListeners() {
 
         rootView!!.fragment_main_choose_game_type_button.setOnClickListener {
             goToChooseGameTypeFragment()
@@ -94,7 +97,14 @@ class MainFragment : FragmentCoroutine() {
             }
         }
 
+        rootView!!.fragment_main_statistics_button.setOnClickListener {
+            goToStatisticFragment()
+        }
 
+    }
+
+    private fun goToStatisticFragment(){
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,StatisticsFragment()).commit()
     }
 
     private fun signIn(){
@@ -125,36 +135,131 @@ class MainFragment : FragmentCoroutine() {
         val credential = GoogleAuthProvider.getCredential(idToken,null)
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity()){ task ->
+
+                    /**
+                     * user has been logged in
+                     */
                     if(task.isSuccessful){
                         val user = Firebase.auth.currentUser
                         if(user!=null){
                             Functions.saveLoggedStateToSharedPreferences(requireContext(),LoggedInStatus(true,user.uid))
-                            checkUserInDataBase(user)
-                            val databaseCreated = Functions.isRoomDatabaseCreatedFromSharedPreferences(requireContext(),user.uid)
-                            if(!databaseCreated){
-                                val field = GameField()
-                                field.generate(Static.EASY)
-                                launch {
-                                    for(i in 0..8){
-                                        for(j in 0..12){
-                                            val item = field.getPoint(i,j)
-                                            requireContext()?.let{
-                                                PointOnFieldEasyDatabase(it).getPointOnFiledDao().addPointOnField(item)
-                                            }
-                                        }
+
+                            // check if database is created
+
+                            launch {
+                                requireContext()?.let {
+                                    val userDB = UserDBDatabase(it).getUserDBDao().getUser(user!!.uid)
+                                    if(userDB==null){
+                                        createDB(it,user)
+                                        Toast.makeText(requireContext(), "CREATING DATABASE", Toast.LENGTH_SHORT).show()
                                     }
-                                    Toast.makeText(requireContext(),"DATABASE CREATED", Toast.LENGTH_LONG).show()
-                                    Functions.databaseCreatedToSharedPreferences(requireContext(),true,user.uid)
+                                    else{
+                                        synchronizeUserDB(it,userDB)
+                                        Toast.makeText(requireContext(), "CHECKING USER", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
-                            }else{
-                                Toast.makeText(requireContext(),"DATABASE ALREADY EXISTS", Toast.LENGTH_LONG).show()
                             }
                         }
-                    }else{
                         updateLoginUI()
+                    }else{
+
                         Functions.saveLoggedStateToSharedPreferences(requireContext(),LoggedInStatus())
+                        updateLoginUI()
                     }
                 }
+
+    }
+
+    private fun synchronizeUserDB(it: Context, userDB: UserDB) {
+
+        val normalUser = User().userFromDB(userDB)
+        val dbRef = Firebase.database.getReference("User").child(userDB.id)
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()){
+                    // doesn't exist - create record in database
+                    dbRef.setValue(normalUser)
+                }
+                else{
+
+                    val fUser = snapshot.getValue(User::class.java)
+
+                    if(fUser!=null){
+
+                        if(normalUser.easyGame.numberOfGames<fUser.easyGame.numberOfGames){
+                            normalUser.easyGame = fUser.easyGame
+                        }
+                        if(normalUser.normalGame.numberOfGames<fUser.normalGame.numberOfGames){
+                            normalUser.normalGame = fUser.normalGame
+                        }
+                        if(normalUser.hardGame.numberOfGames<fUser.hardGame.numberOfGames){
+                            normalUser.hardGame = fUser.hardGame
+                        }
+                        if(normalUser.multiGame.numberOfGames<fUser.multiGame.numberOfGames){
+                            normalUser.multiGame = fUser.multiGame
+                        }
+                        dbRef.setValue(normalUser)
+
+                        launch {
+                            requireContext()?.let {
+                                UserDBDatabase(it).getUserDBDao().updateUserInDB(UserDB().dbUser(normalUser))
+                            }
+                        }
+
+                        Functions.saveLoggedStateToSharedPreferences(requireContext(), loggedInStatus = LoggedInStatus(true,userDB.id))
+                        updateLoginUI()
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // do nothing
+            }
+        })
+
+
+
+
+
+
+
+
+    }
+
+    private suspend fun createDB(it: Context, user: FirebaseUser) {
+        val userFb = createUserStatistics(it,user)
+        createUserEasyField(it)
+
+
+        createUserInFirebase(userFb)
+
+    }
+
+    private fun createUserInFirebase(userFb: User) {
+        val dbRef = Firebase.database.getReference("User").child(userFb.id)
+        dbRef.setValue(userFb)
+
+    }
+
+    private suspend fun createUserEasyField(it: Context) {
+        val field = GameField()
+        field.generate(Static.EASY)
+        for(i in 0..8){
+            for(j in 0..12){
+                val item = field.getPoint(i,j)
+                PointOnFieldEasyDatabase(it).getPointOnFiledDao().addPointOnField(item)
+            }
+        }
+    }
+
+    private suspend fun createUserStatistics(it: Context, user: FirebaseUser):User {
+        val userFb = User()
+        userFb.id = user.uid
+
+        UserDBDatabase(it).getUserDBDao().addUser(UserDB().dbUser(userFb))
+
+        return userFb
 
     }
 
@@ -166,69 +271,21 @@ class MainFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
             rootView!!.fragment_main_user_name.visibility = View.VISIBLE
-            val tUser = Functions.readUserFromSharedPreferences(requireContext(),loggedInStatus.userid)
-            rootView!!.fragment_main_user_name.text = tUser.userName
+
+//            val tUser = Functions.readUserFromSharedPreferences(requireContext(),loggedInStatus.userid)
+
+//            rootView!!.fragment_main_user_name.text = tUser.userName
+            rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE
         }else {
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_grey)
             rootView!!.fragment_main_user_name.visibility = View.GONE
+            rootView!!.fragment_main_statistics_button.visibility = View.GONE
         }
     }
 
     /**
      * check user in database and synchronize with shared preferences
      */
-    private fun checkUserInDataBase(user: FirebaseUser) {
-        val dbRef = Firebase.database.getReference("User").child(user.uid)
-        dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(!snapshot.exists()){
-                    // doesn't exist - create record in database
-                    val userDB = User(id = user.uid)
-                    dbRef.setValue(userDB)
-                    checkUserInDataBase(user)
-                }
-                else{
-                    // exists so check if sharedpreferences are the same as firebase
-                    val fUser = snapshot.getValue(User::class.java)
-                    val shpUser = Functions.readUserFromSharedPreferences(requireContext(),user.uid)
-                    if(fUser!=null){
-                        if(!fUser.userName.equals(shpUser.userName)){
-                            shpUser.userName = fUser.userName
-                        }
-                        if(shpUser.easyGame.numberOfGames>fUser.easyGame.numberOfGames){
-                            fUser.easyGame = shpUser.easyGame
-                        }else{
-                            shpUser.easyGame = fUser.easyGame
-                        }
-                        if(shpUser.normalGame.numberOfGames>fUser.normalGame.numberOfGames){
-                            fUser.normalGame = shpUser.normalGame
-                        }else{
-                            shpUser.normalGame = fUser.normalGame
-                        }
-                        if(shpUser.hardGame.numberOfGames>fUser.hardGame.numberOfGames){
-                            fUser.hardGame = shpUser.hardGame
-                        }else{
-                            shpUser.hardGame = fUser.hardGame
-                        }
-                        if(shpUser.multiGame.numberOfGames>fUser.multiGame.numberOfGames){
-                            fUser.multiGame = shpUser.multiGame
-                        }else{
-                            shpUser.multiGame = fUser.multiGame
-                        }
-                        dbRef.setValue(fUser)
-                        Functions.saveUserToSharedPreferences(requireContext(),shpUser)
-                        Functions.saveLoggedStateToSharedPreferences(requireContext(), loggedInStatus = LoggedInStatus(true,user.uid))
-                        updateLoginUI()
-                    }
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // do nothing
-            }
-        })
-    }
 
     private fun signOut(){
         auth.signOut()
@@ -236,11 +293,11 @@ class MainFragment : FragmentCoroutine() {
         updateLoginUI()
     }
 
-    private fun makeUI(fragmentView:View){
-        setBackgroundGrid(fragmentView)
+    private fun makeUI(){
+        setBackgroundGrid()
         setSizes()
-        setButtonsUI(fragmentView)
-        makeConstraintLayout(fragmentView)
+        setButtonsUI()
+        makeConstraintLayout()
 
     }
 
@@ -259,39 +316,45 @@ class MainFragment : FragmentCoroutine() {
     /**
      * set all views in proper positions on the screen
      */
-    private fun makeConstraintLayout(view: View){
+    private fun makeConstraintLayout(){
         val set = ConstraintSet()
-        set.clone(view.fragment_main_layout)
+        set.clone(rootView!!.fragment_main_layout)
 
-        set.connect(view.fragment_main_login_logout_Image_view.id, ConstraintSet.TOP, view.fragment_main_layout.id, ConstraintSet.TOP, screenUnit)
-        set.connect(view.fragment_main_login_logout_Image_view.id, ConstraintSet.RIGHT, view.fragment_main_layout.id, ConstraintSet.RIGHT, screenUnit)
+        set.connect(rootView!!.fragment_main_login_logout_Image_view.id, ConstraintSet.TOP, rootView!!.fragment_main_layout.id, ConstraintSet.TOP, screenUnit)
+        set.connect(rootView!!.fragment_main_login_logout_Image_view.id, ConstraintSet.RIGHT, rootView!!.fragment_main_layout.id, ConstraintSet.RIGHT, screenUnit)
 
-        set.connect(view.fragment_main_user_name.id, ConstraintSet.TOP,view.fragment_main_layout.id, ConstraintSet.TOP,screenUnit)
-        set.connect(view.fragment_main_user_name.id, ConstraintSet.LEFT,view.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView!!.fragment_main_user_name.id, ConstraintSet.TOP,rootView!!.fragment_main_layout.id, ConstraintSet.TOP,screenUnit)
+        set.connect(rootView!!.fragment_main_user_name.id, ConstraintSet.LEFT,rootView!!.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.connect(view.fragment_main_choose_game_type_button.id, ConstraintSet.TOP,view.fragment_main_login_logout_Image_view.id, ConstraintSet.BOTTOM,marginTop)
-        set.connect(view.fragment_main_choose_game_type_button.id, ConstraintSet.LEFT,view.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView!!.fragment_main_choose_game_type_button.id, ConstraintSet.TOP,rootView!!.fragment_main_login_logout_Image_view.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView!!.fragment_main_choose_game_type_button.id, ConstraintSet.LEFT,rootView!!.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.applyTo(view.fragment_main_layout)
+        set.connect(rootView!!.fragment_main_statistics_button.id, ConstraintSet.TOP,rootView!!.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView!!.fragment_main_statistics_button.id, ConstraintSet.LEFT,rootView!!.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+
+        set.applyTo(rootView!!.fragment_main_layout)
     }
 
     /**
      * buttons sizes, text sizes
      */
-    private fun setButtonsUI(view: View){
-        view.fragment_main_login_logout_Image_view.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
-        view.fragment_main_user_name.layoutParams = ConstraintLayout.LayoutParams(12*screenUnit,3*screenUnit)
-        view.fragment_main_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        view.fragment_main_choose_game_type_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        view.fragment_main_choose_game_type_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        view.fragment_main_choose_game_type_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+    private fun setButtonsUI(){
+        rootView!!.fragment_main_login_logout_Image_view.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView!!.fragment_main_user_name.layoutParams = ConstraintLayout.LayoutParams(12*screenUnit,3*screenUnit)
+        rootView!!.fragment_main_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView!!.fragment_main_choose_game_type_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView!!.fragment_main_choose_game_type_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView!!.fragment_main_choose_game_type_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView!!.fragment_main_statistics_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView!!.fragment_main_statistics_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView!!.fragment_main_statistics_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     /**
      * making background grid
      */
-    private fun setBackgroundGrid(view: View){
-        view.fragment_main_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
+    private fun setBackgroundGrid(){
+        rootView!!.fragment_main_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
             Shader.TileMode.REPEAT,screenUnit)
     }
 

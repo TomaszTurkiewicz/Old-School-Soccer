@@ -148,14 +148,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      * - tie
      */
     private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int){
-        val user = Functions.readUserFromSharedPreferences(requireContext(),loggedInStatus.userid)
-        user.easyGame.numberOfGames+=numbersOfGames
-        user.easyGame.win+=win
-        user.easyGame.tie+=tie
-        user.easyGame.lose+=lose
-        Functions.saveUserToSharedPreferences(requireContext(),user)
-        val dbRef = Firebase.database.getReference("User").child(loggedInStatus.userid)
-        dbRef.setValue(user)
+
     }
 
     private fun makeUI(rootView: View) {

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_statistics_layout"
+    tools:context=".fragments.StatisticsFragment">
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_name_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="user name"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_name_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="user_name"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_id_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="user id"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_id_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="user_id"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="EASY No GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="easy games"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="EASY WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="easy wins"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="EASY LOSE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="easy lose"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="EASY TIE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_easy_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="easy tie"/>
+
+
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="NORMAL No GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="normal games"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="NORMAL WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="normal wins"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="NORMAL LOSE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="normal lose"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="NORMAL TIE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_normal_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="normal tie"/>
+
+
+
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="HARD No GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="hard games"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="HARD WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="hard wins"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="HARD LOSE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="hard lose"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="HARD TIE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_hard_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="hard tie"/>
+
+
+
+
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="MULTI No GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="multi games"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="MULTI WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="multi wins"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="MULTI LOSE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="multi lose"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="MULTI TIE"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_user_multi_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="multi tie"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_records_in_db_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="COUNTER"/>
+
+    <TextView
+        android:id="@+id/fragment_statistics_records_in_db_real"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="zero"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

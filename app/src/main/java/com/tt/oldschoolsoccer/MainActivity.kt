@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
 /*
 * todo FRAGMENTS
-* todo przerobić sharedpreferences na database room - user statistics and saved games
+* todo przerobić sharedpreferences na database room - user statistics and saved games and creating database for user
 * todo connect to firebase (picture, user, login)
 * todo add admob
 * todo activity multiplayer
