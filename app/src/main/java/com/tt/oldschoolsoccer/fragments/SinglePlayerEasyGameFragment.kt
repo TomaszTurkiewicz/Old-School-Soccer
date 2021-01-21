@@ -15,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
+import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.BallDrawable
 import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
 import com.tt.oldschoolsoccer.drawable.MovesEasyDrawable
@@ -148,7 +149,24 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      * - tie
      */
     private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int){
+        launch {
+            requireContext()?.let {
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                user.easyGameNumberOfGame+=numbersOfGames
+                user.easyGameWin+=win
+                user.easyGameLose+=lose
+                user.easyGameTie+=tie
 
+
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+                val userFb = User().userFromDB(user)
+
+
+
+                val dbRef = Firebase.database.getReference("User").child(userFb.id)
+                dbRef.setValue(userFb)
+            }
+        }
     }
 
     private fun makeUI(rootView: View) {
