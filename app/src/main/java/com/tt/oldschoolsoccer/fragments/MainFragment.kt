@@ -148,10 +148,11 @@ class MainFragment : FragmentCoroutine() {
 
                             launch {
                                 requireContext()?.let {
-                                    val userDB = UserDBDatabase(it).getUserDBDao().getUser(user!!.uid)
+                                    val userDB = UserDBDatabase(it).getUserDBDao().getUser(user.uid)
                                     if(userDB==null){
                                         createDB(it,user)
                                         Toast.makeText(requireContext(), "CREATING DATABASE", Toast.LENGTH_SHORT).show()
+
                                     }
                                     else{
                                         synchronizeUserDB(it,userDB)
@@ -159,6 +160,7 @@ class MainFragment : FragmentCoroutine() {
                                     }
                                 }
                             }
+
                         }
                         updateLoginUI()
                     }else{
@@ -198,6 +200,8 @@ class MainFragment : FragmentCoroutine() {
                         if(normalUser.multiGame.numberOfGames<fUser.multiGame.numberOfGames){
                             normalUser.multiGame = fUser.multiGame
                         }
+
+                        //todo when different user names ask user which one to choose and then save
                         dbRef.setValue(normalUser)
 
                         launch {
@@ -227,18 +231,14 @@ class MainFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * creating new database for user ROOM and firebase
+     *
+     */
     private suspend fun createDB(it: Context, user: FirebaseUser) {
         val userFb = createUserStatistics(it,user)
         createUserEasyField(it)
-
-
-        createUserInFirebase(userFb)
-
-    }
-
-    private fun createUserInFirebase(userFb: User) {
-        val dbRef = Firebase.database.getReference("User").child(userFb.id)
-        dbRef.setValue(userFb)
+        //todo normal, hard, and multiplayer database
 
     }
 
@@ -256,8 +256,12 @@ class MainFragment : FragmentCoroutine() {
     private suspend fun createUserStatistics(it: Context, user: FirebaseUser):User {
         val userFb = User()
         userFb.id = user.uid
+        val userDB = UserDB().dbUser(userFb)
 
+        val a = 10
         UserDBDatabase(it).getUserDBDao().addUser(UserDB().dbUser(userFb))
+
+        synchronizeUserDB(it,userDB)
 
         return userFb
 

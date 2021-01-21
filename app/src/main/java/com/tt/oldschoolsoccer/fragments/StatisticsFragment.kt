@@ -39,12 +39,6 @@ class StatisticsFragment : FragmentCoroutine() {
 
         makeUI()
 
-
-
-
-
-
-
         return rootView
     }
 
@@ -60,6 +54,26 @@ class StatisticsFragment : FragmentCoroutine() {
 
                 rootView!!.fragment_statistics_user_id_user.text = user.id
                 rootView!!.fragment_statistics_user_name_user.text = user.userName
+
+                rootView!!.fragment_statistics_user_easy_number_of_games_user.text = user.easyGame.numberOfGames.toString()
+                rootView!!.fragment_statistics_user_easy_win_user.text = user.easyGame.win.toString()
+                rootView!!.fragment_statistics_user_easy_lose_user.text = user.easyGame.lose.toString()
+                rootView!!.fragment_statistics_user_easy_tie_user.text = user.easyGame.tie.toString()
+
+                rootView!!.fragment_statistics_user_normal_number_of_games_user.text = user.normalGame.numberOfGames.toString()
+                rootView!!.fragment_statistics_user_normal_win_user.text = user.normalGame.win.toString()
+                rootView!!.fragment_statistics_user_normal_lose_user.text = user.normalGame.lose.toString()
+                rootView!!.fragment_statistics_user_normal_tie_user.text = user.normalGame.tie.toString()
+
+                rootView!!.fragment_statistics_user_hard_number_of_games_user.text = user.hardGame.numberOfGames.toString()
+                rootView!!.fragment_statistics_user_hard_win_user.text = user.hardGame.win.toString()
+                rootView!!.fragment_statistics_user_hard_lose_user.text = user.hardGame.lose.toString()
+                rootView!!.fragment_statistics_user_hard_tie_user.text = user.hardGame.tie.toString()
+
+                rootView!!.fragment_statistics_user_multi_number_of_games_user.text = user.multiGame.numberOfGames.toString()
+                rootView!!.fragment_statistics_user_multi_win_user.text = user.multiGame.win.toString()
+                rootView!!.fragment_statistics_user_multi_lose_user.text = user.multiGame.lose.toString()
+                rootView!!.fragment_statistics_user_multi_tie_user.text = user.multiGame.tie.toString()
             }
         }
     }
