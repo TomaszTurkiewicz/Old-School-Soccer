@@ -56,6 +56,10 @@ class MainFragment : FragmentCoroutine() {
          */
         screenUnit = Functions.readScreenUnit(requireContext())
 
+
+        /**
+         * for login and google firebase authentication
+         */
         auth = Firebase.auth
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -130,6 +134,9 @@ class MainFragment : FragmentCoroutine() {
 
     /**
      * sign in to firebase auth
+     * check if user db created
+     * check if user in firebase created
+     * compare db with firebase
      */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken,null)
@@ -172,6 +179,10 @@ class MainFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * compare db room with firebase database
+     * make them the same
+     */
     private fun synchronizeUserDB(it: Context, userDB: UserDB) {
 
         val normalUser = User().userFromDB(userDB)
@@ -213,22 +224,12 @@ class MainFragment : FragmentCoroutine() {
                         Functions.saveLoggedStateToSharedPreferences(requireContext(), loggedInStatus = LoggedInStatus(true,userDB.id))
                         updateLoginUI()
                     }
-
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 // do nothing
             }
         })
-
-
-
-
-
-
-
-
     }
 
     /**
@@ -242,6 +243,9 @@ class MainFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * create easy field in db room
+     */
     private suspend fun createUserEasyField(it: Context) {
         val field = GameField()
         field.generate(Static.EASY)
@@ -253,12 +257,15 @@ class MainFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * create user db room
+     * and synchronize with firebase database
+     */
     private suspend fun createUserStatistics(it: Context, user: FirebaseUser):User {
         val userFb = User()
         userFb.id = user.uid
         val userDB = UserDB().dbUser(userFb)
 
-        val a = 10
         UserDBDatabase(it).getUserDBDao().addUser(UserDB().dbUser(userFb))
 
         synchronizeUserDB(it,userDB)
@@ -275,10 +282,12 @@ class MainFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
             rootView!!.fragment_main_user_name.visibility = View.VISIBLE
-
-//            val tUser = Functions.readUserFromSharedPreferences(requireContext(),loggedInStatus.userid)
-
-//            rootView!!.fragment_main_user_name.text = tUser.userName
+            launch {
+                requireContext()?.let {
+                    val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                    rootView!!.fragment_main_user_name.text = userTemp.name
+                }
+            }
             rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE
         }else {
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_grey)

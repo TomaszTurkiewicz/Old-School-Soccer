@@ -52,7 +52,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
          * create UI
          */
         rootView = inflater.inflate(R.layout.fragment_single_player_easy_game, container, false)
-        makeUI(rootView)
+        makeUI()
         return rootView
     }
 
@@ -157,27 +157,24 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                 user.easyGameLose+=lose
                 user.easyGameTie+=tie
 
-
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+
                 val userFb = User().userFromDB(user)
-
-
-
                 val dbRef = Firebase.database.getReference("User").child(userFb.id)
                 dbRef.setValue(userFb)
             }
         }
     }
 
-    private fun makeUI(rootView: View) {
-        makeBackgroundGrid(rootView)
-        setViewSizes(rootView)
-        setConstraintLayout(rootView)
-        setDrawable(rootView)
-        setOnClickListeners(rootView)
+    private fun makeUI() {
+        makeBackgroundGrid()
+        setViewSizes()
+        setConstraintLayout()
+        setDrawable()
+        setOnClickListeners()
     }
 
-    private fun setOnClickListeners(rootView: View) {
+    private fun setOnClickListeners() {
 
         rootView.fragment_single_player_easy_game_move_up_btn.setOnClickListener {
             afterPress(Static.UP,field.moveUp(true))
@@ -554,7 +551,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     }
 
-    private fun setDrawable(rootView: View) {
+    private fun setDrawable() {
         rootView.fragment_single_player_easy_game_field.background = FieldEasyDrawable(requireContext(), screenUnit.toDouble())
         rootView.fragment_single_player_easy_game_move_down_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down)
         rootView.fragment_single_player_easy_game_move_down_right_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down_right)
@@ -566,7 +563,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_easy_game_move_down_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down_left)
     }
 
-    private fun setConstraintLayout(rootView: View) {
+    private fun setConstraintLayout() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_single_player_easy_game_layout)
 
@@ -606,7 +603,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         set.applyTo(rootView.fragment_single_player_easy_game_layout)
     }
 
-    private fun setViewSizes(rootView: View) {
+    private fun setViewSizes() {
         rootView.fragment_single_player_easy_game_field.layoutParams = ConstraintLayout.LayoutParams(10*screenUnit,14*screenUnit)
         rootView.fragment_single_player_easy_game_ball.layoutParams = ConstraintLayout.LayoutParams(10*screenUnit,14*screenUnit)
         rootView.fragment_single_player_easy_game_move_up_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
@@ -620,7 +617,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_easy_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
     }
 
-    private fun makeBackgroundGrid(rootView: View) {
+    private fun makeBackgroundGrid() {
         rootView.fragment_single_player_easy_game_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
                 Shader.TileMode.REPEAT,screenUnit)
 

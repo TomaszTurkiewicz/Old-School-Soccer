@@ -83,30 +83,5 @@ class Functions {
             }
             return savedGame
         }
-
-        /**
-         * reads if Room database was already created
-         */
-        fun isRoomDatabaseCreatedFromSharedPreferences(context: Context?,userId: String):Boolean{
-            var created = false
-            if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("ROOM", Context.MODE_PRIVATE)
-                created = sharedPreferences.getBoolean(userId,false)
-            }
-            return created
-        }
-
-        /**
-         * saves info that Room database was already created
-         */
-        fun databaseCreatedToSharedPreferences(context: Context?, created: Boolean, userId: String){
-            if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("ROOM",Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putBoolean(userId,created)
-                editor.apply()
-            }
-        }
-
 }
 }
