@@ -1,4 +1,4 @@
-package com.tt.oldschoolsoccer.fragments
+package com.tt.oldschoolsoccer.fragments.singlePlayer
 
 import android.graphics.Shader
 import android.os.Bundle
@@ -14,7 +14,6 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
-import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_choose_game_level.view.*
 
 
@@ -49,10 +48,18 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
         rootView.fragment_single_player_choose_game_level_easy_btn.setOnClickListener {
             goToSinglePlayerEasyGame()
         }
+
+        rootView.fragment_single_player_choose_game_level_normal_btn.setOnClickListener {
+            goToSinglePlayerNormalGame()
+        }
+    }
+
+    private fun goToSinglePlayerNormalGame() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerNormalGameFragment()).commit()
     }
 
     private fun goToSinglePlayerEasyGame() {
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,SinglePlayerEasyGameFragment()).commit()
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerEasyGameFragment()).commit()
     }
 
     private fun makeUI(rootView: View){
@@ -73,6 +80,14 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
             ConstraintSet.LEFT,rootView.fragment_single_player_choose_game_level_layout.id,
             ConstraintSet.LEFT,marginLeft)
 
+        set.connect(rootView.fragment_single_player_choose_game_level_normal_btn.id,
+            ConstraintSet.TOP,rootView.fragment_single_player_choose_game_level_easy_btn.id,
+            ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_single_player_choose_game_level_normal_btn.id,
+            ConstraintSet.LEFT,rootView.fragment_single_player_choose_game_level_layout.id,
+            ConstraintSet.LEFT,marginLeft)
+
+
         set.applyTo(rootView.fragment_single_player_choose_game_level_layout)
 
     }
@@ -81,6 +96,10 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
         rootView.fragment_single_player_choose_game_level_easy_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_single_player_choose_game_level_easy_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_single_player_choose_game_level_easy_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        rootView.fragment_single_player_choose_game_level_normal_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_single_player_choose_game_level_normal_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_choose_game_level_normal_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     private fun setSizes(){

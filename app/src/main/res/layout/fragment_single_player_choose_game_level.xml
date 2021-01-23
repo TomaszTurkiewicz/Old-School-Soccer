@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_single_player_choose_game_level_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.SinglePlayerChooseGameLevelFragment">
+    tools:context=".fragments.singlePlayer.SinglePlayerChooseGameLevelFragment">
 
     <TextView
         android:id="@+id/fragment_single_player_choose_game_level_easy_btn"
@@ -14,6 +14,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/easy"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/fragment_single_player_choose_game_level_normal_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/normal"
         android:textAlignment="center"
         android:gravity="center"
         android:clickable="true"

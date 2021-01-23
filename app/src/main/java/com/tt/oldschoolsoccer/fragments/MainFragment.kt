@@ -29,6 +29,7 @@ import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
+import com.tt.oldschoolsoccer.database.PointOnFieldNormalDatabase
 import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
@@ -159,17 +160,19 @@ class MainFragment : FragmentCoroutine() {
                                     if(userDB==null){
                                         createDB(it,user)
                                         Toast.makeText(requireContext(), "CREATING DATABASE", Toast.LENGTH_SHORT).show()
+                                        updateLoginUI()
 
                                     }
                                     else{
                                         synchronizeUserDB(it,userDB)
                                         Toast.makeText(requireContext(), "CHECKING USER", Toast.LENGTH_SHORT).show()
+
                                     }
                                 }
                             }
 
                         }
-                        updateLoginUI()
+
                     }else{
 
                         Functions.saveLoggedStateToSharedPreferences(requireContext(),LoggedInStatus())
@@ -239,8 +242,20 @@ class MainFragment : FragmentCoroutine() {
     private suspend fun createDB(it: Context, user: FirebaseUser) {
         val userFb = createUserStatistics(it,user)
         createUserEasyField(it)
-        //todo normal, hard, and multiplayer database
+        createUserNormalField(it)
+        //todo hard, and multiplayer database
 
+    }
+
+    private suspend fun createUserNormalField(it: Context) {
+        val field = GameField()
+        field.generate(Static.NORMAL)
+        for(i in 0..8){
+            for(j in 0..12){
+                val item = field.getPoint(i,j)
+                PointOnFieldNormalDatabase(it).getPointOnFieldDao().addPointOnField(item)
+            }
+        }
     }
 
     /**
@@ -252,7 +267,7 @@ class MainFragment : FragmentCoroutine() {
         for(i in 0..8){
             for(j in 0..12){
                 val item = field.getPoint(i,j)
-                PointOnFieldEasyDatabase(it).getPointOnFiledDao().addPointOnField(item)
+                PointOnFieldEasyDatabase(it).getPointOnFieldDao().addPointOnField(item)
             }
         }
     }
@@ -283,7 +298,7 @@ class MainFragment : FragmentCoroutine() {
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
             rootView!!.fragment_main_user_name.visibility = View.VISIBLE
             launch {
-                requireContext()?.let {
+                requireContext().let {
                     val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
                     rootView!!.fragment_main_user_name.text = userTemp.name
                 }

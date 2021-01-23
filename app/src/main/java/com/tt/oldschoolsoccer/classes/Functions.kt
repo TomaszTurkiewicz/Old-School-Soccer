@@ -83,5 +83,26 @@ class Functions {
             }
             return savedGame
         }
-}
+
+        fun saveNormalGameToSharedPreferences(context: Context?, saved: Boolean,userId: String){
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,saved)
+                editor.apply()
+            }
+        }
+
+
+        fun readNormalGameFromSharedPreferences(context: Context?, userId: String): Boolean {
+
+            var savedGame = false
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME", Context.MODE_PRIVATE)
+                savedGame = sharedPreferences.getBoolean(userId,false)
+            }
+            return savedGame
+
+        }
+    }
 }

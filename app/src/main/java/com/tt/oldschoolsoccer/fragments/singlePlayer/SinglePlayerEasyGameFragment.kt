@@ -1,4 +1,4 @@
-package com.tt.oldschoolsoccer.fragments
+package com.tt.oldschoolsoccer.fragments.singlePlayer
 
 import android.graphics.Point
 import android.graphics.Shader
@@ -109,7 +109,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             if (savedGame) {
                 launch {
                     requireContext().let {
-                        val list = PointOnFieldEasyDatabase(it).getPointOnFiledDao().getAllPointsOnField()
+                        val list = PointOnFieldEasyDatabase(it).getPointOnFieldDao().getAllPointsOnField()
                         for (item in list) {
                             val i = item.position % 9
                             val j = item.position / 9
@@ -128,7 +128,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                         for (j in 0..12) {
                             val item = field.getPoint(i, j)
                             requireContext().let {
-                                PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(item)
+                                PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(item)
                             }
                         }
                     }
@@ -220,8 +220,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             launch {
                 requireContext().let {
-                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
-                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+                    PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
+                    PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.afterMovePoint)
                 }
             }
         }
@@ -458,8 +458,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn) {
             launch {
                 requireContext().let {
-                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
-                    PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+                    PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
+                    PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.afterMovePoint)
                 }
             }
         }

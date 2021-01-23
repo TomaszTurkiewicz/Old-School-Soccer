@@ -1,27 +1,21 @@
 package com.tt.oldschoolsoccer.database
 
 import android.content.Context
-import androidx.lifecycle.ProcessLifecycleOwnerInitializer
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-/**
- * database
- */
 @Database(
-        entities = [PointOnField::class],
-        version = 1
+    entities = [PointOnField::class],
+    version = 1
 )
-abstract class PointOnFieldEasyDatabase () : RoomDatabase() {
+abstract class PointOnFieldNormalDatabase () : RoomDatabase() {
 
     abstract fun getPointOnFieldDao() : PointOnFieldDao
 
-
-
     companion object{
 
-        @Volatile private var instance : PointOnFieldEasyDatabase ?= null
+        @Volatile private var instance : PointOnFieldNormalDatabase ?= null
         private val LOCK = Any()
 
         operator fun invoke(context: Context) = instance ?: synchronized(LOCK){
@@ -31,14 +25,12 @@ abstract class PointOnFieldEasyDatabase () : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
-                context.applicationContext,
-                PointOnFieldEasyDatabase::class.java,
-                "easydatabase"
+            context.applicationContext,
+            PointOnFieldNormalDatabase::class.java,
+            "normaldatabase"
         ).build()
-
-        }
-
 
 
     }
 
+}

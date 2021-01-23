@@ -14,8 +14,8 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerChooseGameLevelFragment
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
-import kotlinx.android.synthetic.main.fragment_main.view.*
 
 class ChooseGameTypeFragment : Fragment() {
 
@@ -52,7 +52,7 @@ class ChooseGameTypeFragment : Fragment() {
     }
 
     private fun goToSinglePlayerChooseGameLevelFragment() {
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,SinglePlayerChooseGameLevelFragment()).commit()
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerChooseGameLevelFragment()).commit()
     }
 
     private fun makeUI(rootView: View) {
