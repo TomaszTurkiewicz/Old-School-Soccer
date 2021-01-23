@@ -22,6 +22,7 @@ import com.tt.oldschoolsoccer.drawable.MovesEasyDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
@@ -47,7 +48,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         /**
          * create UI
          */
@@ -107,7 +108,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             // if is saved - read from database
             if (savedGame) {
                 launch {
-                    requireContext()?.let {
+                    requireContext().let {
                         val list = PointOnFieldEasyDatabase(it).getPointOnFiledDao().getAllPointsOnField()
                         for (item in list) {
                             val i = item.position % 9
@@ -126,7 +127,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                     for (i in 0..8) {
                         for (j in 0..12) {
                             val item = field.getPoint(i, j)
-                            requireContext()?.let {
+                            requireContext().let {
                                 PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(item)
                             }
                         }
@@ -150,7 +151,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      */
     private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int){
         launch {
-            requireContext()?.let {
+            requireContext().let {
                 val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
                 user.easyGameNumberOfGame+=numbersOfGames
                 user.easyGameWin+=win
@@ -172,6 +173,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         setConstraintLayout()
         setDrawable()
         setOnClickListeners()
+        disableButtons()
     }
 
     private fun setOnClickListeners() {
@@ -217,7 +219,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         val pointsAfterMove = move
         if(loggedInStatus.loggedIn){
             launch {
-                requireContext()?.let {
+                requireContext().let {
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
                 }
@@ -284,15 +286,166 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      */
     private fun makeMovePhone() {
         val ball = field.findBall()
-        when (ball.x) {
-            //todo change -1 to error
-            -1 -> tieAnimation()
-            0, 1, 2 -> moveDownRightPhone(ball)
-            3, 4, 5 -> moveDownPhone(ball)
-            6, 7, 8 -> moveDownLeftPhone(ball)
+
+        if(ball.x == -1){
+            //todo change to error
+            tieAnimation()
+        }
+        else{
+            movePhone(ball)
+        }
+
+
+
+
+    }
+
+    /**
+     * move next move phone (shortest distance to score)
+     */
+    private fun movePhone(ball: Point){
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+
+        val nextMove = NextMove()
+
+        if(availableMoves.down){
+            val newBall = Point(ball.x,ball.y+1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.DOWN,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.DOWN,distanceToScore)
+            }
+        }
+
+        if(availableMoves.downRight){
+            val newBall = Point(ball.x+1,ball.y+1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.downLeft){
+            val newBall = Point(ball.x-1,ball.y+1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.right){
+            val newBall = Point(ball.x+1,ball.y)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.RIGHT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.RIGHT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.left){
+            val newBall = Point(ball.x-1,ball.y)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.LEFT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.LEFT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.upRight){
+            val newBall = Point(ball.x+1,ball.y-1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.upLeft){
+            val newBall = Point(ball.x-1,ball.y-1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
+            }
+        }
+
+        if(availableMoves.up){
+            val newBall = Point(ball.x,ball.y-1)
+            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
+            if(nextMove.isNextMoveSet()){
+                val oldDistance = nextMove.getDistance()
+                if(oldDistance!! >distanceToScore){
+                    nextMove.setNextMove(Static.UP,distanceToScore)
+                }
+            }
+            else{
+                nextMove.setNextMove(Static.UP,distanceToScore)
+            }
+        }
+
+        if(nextMove.isNextMoveSet()){
+            makeMove(nextMove.getDirection())
+        }
+        else{
+            tieAnimation()
         }
 
     }
+
+    /**
+     * making move phone in given direction
+     */
+    private fun makeMove(direction: Int?) {
+        when(direction){
+            Static.UP -> phoneMove(Static.UP,field.moveUp(false))
+            Static.UP_RIGHT -> phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
+            Static.RIGHT -> phoneMove(Static.RIGHT,field.moveRight(false))
+            Static.DOWN_RIGHT -> phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
+            Static.DOWN -> phoneMove(Static.DOWN,field.moveDown(false))
+            Static.DOWN_LEFT -> phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
+            Static.LEFT -> phoneMove(Static.LEFT,field.moveLeft(false))
+            Static.UP_LEFT -> phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
+        }
+
+    }
+
 
     /**
      * making phone move
@@ -304,128 +457,13 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
         if(loggedInStatus.loggedIn) {
             launch {
-                requireContext()?.let {
+                requireContext().let {
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
                     PointOnFieldEasyDatabase(it).getPointOnFiledDao().updatePointOnField(pointsAfterMove.afterMovePoint)
                 }
             }
         }
         nextMovePhone=stuckAndMovePhone.nextMove
-    }
-
-    private fun moveDownLeftPhone(ball: Point) {
-        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-        if(availableMoves.downLeft){
-            phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
-        }else{
-            if(availableMoves.down){
-                phoneMove(Static.DOWN,field.moveDown(false))
-            }else{
-                if(availableMoves.downRight){
-                    phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
-                }else{
-                    if(availableMoves.left){
-                        phoneMove(Static.LEFT,field.moveLeft(false))
-                    }else{
-                        if(availableMoves.right){
-                            phoneMove(Static.RIGHT,field.moveRight(false))
-                        }else{
-                            if(availableMoves.upLeft){
-                                phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
-                            }else{
-                                if(availableMoves.upRight){
-                                    phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
-                                }else{
-                                    if(availableMoves.up){
-                                        phoneMove(Static.UP,field.moveUp(false))
-                                    }else{
-
-                                        tieAnimation()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun moveDownRightPhone(ball: Point) {
-        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-        if(availableMoves.downRight){
-            phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
-        }else{
-            if(availableMoves.down){
-                phoneMove(Static.DOWN,field.moveDown(false))
-            }else{
-                if(availableMoves.downLeft){
-                    phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
-                }else{
-                    if(availableMoves.right){
-                        phoneMove(Static.RIGHT,field.moveRight(false))
-                    }else{
-                        if(availableMoves.left){
-                            phoneMove(Static.LEFT,field.moveLeft(false))
-                        }else{
-                            if(availableMoves.upRight){
-                                phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
-                            }else{
-                                if(availableMoves.upLeft){
-                                    phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
-                                }else{
-                                    if(availableMoves.up){
-                                        phoneMove(Static.UP,field.moveUp(false))
-                                    }else{
-
-                                        tieAnimation()
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun moveDownPhone(ball: Point) {
-        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-        if(availableMoves.down){
-            phoneMove(Static.DOWN,field.moveDown(false))
-        }else{
-            if(availableMoves.downLeft){
-                phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
-            }else{
-                if(availableMoves.downRight){
-                    phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
-                }else{
-                    if(availableMoves.left){
-                        phoneMove(Static.LEFT,field.moveLeft(false))
-                    }else{
-                        if(availableMoves.right){
-                            phoneMove(Static.RIGHT,field.moveRight(false))
-                        }else{
-                            if(availableMoves.upLeft){
-                                phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
-                            }else{
-                                if(availableMoves.upRight){
-                                    phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
-                                }else{
-                                    if(availableMoves.up){
-                                        phoneMove(Static.UP,field.moveUp(false))
-                                    }else{
-
-                                        tieAnimation()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun tieAnimation() {
