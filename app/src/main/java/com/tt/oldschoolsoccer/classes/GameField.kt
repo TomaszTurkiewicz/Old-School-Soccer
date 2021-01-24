@@ -311,37 +311,33 @@ class GameField {
         var downLeft=true
         var left=true
         var upLeft=true
-        //todo poprawić tę loopę using findball
-        for(i in 0..8){
-            for(j in 0..12){
-                if(field[i][j].ball){
-                    if(field[i][j].moveUp==Static.MOVE_AVAILABLE){
+        val ball = findBall()
+
+                    if(field[ball.x][ball.y].moveUp==Static.MOVE_AVAILABLE){
                         up = false
                     }
-                    if(field[i][j].moveUpRight==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveUpRight==Static.MOVE_AVAILABLE){
                         upRight= false
                     }
-                    if(field[i][j].moveRight==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveRight==Static.MOVE_AVAILABLE){
                         right=false
                     }
-                    if(field[i][j].moveDownRight==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveDownRight==Static.MOVE_AVAILABLE){
                         downRight=false
                     }
-                    if(field[i][j].moveDown==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveDown==Static.MOVE_AVAILABLE){
                         down=false
                     }
-                    if(field[i][j].moveDownLeft==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveDownLeft==Static.MOVE_AVAILABLE){
                         downLeft=false
                     }
-                    if(field[i][j].moveLeft==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveLeft==Static.MOVE_AVAILABLE){
                         left=false
                     }
-                    if(field[i][j].moveUpLeft==Static.MOVE_AVAILABLE){
+                    if(field[ball.x][ball.y].moveUpLeft==Static.MOVE_AVAILABLE){
                         upLeft=false
                     }
-                }
-            }
-        }
+
 
         /**
          * if everything is true - stuck is true
@@ -437,7 +433,158 @@ class GameField {
         return field[i][j]
     }
 
+    fun testMoveUp(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUp=Static.MOVE_CHECKING
+        field[ball.x][ball.y-1].moveDown=Static.MOVE_CHECKING
+        return Point(ball.x,ball.y-1)
+    }
 
+    fun testMoveUpRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUpRight=Static.MOVE_CHECKING
+        field[ball.x+1][ball.y-1].moveDownLeft=Static.MOVE_CHECKING
+        return Point(ball.x+1,ball.y-1)
+    }
+
+    fun testMoveRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveRight=Static.MOVE_CHECKING
+        field[ball.x+1][ball.y].moveLeft=Static.MOVE_CHECKING
+        return Point(ball.x+1,ball.y)
+    }
+
+    fun testMoveDownRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDownRight=Static.MOVE_CHECKING
+        field[ball.x+1][ball.y+1].moveUpLeft=Static.MOVE_CHECKING
+        return Point(ball.x+1,ball.y+1)
+    }
+
+    fun testMoveDown(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDown=Static.MOVE_CHECKING
+        field[ball.x][ball.y+1].moveUp=Static.MOVE_CHECKING
+        return Point(ball.x,ball.y+1)
+    }
+
+    fun testMoveDownLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDownLeft=Static.MOVE_CHECKING
+        field[ball.x-1][ball.y+1].moveUpRight=Static.MOVE_CHECKING
+        return Point(ball.x-1,ball.y+1)
+    }
+
+    fun testMoveLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveLeft=Static.MOVE_CHECKING
+        field[ball.x-1][ball.y].moveRight=Static.MOVE_CHECKING
+        return Point(ball.x-1,ball.y)
+    }
+
+    fun testMoveUpLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUpLeft=Static.MOVE_CHECKING
+        field[ball.x-1][ball.y-1].moveDownRight=Static.MOVE_CHECKING
+        return Point(ball.x-1,ball.y-1)
+    }
+
+    fun bestMoveUp(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUp=Static.MOVE_BEST
+        field[ball.x][ball.y-1].moveDown=Static.MOVE_BEST
+        return Point(ball.x,ball.y-1)
+    }
+
+    fun bestMoveUpRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUpRight=Static.MOVE_BEST
+        field[ball.x+1][ball.y-1].moveDownLeft=Static.MOVE_BEST
+        return Point(ball.x+1,ball.y-1)
+    }
+
+    fun bestMoveRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveRight=Static.MOVE_BEST
+        field[ball.x+1][ball.y].moveLeft=Static.MOVE_BEST
+        return Point(ball.x+1,ball.y)
+    }
+
+    fun bestMoveDownRight(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDownRight=Static.MOVE_BEST
+        field[ball.x+1][ball.y+1].moveUpLeft=Static.MOVE_BEST
+        return Point(ball.x+1,ball.y+1)
+    }
+
+    fun bestMoveDown(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDown=Static.MOVE_BEST
+        field[ball.x][ball.y+1].moveUp=Static.MOVE_BEST
+        return Point(ball.x,ball.y+1)
+    }
+
+    fun bestMoveDownLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveDownLeft=Static.MOVE_BEST
+        field[ball.x-1][ball.y+1].moveUpRight=Static.MOVE_BEST
+        return Point(ball.x-1,ball.y+1)
+    }
+
+    fun bestMoveLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveLeft=Static.MOVE_BEST
+        field[ball.x-1][ball.y].moveRight=Static.MOVE_BEST
+        return Point(ball.x-1,ball.y)
+    }
+
+    fun bestMoveUpLeft(field:Array<Array<PointOnField>>,ball:Point):Point{
+        field[ball.x][ball.y].moveUpLeft=Static.MOVE_BEST
+        field[ball.x-1][ball.y-1].moveDownRight=Static.MOVE_BEST
+        return Point(ball.x-1,ball.y-1)
+    }
+
+
+    fun checkBestMove():List<Int>{
+        val ball = findBall()
+        var ballTmp = ball
+        val bestMove = BestMove()
+
+        val node = MoveNode(null,null,this.field,ballTmp,bestMove)
+
+        val moveList = arrayListOf<Int>()
+
+        findBestMoves(moveList,bestMove.moveNode)
+
+        return moveList
+    }
+
+    private fun findBestMoves(moveList: MutableList<Int>,node: MoveNode){
+        if(node.parentNode!=null){
+            moveList.add(0,node.comingDirection!!)
+            findBestMoves(moveList,node.parentNode!!)
+        }else{
+            return
+        }
+    }
+
+    fun clearTestMoves() {
+        for (i in 0..8) {
+            for (j in 0..12) {
+                if(field[i][j].moveUp==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveUp = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveUpRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveUpRight = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveRight = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveDownRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveDownRight = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveDown==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveDown = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveDownLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveDownLeft = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveLeft = Static.MOVE_AVAILABLE
+                }
+                if(field[i][j].moveUpLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                    field[i][j].moveUpLeft = Static.MOVE_AVAILABLE
+                }
+
+            }
+        }
+
+    }
 
 
 }

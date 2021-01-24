@@ -108,209 +108,75 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private fun gameLoop(): Runnable = Runnable {
         if(field.myMove){
             gameLoopHandler.removeCallbacksAndMessages(null)
+            field.clearTestMoves()
             updateButtons()
         }
         else{
-            makeMovePhone()
-            updateField()
-            val endGame = checkWin()
-            if(endGame){
-                gameLoopHandler.removeCallbacksAndMessages(null)
-            }
-            else{
-                if(!nextMovePhone){
-                    field.myMove = true
-                }
-                gameLoopHandler.postDelayed(gameLoop(),1000)
-            }
+            gameLoopHandler.removeCallbacksAndMessages(null)
 
-        }
-
-    }
-
-    /**
-     * phone move (different moves according to where ball is at this time)
-     */
-    private fun makeMovePhone() {
-        val ball = field.findBall()
-
-        if(ball.x == -1){
-            //todo change to error
-            tieAnimation()
-        }
-        else{
-            movePhone(ball)
-        }
-
-    }
-
-
-    /**
-     * move next move phone (shortest distance to score)
-     */
-    //todo change it to tree implementation
-    private fun movePhone(ball: Point) {
-
-        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-
-        val nextMove = NextMove()
-
-        if(availableMoves.down){
-            val newBall = Point(ball.x,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN,distanceToScore)
-            }
-        }
-
-        if(availableMoves.downRight){
-            val newBall = Point(ball.x+1,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.downLeft){
-            val newBall = Point(ball.x-1,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.right){
-            val newBall = Point(ball.x+1,ball.y)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.RIGHT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.left){
-            val newBall = Point(ball.x-1,ball.y)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.LEFT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.upRight){
-            val newBall = Point(ball.x+1,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.upLeft){
-            val newBall = Point(ball.x-1,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
-            }
-        }
-
-        if(availableMoves.up){
-            val newBall = Point(ball.x,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP,distanceToScore)
-            }
-        }
-
-        if(nextMove.isNextMoveSet()){
-            makeMove(nextMove.getDirection())
-        }
-        else{
-            tieAnimation()
-        }
-
-    }
-
-    /**
-     * making move phone in given direction
-     */
-    private fun makeMove(direction: Int?) {
-        when(direction){
-            Static.UP -> phoneMove(Static.UP,field.moveUp(false))
-            Static.UP_RIGHT -> phoneMove(Static.UP_RIGHT,field.moveUpRight(false))
-            Static.RIGHT -> phoneMove(Static.RIGHT,field.moveRight(false))
-            Static.DOWN_RIGHT -> phoneMove(Static.DOWN_RIGHT,field.moveDownRight(false))
-            Static.DOWN -> phoneMove(Static.DOWN,field.moveDown(false))
-            Static.DOWN_LEFT -> phoneMove(Static.DOWN_LEFT,field.moveDownLeft(false))
-            Static.LEFT -> phoneMove(Static.LEFT,field.moveLeft(false))
-            Static.UP_LEFT -> phoneMove(Static.UP_LEFT,field.moveUpLeft(false))
-        }
-
-    }
-
-    /**
-     * making phone move
-     * update two points in database if logged in (before and after move)
-     * checking if phone has next move
-     */
-    private fun phoneMove(direction: Int, move: PointsAfterMove) {
-
-        val pointsAfterMove = move
-        val stuckAndMovePhone = field.checkIfStuckAndNextMove(direction)
-        if(loggedInStatus.loggedIn) {
             launch {
-                requireContext().let {
-                    PointOnFieldNormalDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
-                    PointOnFieldNormalDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+                phoneTurn()
+            }
+
+
+
+
+
+        }
+
+    }
+
+    private fun phoneTurn() {
+        val moveList =  field.checkBestMove()
+
+        var tmpBall = field.findBall()
+
+        for(x in moveList){
+            when(x){
+                Static.UP -> {
+                    val newBall = GameField().bestMoveUp(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.UP_RIGHT -> {
+                    val newBall = GameField().bestMoveUpRight(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.UP_LEFT -> {
+                    val newBall = GameField().bestMoveUpLeft(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.LEFT -> {
+                    val newBall = GameField().bestMoveLeft(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.RIGHT -> {
+                    val newBall = GameField().bestMoveRight(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.DOWN_RIGHT -> {
+                    val newBall = GameField().bestMoveDownRight(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.DOWN_LEFT -> {
+                    val newBall = GameField().bestMoveDownLeft(field.field,tmpBall)
+                    tmpBall = newBall
+                }
+                Static.DOWN -> {
+                    val newBall = GameField().bestMoveDown(field.field,tmpBall)
+                    tmpBall = newBall
                 }
             }
         }
-        nextMovePhone=stuckAndMovePhone.nextMove
+
+
+
+        updateMoves()
+
+
+
+
+
+
     }
 
 

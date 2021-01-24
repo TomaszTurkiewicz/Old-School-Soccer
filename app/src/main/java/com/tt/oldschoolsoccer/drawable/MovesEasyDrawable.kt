@@ -79,6 +79,64 @@ class MovesEasyDrawable(private val context: Context, private val field:GameFiel
         }
         canvas.drawPath(path2,paint)
 
+        paint.color = ContextCompat.getColor(context, R.color.test)
+        val path3 = Path()
+        for(i in 0..8) {
+            for (j in 0..12) {
+
+                if (field.field[i][j].moveUp==Static.MOVE_CHECKING) {
+                    path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path3.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveUpRight==Static.MOVE_CHECKING) {
+                    path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path3.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveRight==Static.MOVE_CHECKING) {
+                    path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path3.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveDownRight==Static.MOVE_CHECKING) {
+                    path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path3.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
+                }
+            }
+        }
+        canvas.drawPath(path3,paint)
+
+        paint.color = ContextCompat.getColor(context, R.color.win)
+        paint.strokeWidth = (screenUnit/5).toFloat()
+        val path4 = Path()
+        for(i in 0..8) {
+            for (j in 0..12) {
+
+                if (field.field[i][j].moveUp==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveUpRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveDownRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
+                }
+            }
+        }
+        canvas.drawPath(path4,paint)
+
+
     }
 
     override fun setAlpha(alpha: Int) {

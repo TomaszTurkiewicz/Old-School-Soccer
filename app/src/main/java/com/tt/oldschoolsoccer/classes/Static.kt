@@ -30,6 +30,8 @@ class Static {
         const val MOVE_AVAILABLE = 1
         const val MOVE_DONE_BY_ME = 2
         const val MOVE_DONE_BY_PHONE = 3
+        const val MOVE_CHECKING = 4
+        const val MOVE_BEST = 5
 
     }
 }
