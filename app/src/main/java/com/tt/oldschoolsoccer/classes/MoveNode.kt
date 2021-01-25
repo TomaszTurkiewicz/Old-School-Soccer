@@ -26,7 +26,7 @@ class MoveNode(parentNode: MoveNode?,direction:Int?,field: Array<Array<PointOnFi
 
 
         init {
-                bestMove.updateBestMove(distance,this)
+
 
                 direction?.let { comingDirection=direction }
                 availableMoves = GameField().checkIfMoveInDirectionIsAvailable(field[ball.x][ball.y])
@@ -66,6 +66,9 @@ class MoveNode(parentNode: MoveNode?,direction:Int?,field: Array<Array<PointOnFi
                                 moveUpNode = MoveNode(this,Static.UP,field,tmpBall,bestMove)
                         }
 
+                }
+                else{
+                        bestMove.updateBestMove(distance,this)
                 }
 
 
