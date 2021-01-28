@@ -19,8 +19,8 @@ class GameField {
             field = Array(9) { Array(13) { PointOnField() } }
             for (i in 0..8) {
                 for (j in 0..12) {
-                    field[i][j].x = i + 1
-                    field[i][j].y = j + 1
+                    field[i][j].x = i+1
+                    field[i][j].y = j+1
                     field[i][j].position = 9*j + i
                 }
             }
@@ -527,30 +527,6 @@ class GameField {
         field[ball.x][ball.y].moveUpLeft=Static.MOVE_BEST
         field[ball.x-1][ball.y-1].moveDownRight=Static.MOVE_BEST
         return Point(ball.x-1,ball.y-1)
-    }
-
-
-    fun checkBestMove():List<Int>{
-        val ball = findBall()
-        var ballTmp = ball
-        val bestMove = BestMove()
-
-        val node = MoveNode(null,null,this.field,ballTmp,bestMove)
-
-        val moveList = arrayListOf<Int>()
-
-        findBestMoves(moveList,bestMove.moveNode)
-
-        return moveList
-    }
-
-    private fun findBestMoves(moveList: MutableList<Int>,node: MoveNode){
-        if(node.parentNode!=null){
-            moveList.add(0,node.comingDirection!!)
-            findBestMoves(moveList,node.parentNode!!)
-        }else{
-            return
-        }
     }
 
     fun clearTestMoves() {

@@ -14,6 +14,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
+import com.tt.oldschoolsoccer.database.PointOnField
 import com.tt.oldschoolsoccer.database.PointOnFieldNormalDatabase
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.BallDrawable
@@ -22,6 +23,7 @@ import com.tt.oldschoolsoccer.drawable.MovesEasyDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_single_player_normal_game.view.*
 import kotlinx.coroutines.launch
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 
@@ -113,60 +115,56 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         }
         else{
             gameLoopHandler.removeCallbacksAndMessages(null)
-
             launch {
                 phoneTurn()
             }
-
-
-
-
-
         }
-
     }
 
     private fun phoneTurn() {
-        val moveList =  field.checkBestMove()
 
-        var tmpBall = field.findBall()
+        // todo zrobić na tablicy
+        val bestMoves = checkBestMove(field)
 
-        for(x in moveList){
-            when(x){
+        var ball = field.findBall()
+        for(move in bestMoves){
+            when(move){
                 Static.UP -> {
-                    val newBall = GameField().bestMoveUp(field.field,tmpBall)
-                    tmpBall = newBall
-                }
-                Static.UP_RIGHT -> {
-                    val newBall = GameField().bestMoveUpRight(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveUp(field.field,ball)
+                    ball = newBall
                 }
                 Static.UP_LEFT -> {
-                    val newBall = GameField().bestMoveUpLeft(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveUpLeft(field.field,ball)
+                    ball = newBall
+                }
+                Static.UP_RIGHT -> {
+                    val newBall = field.bestMoveUpRight(field.field,ball)
+                    ball = newBall
                 }
                 Static.LEFT -> {
-                    val newBall = GameField().bestMoveLeft(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveLeft(field.field,ball)
+                    ball = newBall
                 }
                 Static.RIGHT -> {
-                    val newBall = GameField().bestMoveRight(field.field,tmpBall)
-                    tmpBall = newBall
-                }
-                Static.DOWN_RIGHT -> {
-                    val newBall = GameField().bestMoveDownRight(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveRight(field.field,ball)
+                    ball = newBall
                 }
                 Static.DOWN_LEFT -> {
-                    val newBall = GameField().bestMoveDownLeft(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveDownLeft(field.field,ball)
+                    ball = newBall
+                }
+                Static.DOWN_RIGHT -> {
+                    val newBall = field.bestMoveDownRight(field.field,ball)
+                    ball = newBall
                 }
                 Static.DOWN -> {
-                    val newBall = GameField().bestMoveDown(field.field,tmpBall)
-                    tmpBall = newBall
+                    val newBall = field.bestMoveDown(field.field,ball)
+                    ball = newBall
                 }
             }
         }
+
+
 
 
 
@@ -178,6 +176,157 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
 
     }
+
+    private fun checkBestMove(field: GameField):ArrayList<Int> {
+        val bestMoves = ArrayList<Int>()
+        val ball = field.findBall()
+        val pointOnFieldToCheck = PointOnFieldToCheck(null,ball,null)
+        pointOnFieldToCheck.setAvailableMoves(field)
+
+        val list = ArrayList<PointOnFieldToCheck>()
+        list.add(pointOnFieldToCheck)
+
+        var listComplited = false
+        val tmpList = ArrayList<PointOnFieldToCheck>()
+
+        /**
+         * preparing main list of all moves
+         */
+        while(!listComplited){
+
+            /**
+             * przelatuję po liście i dodaje nowe punkty na liście tmp jeżeli punkt z list nie był jeszcze sprawdzony i ma available moves
+             */
+            for(x in list){
+                if(!x.isChecked()){
+                    if(x.isNextMove()) {
+                        if (x.availableMoves.down) {
+                            val newBall = field.testMoveDown(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.DOWN, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.downLeft) {
+                            val newBall = field.testMoveDownLeft(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.DOWN_LEFT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.downRight) {
+                            val newBall = field.testMoveDownRight(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.DOWN_RIGHT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.right) {
+                            val newBall = field.testMoveRight(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.RIGHT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.left) {
+                            val newBall = field.testMoveLeft(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.LEFT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.upRight) {
+                            val newBall = field.testMoveUpRight(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.UP_RIGHT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.upLeft) {
+                            val newBall = field.testMoveUpLeft(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.UP_LEFT, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                        if (x.availableMoves.up) {
+                            val newBall = field.testMoveUp(field.field, x.currentBall)
+                            val pointOnFieldToCheckTmp = PointOnFieldToCheck(Static.UP, newBall,x.currentBall)
+                            pointOnFieldToCheckTmp.setAvailableMoves(field)
+                            tmpList.add(pointOnFieldToCheckTmp)
+                        }
+                    }
+                    x.setChecked()
+                }
+            }
+
+            val tmpListSize = tmpList.size
+
+            /**
+             * sprawdź czy tmplist wogóle powstała
+             */
+            if(tmpListSize==0){
+                listComplited=true
+            }else{
+                for(tmpx in tmpList){
+                    var shouldBeAdded = true
+                    for(x in list){
+                        if((tmpx.currentBall.x==x.currentBall.x)and (tmpx.currentBall.y==x.currentBall.y)){
+                            shouldBeAdded = false
+                        }
+                    }
+                    if(shouldBeAdded){
+                        list.add(tmpx)
+                    }
+                }
+                tmpList.clear()
+            }
+        }
+
+        var distance = 200
+        var point = Point()
+
+        for(x in list){
+            val distancex = (12-x.currentBall.y)+(abs(4-x.currentBall.x))
+            if(distancex == 0){
+                distance = 0
+                point = x.currentBall
+            }
+        }
+
+        if(distance!=0){
+            for(x in list){
+                if(!x.isNextMove()){
+                    val distancex = (12-x.currentBall.y)+(abs(4-x.currentBall.x))
+                    if(distancex<distance){
+                        distance = distancex
+                        point = x.currentBall
+                    }
+                }
+            }
+        }
+
+
+        var loopChecker = true
+
+        while (loopChecker){
+            for(x in list){
+                if(x.currentBall.x == point.x && x.currentBall.y == point.y){
+                    if(x.incomingDirection!=null){
+                     bestMoves.add(x.incomingDirection)
+                        point = x.previousBall!!
+                    }
+                    else{
+                        loopChecker = false
+                    }
+                }
+            }
+        }
+
+
+
+        return bestMoves
+    }
+
+
+
+
+
+
+
 
 
     private fun updateButtons() {
