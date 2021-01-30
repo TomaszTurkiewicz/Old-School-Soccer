@@ -532,28 +532,28 @@ class GameField {
     fun clearTestMoves() {
         for (i in 0..8) {
             for (j in 0..12) {
-                if(field[i][j].moveUp==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveUp==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveUp = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveUpRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveUpRight==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveUpRight = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveRight==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveRight = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveDownRight==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveDownRight==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveDownRight = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveDown==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveDown==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveDown = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveDownLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveDownLeft==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveDownLeft = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveLeft==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveLeft = Static.MOVE_AVAILABLE
                 }
-                if(field[i][j].moveUpLeft==Static.MOVE_CHECKING or (Static.MOVE_BEST)) {
+                if(field[i][j].moveUpLeft==Static.MOVE_CHECKING || field[i][j].moveUp==Static.MOVE_BEST) {
                     field[i][j].moveUpLeft = Static.MOVE_AVAILABLE
                 }
 

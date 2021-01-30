@@ -14,7 +14,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
-import com.tt.oldschoolsoccer.database.PointOnField
 import com.tt.oldschoolsoccer.database.PointOnFieldNormalDatabase
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.BallDrawable
@@ -36,6 +35,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private var fieldReady = false
     private val startGameHandler = Handler()
     private val gameLoopHandler = Handler()
+    private val phoneMoveHandler = Handler()
     private var nextMovePhone:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,9 +108,12 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
      * loop for my move and phone move
      */
     private fun gameLoop(): Runnable = Runnable {
+
+        updateField()
+        
         if(field.myMove){
+
             gameLoopHandler.removeCallbacksAndMessages(null)
-            field.clearTestMoves()
             updateButtons()
         }
         else{
@@ -118,84 +121,141 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
             launch {
                 phoneTurn()
             }
+
         }
     }
 
     private fun phoneTurn() {
 
-        // todo zrobić na tablicy
+        /**
+         * find best route - which is ending closer to the score
+         */
         val bestMoves = checkBestMove(field)
 
-        var ball = field.findBall()
-        for(move in bestMoves){
-            when(move){
-                Static.UP -> {
-                    val newBall = field.bestMoveUp(field.field,ball)
-                    ball = newBall
-                }
-                Static.UP_LEFT -> {
-                    val newBall = field.bestMoveUpLeft(field.field,ball)
-                    ball = newBall
-                }
-                Static.UP_RIGHT -> {
-                    val newBall = field.bestMoveUpRight(field.field,ball)
-                    ball = newBall
-                }
-                Static.LEFT -> {
-                    val newBall = field.bestMoveLeft(field.field,ball)
-                    ball = newBall
-                }
-                Static.RIGHT -> {
-                    val newBall = field.bestMoveRight(field.field,ball)
-                    ball = newBall
-                }
-                Static.DOWN_LEFT -> {
-                    val newBall = field.bestMoveDownLeft(field.field,ball)
-                    ball = newBall
-                }
-                Static.DOWN_RIGHT -> {
-                    val newBall = field.bestMoveDownRight(field.field,ball)
-                    ball = newBall
-                }
-                Static.DOWN -> {
-                    val newBall = field.bestMoveDown(field.field,ball)
-                    ball = newBall
-                }
-            }
-        }
+        /**
+         * make best way green
+         */
+//        var ball = field.findBall()
+//        for(move in bestMoves){
+//            when(move){
+//                Static.UP -> {
+//                    val newBall = field.bestMoveUp(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.UP_LEFT -> {
+//                    val newBall = field.bestMoveUpLeft(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.UP_RIGHT -> {
+//                    val newBall = field.bestMoveUpRight(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.LEFT -> {
+//                    val newBall = field.bestMoveLeft(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.RIGHT -> {
+//                    val newBall = field.bestMoveRight(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.DOWN_LEFT -> {
+//                    val newBall = field.bestMoveDownLeft(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.DOWN_RIGHT -> {
+//                    val newBall = field.bestMoveDownRight(field.field,ball)
+//                    ball = newBall
+//                }
+//                Static.DOWN -> {
+//                    val newBall = field.bestMoveDown(field.field,ball)
+//                    ball = newBall
+//                }
+//            }
+//        }
 
+        val listSize = bestMoves.size
+        val counter = 0
 
-
-
-
-        updateMoves()
-
-
-
-
-
+        phoneMoveRunnable(listSize,counter,bestMoves).run()
 
     }
 
+    private fun phoneMoveRunnable(size:Int,counter:Int,bestMove:ArrayList<Int>):Runnable = Runnable {
+        when (counter) {
+            0 -> {
+                field.clearTestMoves()
+                updateField()
+                phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),1000)
+            }
+            (size+1) -> {
+                phoneMoveHandler.removeCallbacksAndMessages(null)
+
+                updateField()
+                checkWin()
+                field.myMove=true
+                gameLoopHandler.postDelayed(gameLoop(),1000)
+            }
+            else -> {
+                val move = bestMove[counter-1]
+                makeMovePhone(move)
+                updateField()
+                phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),1000)
+            }
+        }
+    }
+
+    private fun makeMovePhone(move: Int) {
+        when(move){
+            Static.UP -> phoneMove(Static.UP,field.moveUp(false))
+            Static.UP_LEFT -> phoneMove(Static.UP,field.moveUpLeft(false))
+            Static.UP_RIGHT -> phoneMove(Static.UP,field.moveUpRight(false))
+            Static.LEFT -> phoneMove(Static.UP,field.moveLeft(false))
+            Static.RIGHT -> phoneMove(Static.UP,field.moveRight(false))
+            Static.DOWN_LEFT -> phoneMove(Static.UP,field.moveDownLeft(false))
+            Static.DOWN_RIGHT -> phoneMove(Static.UP,field.moveDownRight(false))
+            Static.DOWN -> phoneMove(Static.UP,field.moveDown(false))
+        }
+
+    }
+
+    private fun phoneMove(direction: Int, move:PointsAfterMove){
+        val pointsAfterMove = move
+        if(loggedInStatus.loggedIn){
+            launch {
+                requireContext().let {
+                    PointOnFieldNormalDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.beforeMovePoint)
+                    PointOnFieldNormalDatabase(it).getPointOnFieldDao().updatePointOnField(pointsAfterMove.afterMovePoint)
+                }
+            }
+        }
+    }
+
+    /**
+     * return list of moves for best way to score or closer to score
+     */
     private fun checkBestMove(field: GameField):ArrayList<Int> {
         val bestMoves = ArrayList<Int>()
         val ball = field.findBall()
         val pointOnFieldToCheck = PointOnFieldToCheck(null,ball,null)
         pointOnFieldToCheck.setAvailableMoves(field)
-
+        /**
+         * prepare list with first point - starting point
+         */
         val list = ArrayList<PointOnFieldToCheck>()
         list.add(pointOnFieldToCheck)
-
-        var listComplited = false
+        /**
+         * temporary list for storing additional moves
+         */
+        var listCompleted = false
         val tmpList = ArrayList<PointOnFieldToCheck>()
-
         /**
          * preparing main list of all moves
          */
-        while(!listComplited){
-
+        while(!listCompleted){
             /**
-             * przelatuję po liście i dodaje nowe punkty na liście tmp jeżeli punkt z list nie był jeszcze sprawdzony i ma available moves
+             * checking if each element has been already checked
+             * if not checking if additional move can be done from new point
+             * if yes create new points (if move in given direction is possible) and add it to the temporary list
              */
             for(x in list){
                 if(!x.isChecked()){
@@ -252,14 +312,15 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                     x.setChecked()
                 }
             }
-
             val tmpListSize = tmpList.size
-
             /**
-             * sprawdź czy tmplist wogóle powstała
+             * check if temporary list has any elements
+             * if no - terminate while loop
+             * if yes check if any element should be added to main list
+             * clear tmp list
              */
             if(tmpListSize==0){
-                listComplited=true
+                listCompleted=true
             }else{
                 for(tmpx in tmpList){
                     var shouldBeAdded = true
@@ -275,10 +336,13 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 tmpList.clear()
             }
         }
-
+        /**
+         * when main list is ready check distance
+         * check if at any point distance to score equals 0 - goal
+         * if not check point (end point) with smallest distance to score
+         */
         var distance = 200
         var point = Point()
-
         for(x in list){
             val distancex = (12-x.currentBall.y)+(abs(4-x.currentBall.x))
             if(distancex == 0){
@@ -286,7 +350,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 point = x.currentBall
             }
         }
-
         if(distance!=0){
             for(x in list){
                 if(!x.isNextMove()){
@@ -299,14 +362,15 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
             }
         }
 
-
+        /**
+         * create best moves list going from the last point to first one
+         */
         var loopChecker = true
-
         while (loopChecker){
             for(x in list){
                 if(x.currentBall.x == point.x && x.currentBall.y == point.y){
                     if(x.incomingDirection!=null){
-                     bestMoves.add(x.incomingDirection)
+                     bestMoves.add(0, x.incomingDirection)
                         point = x.previousBall!!
                     }
                     else{
@@ -315,8 +379,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 }
             }
         }
-
-
 
         return bestMoves
     }
