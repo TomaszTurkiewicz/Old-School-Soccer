@@ -34,6 +34,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     private val gameLoopHandler = Handler()
     private var nextMovePhone:Boolean=false
     private val startGameHandler = Handler()
+    private val score = Point(4,12)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -300,6 +301,21 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     }
 
+    private fun compareDistance(oldDistance:Point?, newDistance:Point):Boolean{
+        var replace = false
+        if(oldDistance==null){
+            replace = true
+        }else{
+            if(newDistance.y<oldDistance.y){
+                replace = true
+            }
+            else if ((newDistance.y==oldDistance.y)&&(newDistance.x<oldDistance.x)){
+                replace = true
+            }
+        }
+        return replace
+    }
+
     /**
      * move next move phone (shortest distance to score)
      */
@@ -310,113 +326,78 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
         if(availableMoves.down){
             val newBall = Point(ball.x,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN,distanceToScore)
-            }
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+                nextMove.setNextMoveWithDistancePoint(Static.DOWN,distanceToScorePoint)
+
         }
 
         if(availableMoves.downRight){
             val newBall = Point(ball.x+1,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN_RIGHT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.DOWN_RIGHT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.downLeft){
             val newBall = Point(ball.x-1,ball.y+1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.DOWN_LEFT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.DOWN_LEFT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.right){
             val newBall = Point(ball.x+1,ball.y)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.RIGHT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.RIGHT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.left){
             val newBall = Point(ball.x-1,ball.y)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.LEFT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.LEFT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.upRight){
             val newBall = Point(ball.x+1,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP_RIGHT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.UP_RIGHT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.upLeft){
             val newBall = Point(ball.x-1,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP_LEFT,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.UP_LEFT,distanceToScorePoint)
             }
         }
 
         if(availableMoves.up){
             val newBall = Point(ball.x,ball.y-1)
-            val distanceToScore = (12-newBall.y)+(abs(4-newBall.x))
-            if(nextMove.isNextMoveSet()){
-                val oldDistance = nextMove.getDistance()
-                if(oldDistance!! >distanceToScore){
-                    nextMove.setNextMove(Static.UP,distanceToScore)
-                }
-            }
-            else{
-                nextMove.setNextMove(Static.UP,distanceToScore)
+            val distanceToScorePoint = Point(abs(score.x-newBall.x),(score.y-newBall.y))
+            val oldDistanceToScorePoint = nextMove.getDistancePoint()
+            val replace = compareDistance(oldDistanceToScorePoint,distanceToScorePoint)
+            if(replace){
+                nextMove.setNextMoveWithDistancePoint(Static.UP,distanceToScorePoint)
             }
         }
 

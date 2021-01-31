@@ -1,22 +1,28 @@
 package com.tt.oldschoolsoccer.classes
 
-class NextMove(private var direction:Int? = null,
-                private var distance:Int? = null ) {
+import android.graphics.Point
 
-    fun setNextMove(direction: Int,distance: Int){
+class NextMove(private var direction:Int? = null,
+                private var distance:Int? = null,
+                private var distancePoint: Point? = null) {
+
+
+
+    fun setNextMoveWithDistancePoint(direction:Int,distancePoint:Point){
         this.direction = direction
-        this.distance = distance
+        this.distancePoint = distancePoint
     }
 
     fun isNextMoveSet():Boolean{
         return this.direction != null
     }
 
-    fun getDistance():Int?{
-        return this.distance
-    }
 
     fun getDirection():Int?{
         return this.direction
+    }
+
+    fun getDistancePoint():Point?{
+        return this.distancePoint
     }
 }
