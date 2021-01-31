@@ -133,47 +133,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
          */
         val bestMoves = checkBestMove(field)
 
-        /**
-         * make best way green
-         */
-//        var ball = field.findBall()
-//        for(move in bestMoves){
-//            when(move){
-//                Static.UP -> {
-//                    val newBall = field.bestMoveUp(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.UP_LEFT -> {
-//                    val newBall = field.bestMoveUpLeft(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.UP_RIGHT -> {
-//                    val newBall = field.bestMoveUpRight(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.LEFT -> {
-//                    val newBall = field.bestMoveLeft(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.RIGHT -> {
-//                    val newBall = field.bestMoveRight(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.DOWN_LEFT -> {
-//                    val newBall = field.bestMoveDownLeft(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.DOWN_RIGHT -> {
-//                    val newBall = field.bestMoveDownRight(field.field,ball)
-//                    ball = newBall
-//                }
-//                Static.DOWN -> {
-//                    val newBall = field.bestMoveDown(field.field,ball)
-//                    ball = newBall
-//                }
-//            }
-//        }
-
         val listSize = bestMoves.size
         val counter = 0
 
@@ -192,9 +151,11 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 phoneMoveHandler.removeCallbacksAndMessages(null)
 
                 updateField()
-                checkWin()
-                field.myMove=true
-                gameLoopHandler.postDelayed(gameLoop(),1000)
+                val end = checkWin()
+                field.myMove = true
+                if (!end) {
+                    gameLoopHandler.postDelayed(gameLoop(), 1000)
+                }
             }
             else -> {
                 val move = bestMove[counter-1]
