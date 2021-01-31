@@ -37,6 +37,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
     private var nextMovePhone:Boolean=false
+    private val score = Point(4,12)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -341,21 +342,26 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
          * check if at any point distance to score equals 0 - goal
          * if not check point (end point) with smallest distance to score
          */
-        var distance = 200
+
         var point = Point()
+        val distancePoint = Point(20,20)
         for(x in list){
-            val distancex = (12-x.currentBall.y)+(abs(4-x.currentBall.x))
-            if(distancex == 0){
-                distance = 0
+
+            val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
+            if(distancex.x==0&&distancex.y==0){
+                distancePoint.x=0
+                distancePoint.y=0
                 point = x.currentBall
             }
         }
-        if(distance!=0){
+        if(distancePoint.x!=0&&distancePoint.y!=0){
             for(x in list){
                 if(!x.isNextMove()){
-                    val distancex = (12-x.currentBall.y)+(abs(4-x.currentBall.x))
-                    if(distancex<distance){
-                        distance = distancex
+                    val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
+                    val replace = compareDistance(distancePoint,distancex)
+                    if(replace){
+                        distancePoint.x=distancex.x
+                        distancePoint.y=distancex.y
                         point = x.currentBall
                     }
                 }
@@ -383,12 +389,16 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         return bestMoves
     }
 
-
-
-
-
-
-
+    private fun compareDistance(oldDistance: Point, newDistance: Point): Boolean {
+        var replace = false
+        if(newDistance.y<oldDistance.y){
+            replace = true
+        }
+        else if ((newDistance.y==oldDistance.y)&&(newDistance.x<oldDistance.x)){
+            replace = true
+        }
+        return replace
+    }
 
 
     private fun updateButtons() {

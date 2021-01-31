@@ -648,5 +648,4 @@ todo lost animation
 todo win animation
 todo stuck animation
 todo back button
-todo poprawić ruch phona jeżeli ten sam dystanse to ma wybrać większy "y"
  */
