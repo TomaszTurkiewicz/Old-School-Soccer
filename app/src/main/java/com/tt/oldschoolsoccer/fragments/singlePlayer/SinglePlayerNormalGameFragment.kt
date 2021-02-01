@@ -82,6 +82,10 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
          */
         gameLoopHandler.removeCallbacksAndMessages(null)
         startGameHandler.removeCallbacksAndMessages(null)
+
+        if(loggedInStatus.loggedIn){
+            Functions.saveMyMoveNormalToSharedPreferences(requireContext(),field.myMove,loggedInStatus.userid)
+        }
     }
 
 
@@ -437,6 +441,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                             val j = item.position / 9
                             field.field[i][j] = item
                         }
+                        field.myMove = Functions.readMyMoveNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
                     }
                     fieldReady = true
                 }

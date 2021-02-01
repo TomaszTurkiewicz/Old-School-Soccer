@@ -123,5 +123,23 @@ class Functions {
             return myMove
         }
 
+        fun saveMyMoveNormalToSharedPreferences(context: Context?,myMove: Boolean, userId: String){
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME_MY_MOVE",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,myMove)
+                editor.commit()
+            }
+        }
+
+        fun readMyMoveNormalGameFromSharedPreferences(context: Context?,userId: String):Boolean{
+            var myMove = false
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME_MY_MOVE",Context.MODE_PRIVATE)
+                myMove = sharedPreferences.getBoolean(userId,false)
+            }
+            return myMove
+        }
+
     }
 }
