@@ -101,7 +101,9 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         if(fieldReady){
             startGameHandler.removeCallbacksAndMessages(null)
             updateField()
-            updateButtons()
+            if(field.myMove) {
+                updateButtons()
+            }
             gameLoop().run()
         }else{
             startGameHandler.postDelayed(startGame(),1000)
@@ -151,7 +153,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
             0 -> {
                 field.clearTestMoves()
                 updateField()
-                phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),1000)
+                phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),500)
             }
             (size+1) -> {
                 phoneMoveHandler.removeCallbacksAndMessages(null)
@@ -160,7 +162,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 val end = checkWin()
                 field.myMove = true
                 if (!end) {
-                    gameLoopHandler.postDelayed(gameLoop(), 1000)
+                    gameLoopHandler.postDelayed(gameLoop(), 100)
                 }
             }
             else -> {
