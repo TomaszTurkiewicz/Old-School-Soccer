@@ -4,6 +4,7 @@ import android.graphics.Point
 import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,9 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldNormalDatabase
 import com.tt.oldschoolsoccer.database.UserDBDatabase
-import com.tt.oldschoolsoccer.drawable.BallDrawable
-import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
-import com.tt.oldschoolsoccer.drawable.MovesEasyDrawable
-import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.*
+import com.tt.oldschoolsoccer.fragments.MainFragment
+import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_normal_game.view.*
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
@@ -498,8 +498,8 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private fun makeUI() {
         makeBackgroundGrid()
         setViewSizes()
-        setConstraintLayout()
         setDrawable()
+        setConstraintLayout()
         setOnClickListeners()
         disableButtons()
 
@@ -659,6 +659,15 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_up_left_btn.setOnClickListener {
             afterPress(Static.UP_LEFT,field.moveUpLeft(true))
         }
+
+        rootView.fragment_single_player_normal_back_button.setOnClickListener {
+            goToMainMenu()
+        }
+    }
+
+    private fun goToMainMenu() {
+
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
     }
 
     private fun setDrawable() {
@@ -672,6 +681,9 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.left)
         rootView.fragment_single_player_normal_game_move_down_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down_left)
 
+        rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_normal_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_normal_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
     }
 
     private fun setConstraintLayout() {
@@ -711,6 +723,9 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_normal_game_move_up_left_btn.id, ConstraintSet.BOTTOM,rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.TOP,3*screenUnit)
         set.connect(rootView.fragment_single_player_normal_game_move_up_left_btn.id, ConstraintSet.RIGHT,rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.LEFT,3*screenUnit)
 
+        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.TOP,2*screenUnit)
+        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.LEFT,14*screenUnit)
+
         set.applyTo(rootView.fragment_single_player_normal_game_layout)
 
     }
@@ -727,7 +742,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_game_move_up_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-
+        rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
     }
 
     private fun makeBackgroundGrid() {
@@ -736,3 +751,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     }
 
 }
+
+/*
+todo back button
+ */
