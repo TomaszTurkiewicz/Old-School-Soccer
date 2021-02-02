@@ -87,7 +87,9 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         if(fieldReady){
             startGameHandler.removeCallbacksAndMessages(null)
             updateField()
+            if(field.myMove){
             updateButtons()
+            }
             gameLoop().run()
         }else{
             startGameHandler.postDelayed(startGame(),1000)

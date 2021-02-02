@@ -97,6 +97,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
      */
 
     private fun startGame(): Runnable = Runnable {
+
         if(fieldReady){
             startGameHandler.removeCallbacksAndMessages(null)
             updateField()
@@ -128,6 +129,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
             }
 
         }
+
     }
 
     private fun phoneTurn() {
@@ -412,12 +414,16 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     }
 
     private fun updateMoves() {
+        view?.let {
         rootView.fragment_single_player_normal_game_field.setImageDrawable(MovesEasyDrawable(requireContext(),field, screenUnit.toDouble()))
+        }
     }
 
     private fun displayBall() {
+        view?.let {
         val ball = field.findBall()
         rootView.fragment_single_player_normal_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenUnit.toDouble()))
+        }
     }
 
 
