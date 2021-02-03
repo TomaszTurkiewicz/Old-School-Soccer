@@ -141,5 +141,23 @@ class Functions {
             return myMove
         }
 
+        fun saveMyStartNormalToSharedPreferences(context: Context?,myMove: Boolean, userId: String){
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME_MY_START",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,myMove)
+                editor.commit()
+            }
+        }
+
+        fun readMyStartNormalGameFromSharedPreferences(context: Context?,userId: String):Boolean{
+            var myMove = false
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("NORMAL_GAME_MY_START",Context.MODE_PRIVATE)
+                myMove = sharedPreferences.getBoolean(userId,false)
+            }
+            return myMove
+        }
+
     }
 }

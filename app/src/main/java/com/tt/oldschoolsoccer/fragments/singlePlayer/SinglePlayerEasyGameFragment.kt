@@ -670,5 +670,4 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 todo lost animation
 todo win animation
 todo stuck animation
-todo back button
  */

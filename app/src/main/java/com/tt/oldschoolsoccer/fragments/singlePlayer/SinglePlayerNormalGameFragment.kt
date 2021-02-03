@@ -38,6 +38,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private val phoneMoveHandler = Handler()
     private var nextMovePhone:Boolean=false
     private val score = Point(4,12)
+    private var firstMove = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         /**
          * read screen unit, read logged in status and create field
          */
-
         screenUnit = Functions.readScreenUnit(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
 
@@ -118,17 +118,31 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private fun gameLoop(): Runnable = Runnable {
 
         updateField()
-        
+
         if(field.myMove){
+            if(firstMove){
+                firstMove=false
+            }
 
             gameLoopHandler.removeCallbacksAndMessages(null)
             updateButtons()
         }
         else{
             gameLoopHandler.removeCallbacksAndMessages(null)
+            if(firstMove){
+                firstMove=false
+               makeMovePhone(Static.DOWN)
+                updateField()
+                field.myMove = true
+                gameLoopHandler.postDelayed(gameLoop(), 100)
+            }
+            else{
             launch {
                 phoneTurn()
             }
+            }
+
+
 
         }
 
@@ -452,11 +466,14 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                         field.myMove = Functions.readMyMoveNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
                     }
                     fieldReady = true
+                    firstMove=false
                 }
             }
             else{
                 Functions.saveNormalGameToSharedPreferences(requireContext(), true, loggedInStatus.userid)
                 updateUserCounters(1,0,0,0)
+
+
                 launch {
                     for (i in 0..8) {
                         for (j in 0..12) {
@@ -466,11 +483,15 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                             }
                         }
                     }
+                    val myStart = Functions.readMyStartNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+                    field.myMove = myStart
+                    Functions.saveMyStartNormalToSharedPreferences(requireContext(),!myStart,loggedInStatus.userid)
                     fieldReady = true
                 }
             }
         }
         else{
+            firstMove=false
             fieldReady = true
         }
     }
@@ -761,5 +782,5 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 }
 
 /*
-todo back button
+todo change best moves... what if stuck somewhere around my score...
  */
