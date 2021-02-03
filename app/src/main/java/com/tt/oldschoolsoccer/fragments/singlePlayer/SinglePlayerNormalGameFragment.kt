@@ -36,7 +36,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private val startGameHandler = Handler()
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
-    private var nextMovePhone:Boolean=false
     private val score = Point(4,12)
     private var firstMove = true
 

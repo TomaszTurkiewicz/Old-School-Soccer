@@ -115,3 +115,5 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
     }
 
 }
+
+//TODO add button to hard game!!!

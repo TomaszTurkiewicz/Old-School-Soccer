@@ -23,4 +23,5 @@ abstract class FragmentCoroutine: Fragment(), CoroutineScope {
         super.onDestroy()
         job.cancel()
     }
+
 }
