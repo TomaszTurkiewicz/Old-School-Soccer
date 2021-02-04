@@ -52,6 +52,14 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
         rootView.fragment_single_player_choose_game_level_normal_btn.setOnClickListener {
             goToSinglePlayerNormalGame()
         }
+
+        rootView.fragment_single_player_choose_game_level_hard_btn.setOnClickListener {
+            goToSinglePlayerHardGame()
+        }
+    }
+
+    private fun goToSinglePlayerHardGame() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerHardGameFragment()).commit()
     }
 
     private fun goToSinglePlayerNormalGame() {
@@ -87,6 +95,13 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
             ConstraintSet.LEFT,rootView.fragment_single_player_choose_game_level_layout.id,
             ConstraintSet.LEFT,marginLeft)
 
+        set.connect(rootView.fragment_single_player_choose_game_level_hard_btn.id,
+                ConstraintSet.TOP,rootView.fragment_single_player_choose_game_level_normal_btn.id,
+                ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_single_player_choose_game_level_hard_btn.id,
+                ConstraintSet.LEFT,rootView.fragment_single_player_choose_game_level_layout.id,
+                ConstraintSet.LEFT,marginLeft)
+
 
         set.applyTo(rootView.fragment_single_player_choose_game_level_layout)
 
@@ -100,6 +115,10 @@ class SinglePlayerChooseGameLevelFragment : Fragment() {
         rootView.fragment_single_player_choose_game_level_normal_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_single_player_choose_game_level_normal_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_single_player_choose_game_level_normal_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        rootView.fragment_single_player_choose_game_level_hard_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_single_player_choose_game_level_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_choose_game_level_hard_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     private fun setSizes(){
