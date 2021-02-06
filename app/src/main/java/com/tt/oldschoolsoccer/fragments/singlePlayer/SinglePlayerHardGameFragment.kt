@@ -36,7 +36,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private val startGameHandler = Handler()
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
-    private val score = Point(6,22)
+    private val score = Point(6,20)
+    private val scoreHard = HardGameWinningPoint()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -337,11 +338,14 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
          */
 
         var point = Point()
-        val distancePoint = Point(20,20)
+        val distancePoint = Point(20,30)
         for(x in list){
 
-            val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
-            if(distancex.x==0&&distancex.y==0){
+  //          val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
+
+            val distance_hard = scoreHard.checkDistance(x.currentBall.x,x.currentBall.y)
+
+            if(distance_hard.x==0&&distance_hard.y==0){
                 distancePoint.x=0
                 distancePoint.y=0
                 point = x.currentBall
@@ -350,11 +354,12 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         if(distancePoint.x!=0&&distancePoint.y!=0){
             for(x in list){
                 if(!x.isNextMove()){
-                    val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
-                    val replace = compareDistance(distancePoint,distancex)
+//                    val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
+                    val distance_hard = scoreHard.checkDistance(x.currentBall.x,x.currentBall.y)
+                    val replace = compareDistance(distancePoint,distance_hard)
                     if(replace){
-                        distancePoint.x=distancex.x
-                        distancePoint.y=distancex.y
+                        distancePoint.x=distance_hard.x
+                        distancePoint.y=distance_hard.y
                         point = x.currentBall
                     }
                 }
