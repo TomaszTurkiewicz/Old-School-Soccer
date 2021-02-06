@@ -12,10 +12,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
-import com.tt.oldschoolsoccer.drawable.ButtonDrawable
-import com.tt.oldschoolsoccer.drawable.FieldEasyDrawable
-import com.tt.oldschoolsoccer.drawable.FieldHardDrawable
-import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_normal_game.view.*
@@ -40,9 +37,14 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     }
 
     private fun createField() {
-        //todo!!!
+        field.generate(Static.HARD)
+
+
+
 
     }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,6 +54,73 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         makeUI()
 
         return rootView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateField()
+        //todo !!!
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        //todo
+    }
+
+    private fun startGame():Runnable = Runnable {
+        //todo!!!
+    }
+
+    private fun gameLoop():Runnable = Runnable {
+        //todo!!!
+    }
+
+    private fun phoneTurn(){
+        //todo!!!
+    }
+
+    private fun phoneMoveRunnable(size:Int,counter:Int,bestMove:ArrayList<Int>):Runnable = Runnable {
+        //todo!!!
+    }
+
+    private fun makeMovePhone(move: Int) {
+        //todo!!!
+    }
+
+    private fun phoneMove(direction: Int, move:PointsAfterMove){
+        //todo!!!
+    }
+
+    private fun checkBestMove(field: GameField):ArrayList<Int>? {
+        //todo!!!
+        return null
+    }
+
+    private fun updateButtons() {
+        //todo!!!
+    }
+
+    private fun updateField() {
+        updateMoves()
+        displayBall()
+    }
+
+    private fun updateMoves() {
+        view?.let {
+            rootView.fragment_single_player_hard_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field, screenUnit.toDouble()))
+        }
+    }
+
+    private fun displayBall() {
+        view?.let {
+            val ball = field.findBall()
+            rootView.fragment_single_player_hard_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenUnit.toDouble()))
+        }
+    }
+
+    private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int) {
+        //todo!!!
     }
 
     private fun makeUI() {
