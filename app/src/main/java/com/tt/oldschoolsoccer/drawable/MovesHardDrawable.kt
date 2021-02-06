@@ -22,28 +22,116 @@ class MovesHardDrawable(private val context: Context, private val field: GameFie
         for(i in 0..12) {
             for (j in 0..20) {
 
-                if (field.field[i][j].moveUp== Static.MOVE_AVAILABLE) {
+                if (field.field[i][j].moveUp==Static.MOVE_CHECKING) {
                     path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                     path3.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
                 }
 
-                if (field.field[i][j].moveUpRight== Static.MOVE_AVAILABLE) {
+                if (field.field[i][j].moveUpRight==Static.MOVE_CHECKING) {
                     path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                     path3.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
                 }
 
-                if (field.field[i][j].moveRight== Static.MOVE_AVAILABLE) {
+                if (field.field[i][j].moveRight==Static.MOVE_CHECKING) {
                     path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                     path3.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
                 }
 
-                if (field.field[i][j].moveDownRight== Static.MOVE_AVAILABLE) {
+                if (field.field[i][j].moveDownRight==Static.MOVE_CHECKING) {
                     path3.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
                     path3.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
                 }
             }
         }
         canvas.drawPath(path3,paint)
+
+        paint.color = ContextCompat.getColor(context, R.color.win)
+        paint.strokeWidth = (screenUnit/5).toFloat()
+        val path4 = Path()
+        for(i in 0..12) {
+            for (j in 0..20) {
+
+                if (field.field[i][j].moveUp==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveUpRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveDownRight==Static.MOVE_BEST) {
+                    path4.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path4.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
+                }
+            }
+        }
+        canvas.drawPath(path4,paint)
+
+        paint.strokeWidth = lineWidth.toFloat()
+        paint.color = ContextCompat.getColor(context, R.color.black)
+        val path = Path()
+        for(i in 0..12){
+            for(j in 0..20){
+
+                if(field.field[i][j].moveUp==Static.MOVE_DONE_BY_ME){
+                    path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
+                    path.lineTo((field.field[i][j-1].x*screenUnit).toFloat(), (field.field[i][j-1].y*screenUnit).toFloat())
+                }
+
+                if(field.field[i][j].moveUpRight==Static.MOVE_DONE_BY_ME){
+                    path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
+                    path.lineTo((field.field[i+1][j-1].x*screenUnit).toFloat(), (field.field[i+1][j-1].y*screenUnit).toFloat())
+                }
+
+                if(field.field[i][j].moveRight==Static.MOVE_DONE_BY_ME){
+                    path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
+                    path.lineTo((field.field[i+1][j].x*screenUnit).toFloat(), (field.field[i+1][j].y*screenUnit).toFloat())
+                }
+
+                if(field.field[i][j].moveDownRight==Static.MOVE_DONE_BY_ME){
+                    path.moveTo((field.field[i][j].x*screenUnit).toFloat(), (field.field[i][j].y*screenUnit).toFloat())
+                    path.lineTo((field.field[i+1][j+1].x*screenUnit).toFloat(), (field.field[i+1][j+1].y*screenUnit).toFloat())
+                }
+            }
+        }
+        canvas.drawPath(path,paint)
+
+        paint.color = ContextCompat.getColor(context, R.color.lost)
+        val path2 = Path()
+        for(i in 0..12) {
+            for (j in 0..20) {
+
+                if (field.field[i][j].moveUp==Static.MOVE_DONE_BY_PHONE) {
+                    path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path2.lineTo((field.field[i][j - 1].x * screenUnit).toFloat(), (field.field[i][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveUpRight==Static.MOVE_DONE_BY_PHONE) {
+                    path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path2.lineTo((field.field[i + 1][j - 1].x * screenUnit).toFloat(), (field.field[i + 1][j - 1].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveRight==Static.MOVE_DONE_BY_PHONE) {
+                    path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path2.lineTo((field.field[i + 1][j].x * screenUnit).toFloat(), (field.field[i + 1][j].y * screenUnit).toFloat())
+                }
+
+                if (field.field[i][j].moveDownRight==Static.MOVE_DONE_BY_PHONE) {
+                    path2.moveTo((field.field[i][j].x * screenUnit).toFloat(), (field.field[i][j].y * screenUnit).toFloat())
+                    path2.lineTo((field.field[i + 1][j + 1].x * screenUnit).toFloat(), (field.field[i + 1][j + 1].y * screenUnit).toFloat())
+                }
+            }
+        }
+        canvas.drawPath(path2,paint)
+
+
     }
 
     override fun setAlpha(alpha: Int) {

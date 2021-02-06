@@ -140,11 +140,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 phoneTurn()
             }
             }
-
-
-
         }
-
     }
 
     private fun phoneTurn() {
@@ -189,19 +185,19 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
     private fun makeMovePhone(move: Int) {
         when(move){
-            Static.UP -> phoneMove(Static.UP,field.moveUp(false))
-            Static.UP_LEFT -> phoneMove(Static.UP,field.moveUpLeft(false))
-            Static.UP_RIGHT -> phoneMove(Static.UP,field.moveUpRight(false))
-            Static.LEFT -> phoneMove(Static.UP,field.moveLeft(false))
-            Static.RIGHT -> phoneMove(Static.UP,field.moveRight(false))
-            Static.DOWN_LEFT -> phoneMove(Static.UP,field.moveDownLeft(false))
-            Static.DOWN_RIGHT -> phoneMove(Static.UP,field.moveDownRight(false))
-            Static.DOWN -> phoneMove(Static.UP,field.moveDown(false))
+            Static.UP -> phoneMove(field.moveUp(false))
+            Static.UP_LEFT -> phoneMove(field.moveUpLeft(false))
+            Static.UP_RIGHT -> phoneMove(field.moveUpRight(false))
+            Static.LEFT -> phoneMove(field.moveLeft(false))
+            Static.RIGHT -> phoneMove(field.moveRight(false))
+            Static.DOWN_LEFT -> phoneMove(field.moveDownLeft(false))
+            Static.DOWN_RIGHT -> phoneMove(field.moveDownRight(false))
+            Static.DOWN -> phoneMove(field.moveDown(false))
         }
 
     }
 
-    private fun phoneMove(direction: Int, move:PointsAfterMove){
+    private fun phoneMove(move:PointsAfterMove){
         val pointsAfterMove = move
         if(loggedInStatus.loggedIn){
             launch {

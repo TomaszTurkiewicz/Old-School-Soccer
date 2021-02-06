@@ -28,10 +28,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
-import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
-import com.tt.oldschoolsoccer.database.PointOnFieldNormalDatabase
-import com.tt.oldschoolsoccer.database.UserDB
-import com.tt.oldschoolsoccer.database.UserDBDatabase
+import com.tt.oldschoolsoccer.database.*
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_main.view.*
@@ -243,7 +240,20 @@ class MainFragment : FragmentCoroutine() {
         val userFb = createUserStatistics(it,user)
         createUserEasyField(it)
         createUserNormalField(it)
-        //todo hard, and multiplayer database
+        createUserHardField(it)
+        //todo multiplayer database
+
+    }
+
+    private suspend fun createUserHardField(it: Context) {
+        val field = GameField()
+        field.generate(Static.HARD)
+        for(i in 0..12){
+            for(j in 0..20){
+                val item = field.getPoint(i,j)
+                PointOnFieldHardDatabase(it).getPointOnFieldDao().addPointOnField(item)
+            }
+        }
 
     }
 

@@ -159,5 +159,65 @@ class Functions {
             return myMove
         }
 
+        fun readHardGameFromSharedPreferences(context: Context, userId: String): Boolean {
+            var savedGame = false
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME", Context.MODE_PRIVATE)
+                savedGame = sharedPreferences.getBoolean(userId,false)
+            }
+            return savedGame
+
+        }
+
+        fun readMyMoveHardGameFromSharedPreferences(context: Context, userId: String): Boolean {
+            var myMove = false
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE",Context.MODE_PRIVATE)
+                myMove = sharedPreferences.getBoolean(userId,false)
+            }
+            return myMove
+
+        }
+
+        fun saveHardGameToSharedPreferences(context: Context, saved: Boolean, userId: String) {
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,saved)
+                editor.apply()
+            }
+
+        }
+
+        fun readMyStartHardGameFromSharedPreferences(context: Context, userId: String): Boolean {
+            var myMove = false
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_START",Context.MODE_PRIVATE)
+                myMove = sharedPreferences.getBoolean(userId,false)
+            }
+            return myMove
+
+        }
+
+        fun saveMyStartHardToSharedPreferences(context: Context, myMove: Boolean, userId: String) {
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_START",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,myMove)
+                editor.commit()
+            }
+
+        }
+
+        fun saveMyMoveHardToSharedPreferences(context: Context, myMove: Boolean, userId: String) {
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean(userId,myMove)
+                editor.commit()
+            }
+
+        }
+
     }
 }
