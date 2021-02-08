@@ -8,6 +8,16 @@ class PointOnFieldToCheck (val incomingDirection:Int?, val currentBall:Point, va
     val availableMoves = AvailableMoves()
     private var checked = false
     private var nextMove = false
+    private val distanceToMyScore:Point = Point(100,100)
+
+    fun setDistanceToMyScore(distance:Point){
+        this.distanceToMyScore.x = distance.x
+        this.distanceToMyScore.y = distance.y
+    }
+
+    fun getDistanceToMyScore():Point{
+        return this.distanceToMyScore
+    }
 
     fun setAvailableMoves(field: GameField){
 

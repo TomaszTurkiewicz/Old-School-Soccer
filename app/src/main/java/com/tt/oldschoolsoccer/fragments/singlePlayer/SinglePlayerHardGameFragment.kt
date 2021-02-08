@@ -36,10 +36,12 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private val startGameHandler = Handler()
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
-    private val score = Point(6,20)
     private val scoreHard = HardGameWinningPoint()
 
 
+    /**
+     * read screen unit, check if logged in and create empty field
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,6 +52,12 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
     }
 
+    /**
+     * generate field
+     * if logged in and save game read from database and load to field
+     * if logged in and not saved create new and save to database
+     * if not logged in just create new field
+     */
     private fun createField() {
         field.generate(Static.HARD)
         if(loggedInStatus.loggedIn){
@@ -97,7 +105,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     }
 
 
-
+    /**
+     * make UI
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -114,6 +124,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         startGame().run()
     }
 
+    /**
+     * stop runnables and save myMove to shared preferences
+     */
     override fun onPause() {
         super.onPause()
 
@@ -125,6 +138,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * check if field is ready and start game loop
+     */
     private fun startGame():Runnable = Runnable {
         if(fieldReady){
             startGameHandler.removeCallbacksAndMessages(null)
@@ -138,6 +154,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         }
     }
 
+    /**
+     * proper game loop
+     */
     private fun gameLoop():Runnable = Runnable {
         updateField()
 
@@ -165,6 +184,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             }
         }
     }
+
 
     private fun phoneTurn(){
         val bestMoves = checkBestMove(field)
@@ -331,6 +351,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 tmpList.clear()
             }
         }
+
+        field.clearTestMoves()
         /**
          * when main list is ready check distance
          * check if at any point distance to score equals 0 - goal
@@ -340,27 +362,26 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         var point = Point()
         val distancePoint = Point(20,30)
         for(x in list){
-
-  //          val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
-
             val distance_hard = scoreHard.checkDistance(x.currentBall.x,x.currentBall.y)
-
             if(distance_hard.x==0&&distance_hard.y==0){
                 distancePoint.x=0
                 distancePoint.y=0
                 point = x.currentBall
             }
         }
-        if(distancePoint.x!=0&&distancePoint.y!=0){
+        if(distancePoint.x!=0||distancePoint.y!=0){
             for(x in list){
                 if(!x.isNextMove()){
-//                    val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)
                     val distance_hard = scoreHard.checkDistance(x.currentBall.x,x.currentBall.y)
-                    val replace = compareDistance(distancePoint,distance_hard)
-                    if(replace){
-                        distancePoint.x=distance_hard.x
+                    if(distance_hard.y<distancePoint.y){
                         distancePoint.y=distance_hard.y
-                        point = x.currentBall
+                        distancePoint.x=distance_hard.x
+                        point=x.currentBall
+                    }
+                    else if(distance_hard.y==distancePoint.y&&distance_hard.x<distancePoint.x){
+                        distancePoint.y=distance_hard.y
+                        distancePoint.x=distance_hard.x
+                        point=x.currentBall
                     }
                 }
             }
@@ -387,17 +408,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         return bestMoves
     }
 
-    private fun compareDistance(oldDistance: Point, newDistance: Point): Boolean {
-        var replace = false
-        if(newDistance.y<oldDistance.y){
-            replace = true
-        }
-        else if ((newDistance.y==oldDistance.y)&&(newDistance.x<oldDistance.x)){
-            replace = true
-        }
-        return replace
 
-    }
+
 
     private fun updateButtons() {
         disableButtons()

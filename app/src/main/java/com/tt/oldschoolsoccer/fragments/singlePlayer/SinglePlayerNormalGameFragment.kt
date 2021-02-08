@@ -332,7 +332,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 point = x.currentBall
             }
         }
-        if(distancePoint.x!=0&&distancePoint.y!=0){
+        if(distancePoint.x!=0||distancePoint.y!=0){
             for(x in list){
                 if(!x.isNextMove()){
                     val distancex = Point(abs(score.x-x.currentBall.x),score.y-x.currentBall.y)

@@ -12,7 +12,7 @@ class HardGameWinningPoint {
 
     fun checkDistance(currentX:Int, currentY:Int): Point {
         val point = Point()
-        point.y = 20 - currentY
+        point.y = y - currentY
         val a = abs(xOne-currentX)
         val b = abs(xTwo-currentX)
         val c = abs(xThree-currentX)
@@ -25,6 +25,23 @@ class HardGameWinningPoint {
             point.x=c
         }
 
+        return point
+    }
+
+    fun checkDistanceToMyScore(currentX: Int,currentY: Int):Point{
+        val point = Point()
+        point.y = currentY
+        val a = abs(xOne-currentX)
+        val b = abs(xTwo-currentX)
+        val c = abs(xThree-currentX)
+
+        if(a<b||a<c){
+            point.x=a
+        }else if(b<c){
+            point.x=b
+        }else{
+            point.x=c
+        }
         return point
     }
 }
