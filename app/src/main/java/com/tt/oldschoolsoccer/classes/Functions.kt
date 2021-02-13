@@ -169,15 +169,7 @@ class Functions {
 
         }
 
-        fun readMyMoveHardGameFromSharedPreferences(context: Context, userId: String): Boolean {
-            var myMove = false
-            context?.let {
-                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE",Context.MODE_PRIVATE)
-                myMove = sharedPreferences.getBoolean(userId,false)
-            }
-            return myMove
 
-        }
 
         fun saveHardGameToSharedPreferences(context: Context, saved: Boolean, userId: String) {
             if(context!=null){
@@ -209,13 +201,25 @@ class Functions {
 
         }
 
-        fun saveMyMoveHardToSharedPreferences(context: Context, myMove: Boolean, userId: String) {
+        fun saveGameMoveStateHardToSharedPreferences(context: Context, turn:HardGameMoveState, userId: String) {
             context?.let {
-                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE",Context.MODE_PRIVATE)
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE$userId",Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-                editor.putBoolean(userId,myMove)
+                editor.putInt("turn",turn.getTurn())
+                editor.putBoolean("nextMyTurn",turn.getNextMyTurn())
                 editor.commit()
             }
+
+        }
+        fun readGameMoveStateHardGameFromSharedPreferences(context: Context, userId: String): HardGameMoveState {
+            val turn = HardGameMoveState()
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("HARD_GAME_MY_MOVE$userId",Context.MODE_PRIVATE)
+                val turnInt = sharedPreferences.getInt("turn",Static.CHECKING)
+                val nextMyTurn = sharedPreferences.getBoolean("nextMyTurn",true)
+                turn.setMoveState(turnInt,nextMyTurn)
+            }
+            return turn
 
         }
 

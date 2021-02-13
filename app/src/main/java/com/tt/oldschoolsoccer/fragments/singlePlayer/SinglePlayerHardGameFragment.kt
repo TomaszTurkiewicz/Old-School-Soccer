@@ -37,6 +37,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
     private val scoreHard = HardGameWinningPoint()
+    private var turn = HardGameMoveState()
 
 
     /**
@@ -71,7 +72,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                             val j = item.position / 13
                             field.field[i][j] = item
                         }
-                        field.myMove = Functions.readMyMoveHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+                        turn = Functions.readGameMoveStateHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
                     }
                     fieldReady = true
                     firstMove=false
@@ -92,7 +93,11 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                         }
                     }
                     val myStart = Functions.readMyStartHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
-                    field.myMove = myStart
+                    if(myStart){
+                        turn.nextMovePlayer()
+                    }else{
+                        turn.nextMovePhone()
+                    }
                     Functions.saveMyStartHardToSharedPreferences(requireContext(),!myStart,loggedInStatus.userid)
                     fieldReady = true
                 }
@@ -134,7 +139,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         startGameHandler.removeCallbacksAndMessages(null)
 
         if(loggedInStatus.loggedIn){
-            Functions.saveMyMoveHardToSharedPreferences(requireContext(),field.myMove,loggedInStatus.userid)
+            Functions.saveGameMoveStateHardToSharedPreferences(requireContext(),turn,loggedInStatus.userid)
         }
     }
 
@@ -145,7 +150,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         if(fieldReady){
             startGameHandler.removeCallbacksAndMessages(null)
             updateField()
-            if(field.myMove) {
+            if(turn.getTurn()==Static.PLAYER) {
                 updateButtons()
             }
             gameLoop().run()
@@ -160,7 +165,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private fun gameLoop():Runnable = Runnable {
         updateField()
 
-        if(field.myMove){
+        if(turn.getTurn() == Static.PLAYER){
+            rootView.fragment_single_player_hard_game_win.text = "PLAYER"
             if(firstMove){
                 firstMove=false
             }
@@ -168,13 +174,28 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             gameLoopHandler.removeCallbacksAndMessages(null)
             updateButtons()
         }
+        else if(turn.getTurn() == Static.CHECKING){
+            //todo
+            rootView.fragment_single_player_hard_game_win.text = "CHECKING"
+            val nextMyMove = turn.getNextMyTurn()
+
+            if(nextMyMove){
+                turn.nextMovePlayer()
+            }else{
+                turn.nextMovePhone()
+            }
+            gameLoopHandler.postDelayed(gameLoop(),1000)
+
+
+        }
         else{
+            rootView.fragment_single_player_hard_game_win.text = "PHONE"
             gameLoopHandler.removeCallbacksAndMessages(null)
             if(firstMove){
                 firstMove=false
                 makeMovePhone(Static.DOWN)
                 updateField()
-                field.myMove = true
+                turn.nextMovePlayer()
                 gameLoopHandler.postDelayed(gameLoop(), 100)
             }
             else{
@@ -207,7 +228,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
                 updateField()
                 val end = checkWin()
-                field.myMove = true
+                turn.nextMovePlayerAfterChecking()
                 if (!end) {
                     gameLoopHandler.postDelayed(gameLoop(), 100)
                 }
@@ -247,7 +268,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     }
 
 
-    //todo change this function!!!
+
     private fun checkBestMove(field: GameField):ArrayList<Int> {
         val bestMoves = ArrayList<Int>()
         val ball = field.findBall()
@@ -584,7 +605,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             updateButtons()
         }else{
             disableButtons()
-            field.myMove=false
+            turn.nextMovePhoneAfterChecking()
             gameLoopHandler.postDelayed(gameLoop(),1000)
         }
 
