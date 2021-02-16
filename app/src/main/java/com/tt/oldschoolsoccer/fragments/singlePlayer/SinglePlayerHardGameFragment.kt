@@ -694,6 +694,51 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             goToMainMenu()
         }
 
+        rootView.fragment_single_player_hard_test1_button.setOnClickListener {
+            blockMyScore()
+        }
+
+        rootView.fragment_single_player_hard_test2_button.setOnClickListener {
+            blockPhoneScore()
+        }
+
+        rootView.fragment_single_player_hard_test_button.setOnClickListener {
+            blockMyScore()
+            blockPhoneScore()
+        }
+    }
+
+    private fun blockPhoneScore() {
+        field.field[4][19].moveDownRight=Static.MOVE_DONE_BY_PHONE
+        field.field[5][19].moveDownRight=Static.MOVE_DONE_BY_PHONE
+        field.field[5][19].moveDown=Static.MOVE_DONE_BY_PHONE
+        field.field[5][19].moveDownLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[6][19].moveDownRight=Static.MOVE_DONE_BY_PHONE
+        field.field[6][19].moveDown=Static.MOVE_DONE_BY_PHONE
+        field.field[6][19].moveDownLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[7][19].moveDownRight=Static.MOVE_DONE_BY_PHONE
+        field.field[7][19].moveDown=Static.MOVE_DONE_BY_PHONE
+        field.field[7][19].moveDownLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[8][19].moveDownLeft=Static.MOVE_DONE_BY_PHONE
+
+        updateField()
+
+    }
+
+    private fun blockMyScore() {
+        field.field[4][1].moveUpRight=Static.MOVE_DONE_BY_PHONE
+        field.field[5][1].moveUpRight=Static.MOVE_DONE_BY_PHONE
+        field.field[5][1].moveUp=Static.MOVE_DONE_BY_PHONE
+        field.field[5][1].moveUpLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[6][1].moveUpRight=Static.MOVE_DONE_BY_PHONE
+        field.field[6][1].moveUp=Static.MOVE_DONE_BY_PHONE
+        field.field[6][1].moveUpLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[7][1].moveUpRight=Static.MOVE_DONE_BY_PHONE
+        field.field[7][1].moveUp=Static.MOVE_DONE_BY_PHONE
+        field.field[7][1].moveUpLeft=Static.MOVE_DONE_BY_PHONE
+        field.field[8][1].moveUpLeft=Static.MOVE_DONE_BY_PHONE
+
+        updateField()
     }
 
     private fun goToMainMenu() {
@@ -815,6 +860,18 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_hard_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
         rootView.fragment_single_player_hard_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
         rootView.fragment_single_player_hard_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_single_player_hard_test_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_hard_test_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_single_player_hard_test1_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test1_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_hard_test1_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_single_player_hard_test2_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test2_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_single_player_hard_test2_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
     }
 
     private fun setConstraintLayout() {
@@ -857,6 +914,15 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_hard_back_button.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.TOP,2*screenUnit)
         set.connect(rootView.fragment_single_player_hard_back_button.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,15*screenUnit)
 
+        set.connect(rootView.fragment_single_player_hard_test_button.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_back_button.id, ConstraintSet.BOTTOM,2*screenUnit)
+        set.connect(rootView.fragment_single_player_hard_test_button.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,15*screenUnit)
+
+        set.connect(rootView.fragment_single_player_hard_test1_button.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_test_button.id, ConstraintSet.BOTTOM,2*screenUnit)
+        set.connect(rootView.fragment_single_player_hard_test1_button.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,15*screenUnit)
+
+        set.connect(rootView.fragment_single_player_hard_test2_button.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_test1_button.id, ConstraintSet.BOTTOM,2*screenUnit)
+        set.connect(rootView.fragment_single_player_hard_test2_button.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,15*screenUnit)
+
         set.applyTo(rootView.fragment_single_player_hard_game_layout)
 
     }
@@ -874,6 +940,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_hard_game_move_up_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_hard_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_hard_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test1_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_hard_test2_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
 
     }
 
