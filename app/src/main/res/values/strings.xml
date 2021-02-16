@@ -11,4 +11,7 @@
     <string name="normal">NORMAL</string>
     <string name="back">BACK</string>
     <string name="hard">HARD</string>
+    <string name="test">TEST</string>
+    <string name="test2">TEST2</string>
+    <string name="test1">TEST1</string>
 </resources>

@@ -24,4 +24,21 @@ class BothScorePoint (ball:Point,field:GameField){
     fun isChecked():Boolean{
         return this.checked
     }
+
+    fun isMyScore():Boolean{
+        var boolean=false
+        if(distanceToMyScore.x==0&&distanceToMyScore.y==0){
+            boolean=true
+        }
+        return boolean
+    }
+
+    fun isPhoneScore():Boolean{
+        var boolean=false
+        if(distanceToScore.x==0&&distanceToScore.y==0){
+            boolean=true
+        }
+        return boolean
+    }
+
 }

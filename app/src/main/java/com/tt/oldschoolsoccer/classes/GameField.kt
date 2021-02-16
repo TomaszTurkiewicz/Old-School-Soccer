@@ -634,6 +634,20 @@ class GameField {
         return Point(ball.x - 1, ball.y - 1)
     }
 
+    fun checkIfNextMoveAvailable(pointOnField:PointOnField):Boolean{
+        val availableMoves = checkIfMoveInDirectionIsAvailable(pointOnField)
+
+        return availableMoves.up or
+                (availableMoves.upRight or
+                        (availableMoves.upLeft or
+                                (availableMoves.left or
+                                        (availableMoves.right or
+                                                (availableMoves.downLeft or
+                                                        (availableMoves.downRight or
+                                                                (availableMoves.down)))))))
+
+    }
+
     fun clearTestMoves() {
         if (level != Static.HARD) {
             for (i in 0..8) {

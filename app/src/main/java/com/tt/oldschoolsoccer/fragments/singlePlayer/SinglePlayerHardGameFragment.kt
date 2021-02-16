@@ -175,18 +175,10 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             updateButtons()
         }
         else if(turn.getTurn() == Static.CHECKING){
-            //todo
             rootView.fragment_single_player_hard_game_win.text = "CHECKING"
-            val nextMyMove = turn.getNextMyTurn()
-
-            if(nextMyMove){
-                turn.nextMovePlayer()
-            }else{
-                turn.nextMovePhone()
-            }
-            gameLoopHandler.postDelayed(gameLoop(),1000)
-
-
+                launch {
+                    checkingBothScores()
+                }
         }
         else{
             rootView.fragment_single_player_hard_game_win.text = "PHONE"
@@ -204,6 +196,131 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 }
             }
         }
+    }
+
+    private fun checkingBothScores() {
+
+        var myScoreAvailable = false
+        var phoneScoreAvailable = false
+        var tie = false
+
+        val list = ArrayList<BothScorePoint>()
+        val ball = field.findBall()
+        val firstPoint = BothScorePoint(ball,field)
+
+        list.add(firstPoint)
+
+        val tmpList = ArrayList<BothScorePoint>()
+        var loopChecker = true
+
+        while(loopChecker){
+            for(x in list){
+                if(!x.isChecked()){
+                    x.setCheck()
+                    val myScore = x.isMyScore()
+                    val phoneScore = x.isPhoneScore()
+
+                    if(myScore){
+                        myScoreAvailable=true
+                    }
+                    if(phoneScore){
+                        phoneScoreAvailable=true
+                    }
+                    if(myScore or (phoneScore)){
+                        //don't check availablemoves
+                    }else {
+                        if (x.availableMoves.down) {
+                            val newBall = field.testMoveDown(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.downLeft) {
+                            val newBall = field.testMoveDownLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.downRight) {
+                            val newBall = field.testMoveDownRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.left) {
+                            val newBall = field.testMoveLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.right) {
+                            val newBall = field.testMoveRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.upLeft) {
+                            val newBall = field.testMoveUpLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.upRight) {
+                            val newBall = field.testMoveUpRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.up) {
+                            val newBall = field.testMoveUp(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                    }
+                }
+            }
+
+      //      list.clear()
+
+            if(myScoreAvailable or (phoneScoreAvailable)){
+                loopChecker=false
+            }
+            else {
+
+                if (tmpList.size == 0) {
+                    loopChecker = false
+                    tie=true
+                } else {
+                    for (x in tmpList) {
+                        var shouldBeAdded = true
+
+                        for(y in list){
+                            if(y.currentBall.x==x.currentBall.x && y.currentBall.y == x.currentBall.y){
+                                shouldBeAdded = false
+                            }
+                        }
+
+                        if(shouldBeAdded) {
+                            list.add(x)
+                        }
+                    }
+                    tmpList.clear()
+                }
+            }
+        }
+
+        field.clearTestMoves()
+
+        if(tie){
+            tieAnimation()
+        }else{
+        val nextMyMove = turn.getNextMyTurn()
+        if(nextMyMove){
+            turn.nextMovePlayer()
+            gameLoopHandler.postDelayed(gameLoop(),0)
+        }else{
+            turn.nextMovePhone()
+            gameLoopHandler.postDelayed(gameLoop(),0)
+        }
+
+
+
+        }
+
+
     }
 
 
@@ -227,10 +344,20 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 phoneMoveHandler.removeCallbacksAndMessages(null)
 
                 updateField()
+
+                val ball = field.findBall()
+                val currentPoint = field.field[ball.x][ball.y]
+                val available = field.checkIfNextMoveAvailable(currentPoint)
+
+                if(available){
                 val end = checkWin()
                 turn.nextMovePlayerAfterChecking()
                 if (!end) {
                     gameLoopHandler.postDelayed(gameLoop(), 100)
+                    }
+                }
+                else{
+                    winAnimation()
                 }
             }
             else -> {
@@ -391,6 +518,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             }
         }
         if(distancePoint.x!=0||distancePoint.y!=0){
+
             for(x in list){
                 if(!x.isNextMove()){
                     val distance_hard = scoreHard.checkDistance(x.currentBall.x,x.currentBall.y)
@@ -599,7 +727,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         val nextMove = field.checkIfStuckAndNextMove(direction)
         if(nextMove.stuck){
             gameLoopHandler.removeCallbacksAndMessages(this)
-            tieAnimation()
+            lostAnimation()
         }
         if(nextMove.nextMove){
             updateButtons()
