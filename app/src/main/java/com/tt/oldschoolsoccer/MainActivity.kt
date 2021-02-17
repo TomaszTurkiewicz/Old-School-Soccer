@@ -11,7 +11,7 @@ import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 
     private var screenHeight=0
     private var screenWidth=0
@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .add(R.id.fragment_container,MainFragment())
             .commit()
+
+        Functions.saveUpdateToSharedPreferences(context = this,isUpdate = false)
+        UpdateHelper.with(this).onUpdateNeeded(this).check()
 
 
     }
@@ -64,10 +67,13 @@ class MainActivity : AppCompatActivity() {
         screenUnit=if(unitWidth>unitHeight)unitHeight else unitWidth
         Functions.saveScreenUnit(this,screenUnit)
     }
+
+    override fun onUpdateNeeded(updateUrl: String) {
+        Functions.saveUpdateToSharedPreferences(context = this,isUpdate = true,url = updateUrl)
+    }
 }
 
 /*
-* todo FRAGMENTS
 * todo przerobić sharedpreferences na database room - user statistics and saved games and creating database for user
 * todo connect to firebase (picture, user, login)
 * todo add admob

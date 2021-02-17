@@ -31,6 +31,7 @@ import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.*
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.coroutines.launch
 
@@ -44,6 +45,7 @@ class MainFragment : FragmentCoroutine() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private var rootView: View? = null
+    private var updateObject=Update()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +66,10 @@ class MainFragment : FragmentCoroutine() {
                 .requestEmail()
                 .build()
         googleSignInClient = GoogleSignIn.getClient(requireContext(),gso)
+
+        updateObject=Functions.readUpdateFromSharedPreferences(requireContext())
+
+
 
     }
 
@@ -337,6 +343,13 @@ class MainFragment : FragmentCoroutine() {
         setButtonsUI()
         makeConstraintLayout()
 
+
+        if(updateObject.isUpdate){
+            rootView!!.fragment_main_update_button.visibility = View.VISIBLE
+        }else{
+            rootView!!.fragment_main_update_button.visibility = View.GONE
+        }
+
     }
 
 
@@ -370,6 +383,9 @@ class MainFragment : FragmentCoroutine() {
         set.connect(rootView!!.fragment_main_statistics_button.id, ConstraintSet.TOP,rootView!!.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView!!.fragment_main_statistics_button.id, ConstraintSet.LEFT,rootView!!.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
+        set.connect(rootView!!.fragment_main_update_button.id, ConstraintSet.TOP,rootView!!.fragment_main_statistics_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView!!.fragment_main_update_button.id, ConstraintSet.LEFT,rootView!!.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+
         set.applyTo(rootView!!.fragment_main_layout)
     }
 
@@ -386,6 +402,9 @@ class MainFragment : FragmentCoroutine() {
         rootView!!.fragment_main_statistics_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView!!.fragment_main_statistics_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView!!.fragment_main_statistics_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView!!.fragment_main_update_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView!!.fragment_main_update_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView!!.fragment_main_update_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     /**
