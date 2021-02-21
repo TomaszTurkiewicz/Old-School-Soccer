@@ -1,5 +1,6 @@
 package com.tt.oldschoolsoccer.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Shader
@@ -31,6 +32,7 @@ import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.*
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.coroutines.launch
@@ -252,7 +254,7 @@ class MainFragment : FragmentCoroutine() {
      *
      */
     private suspend fun createDB(it: Context, user: FirebaseUser) {
-        val userFb = createUserStatistics(it,user)
+        createUserStatistics(it,user)
         createUserEasyField(it)
         createUserNormalField(it)
         createUserHardField(it)
@@ -301,16 +303,17 @@ class MainFragment : FragmentCoroutine() {
      * create user db room
      * and synchronize with firebase database
      */
-    private suspend fun createUserStatistics(it: Context, user: FirebaseUser):User {
+    private suspend fun createUserStatistics(it: Context, user: FirebaseUser) {
         val userFb = User()
         userFb.id = user.uid
+
         val userDB = UserDB().dbUser(userFb)
 
         UserDBDatabase(it).getUserDBDao().addUser(UserDB().dbUser(userFb))
 
         synchronizeUserDB(it,userDB)
 
-        return userFb
+
 
     }
 
@@ -325,7 +328,26 @@ class MainFragment : FragmentCoroutine() {
             launch {
                 requireContext().let {
                     val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                    val username = userTemp.name.trim()
                     rootView!!.fragment_main_user_name.text = userTemp.name
+
+                    if(username.isEmpty()){
+                        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.alert_dialog_user_name, null)
+                        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+                        val mAlertDialog = mBuilder.show()
+
+                        mDialogView.alert_dialog_ok_button.setOnClickListener{
+                            val username = mDialogView.alert_dialog_input_user_name.text.toString().trim()
+                            if(username.isNotEmpty()){
+                                userTemp.name=username
+                                synchronizeUserDB(requireContext(),userTemp)
+                                mAlertDialog.dismiss()
+                            }
+                            else{
+                                mDialogView.alert_dialog_input_user_name.error = "WRONG USER NAME"
+                            }
+                        }
+                    }
                 }
             }
             rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE

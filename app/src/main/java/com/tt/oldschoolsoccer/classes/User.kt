@@ -6,7 +6,7 @@ import com.tt.oldschoolsoccer.database.UserDB
  * holding user info
  */
  data class User (var id:String = "",
-                    var userName:String = "ANONYMOUS",
+                    var userName:String = "",
                     var easyGame:Game = Game(),
                     var normalGame:Game = Game(),
                     var hardGame:Game = Game(),
