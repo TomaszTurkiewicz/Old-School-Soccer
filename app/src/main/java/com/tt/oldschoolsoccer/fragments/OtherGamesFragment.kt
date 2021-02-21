@@ -3,6 +3,7 @@ package com.tt.oldschoolsoccer.fragments
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Shader
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.TypedValue
@@ -40,7 +41,7 @@ class OtherGamesFragment : FragmentCoroutine() {
     private var buttonSendWidth=0
     private var tvSendHeight=0
     private var tvSendWidth=0
-    private var pageCounter = 0
+    private var pageCounter = 1
     private var totalCounter = 0
     private var gameListReady = false
     private val mHandlerDisplayFirstItems = Handler()
@@ -93,6 +94,10 @@ class OtherGamesFragment : FragmentCoroutine() {
 
         makeUI()
 
+        rootView.fragment_other_games_page_counter.visibility = View.GONE
+        rootView.fragment_other_games_right_arrow.visibility = View.GONE
+        rootView.fragment_other_games_left_arrow.visibility = View.GONE
+
         setOnClickListeners()
 
         return rootView
@@ -106,6 +111,29 @@ class OtherGamesFragment : FragmentCoroutine() {
     private fun displayFirstItemsLoop():Runnable = Runnable {
         if(gameListReady){
             mHandlerDisplayFirstItems.removeCallbacksAndMessages(null)
+            totalCounter = gameList.size/2+gameList.size%2
+
+            if(totalCounter>1){
+                rootView.fragment_other_games_page_counter.visibility = View.VISIBLE
+                rootView.fragment_other_games_right_arrow.visibility = View.VISIBLE
+                rootView.fragment_other_games_left_arrow.visibility = View.VISIBLE
+
+                rootView.fragment_other_games_right_arrow.setOnClickListener {
+                    pageCounter+=1
+                    rootView.fragment_other_games_image_view_first.setImageDrawable(null)
+                    rootView.fragment_other_games_image_view_second.setImageDrawable(null)
+                    displayGames(pageCounter)
+                }
+
+                rootView.fragment_other_games_left_arrow.setOnClickListener {
+                    pageCounter-=1
+                    rootView.fragment_other_games_image_view_first.setImageDrawable(null)
+                    rootView.fragment_other_games_image_view_second.setImageDrawable(null)
+                    displayGames(pageCounter)
+                }
+
+            }
+
             displayGames(pageCounter)
         }else{
             mHandlerDisplayFirstItems.postDelayed(displayFirstItemsLoop(),100)
@@ -113,13 +141,53 @@ class OtherGamesFragment : FragmentCoroutine() {
     }
 
     private fun displayGames(pageCounter: Int) {
-        rootView.fragment_other_games_text_view_first.text = gameList[pageCounter].gameName
-        rootView.fragment_other_games_text_view_second.text = gameList[pageCounter+1].gameName
 
+        if(pageCounter==1){
+            rootView.fragment_other_games_left_arrow.visibility = View.INVISIBLE
+        }else{
+            rootView.fragment_other_games_left_arrow.visibility = View.VISIBLE
+        }
+
+        if(pageCounter==totalCounter){
+            rootView.fragment_other_games_right_arrow.visibility = View.GONE
+        }else{
+            rootView.fragment_other_games_right_arrow.visibility = View.VISIBLE
+        }
+
+        rootView.fragment_other_games_page_counter.text = "$pageCounter/$totalCounter"
+
+        rootView.fragment_other_games_text_view_first.text = gameList[(pageCounter-1)*2].gameName
+
+        rootView.fragment_other_games_button_first.setOnClickListener {
+            val link = gameList[(pageCounter-1)*2].uri
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
+        if(pageCounter==totalCounter&&gameList.size%2==1) {
+            rootView.fragment_other_games_text_view_second.visibility = View.GONE
+            rootView.fragment_other_games_image_view_second.visibility = View.GONE
+            rootView.fragment_other_games_button_second.visibility = View.GONE
+
+
+        }
+        else{
+            rootView.fragment_other_games_text_view_second.visibility = View.VISIBLE
+            rootView.fragment_other_games_image_view_second.visibility = View.VISIBLE
+            rootView.fragment_other_games_button_second.visibility = View.VISIBLE
+            rootView.fragment_other_games_text_view_second.text = gameList[(pageCounter - 1) * 2 + 1].gameName
+            rootView.fragment_other_games_button_second.setOnClickListener {
+                val link = gameList[(pageCounter-1)*2+1].uri
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        }
         launch {
             requireContext().let {
                 val storageRefFirst =
-                    storage.reference.child("OtherGames").child(gameList[pageCounter].picture)
+                    storage.reference.child("OtherGames").child(gameList[(pageCounter-1)*2].picture)
                 val size: Long = 1024 * 1024
 
                 storageRefFirst.getBytes(size).addOnSuccessListener {
@@ -127,12 +195,15 @@ class OtherGamesFragment : FragmentCoroutine() {
                     rootView.fragment_other_games_image_view_first.setImageBitmap(bm)
                 }
 
-                val storageRefSecond =
-                    storage.reference.child("OtherGames").child(gameList[pageCounter + 1].picture)
+                if(pageCounter==totalCounter&&gameList.size%2==1) {}
+                else{
+                    val storageRefSecond =
+                            storage.reference.child("OtherGames").child(gameList[(pageCounter - 1) * 2 + 1].picture)
 
-                storageRefSecond.getBytes(size).addOnSuccessListener {
-                    val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
-                    rootView.fragment_other_games_image_view_second.setImageBitmap(bm)
+                    storageRefSecond.getBytes(size).addOnSuccessListener {
+                        val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
+                        rootView.fragment_other_games_image_view_second.setImageBitmap(bm)
+                    }
                 }
             }
         }
