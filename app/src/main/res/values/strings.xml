@@ -16,4 +16,5 @@
     <string name="test1">TEST1</string>
     <string name="update">UPDATE</string>
     <string name="other_games">OTHER GAMES</string>
+    <string name="send_this_game_to_a_friend">SEND THIS GAME TO A FRIEND</string>
 </resources>
