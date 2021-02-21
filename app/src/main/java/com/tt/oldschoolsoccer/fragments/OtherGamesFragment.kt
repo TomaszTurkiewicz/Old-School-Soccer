@@ -52,6 +52,9 @@ class OtherGamesFragment : FragmentCoroutine() {
     private var gameNameTVHeight = 0
     private var arrowSize = 0
     private var pageCounterWidth = 0
+    private var backButtonHeight = 0
+    private var backButtonWidth = 0
+
 
     private lateinit var gameList: MutableList<OtherGamesObject>
 
@@ -224,6 +227,10 @@ class OtherGamesFragment : FragmentCoroutine() {
             }
         }
 
+        rootView.fragment_other_games_back_button.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
+        }
+
     }
 
     private fun makeUI() {
@@ -261,13 +268,16 @@ class OtherGamesFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_other_games_button_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_second.id,ConstraintSet.LEFT,0)
 
         set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
-        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.BOTTOM,rootView.fragment_other_games_layout.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,30*screenUnit)
 
         set.connect(rootView.fragment_other_games_page_counter.id,ConstraintSet.LEFT,rootView.fragment_other_games_left_arrow.id,ConstraintSet.RIGHT,screenUnit)
         set.connect(rootView.fragment_other_games_page_counter.id,ConstraintSet.BOTTOM,rootView.fragment_other_games_left_arrow.id,ConstraintSet.BOTTOM,0)
 
         set.connect(rootView.fragment_other_games_right_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_page_counter.id,ConstraintSet.RIGHT,screenUnit)
         set.connect(rootView.fragment_other_games_right_arrow.id,ConstraintSet.BOTTOM,rootView.fragment_other_games_page_counter.id,ConstraintSet.BOTTOM,0)
+
+        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,35*screenUnit)
 
         set.applyTo(rootView.fragment_other_games_layout)
     }
@@ -303,6 +313,10 @@ class OtherGamesFragment : FragmentCoroutine() {
         rootView.fragment_other_games_page_counter.layoutParams = ConstraintLayout.LayoutParams(pageCounterWidth,arrowSize)
         rootView.fragment_other_games_page_counter.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
+        rootView.fragment_other_games_back_button.layoutParams = ConstraintLayout.LayoutParams(backButtonWidth,backButtonHeight)
+        rootView.fragment_other_games_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_other_games_back_button.background = ButtonDrawable(requireContext(),backButtonWidth.toDouble(),backButtonHeight.toDouble(),screenUnit.toDouble())
+
         val lp:LinearLayout.LayoutParams = LinearLayout.LayoutParams(buttonSendWidth,buttonSendHeight)
         lp.setMargins(screenUnit,0,0,0)
         rootView.fragment_other_games_send_game_button.layoutParams = lp
@@ -320,6 +334,8 @@ class OtherGamesFragment : FragmentCoroutine() {
         gameNameTVWidth = 12*screenUnit
         arrowSize = 3*screenUnit
         pageCounterWidth = 10*screenUnit
+        backButtonHeight = 2*screenUnit
+        backButtonWidth = 4*screenUnit
 
     }
 

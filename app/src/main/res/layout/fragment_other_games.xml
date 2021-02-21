@@ -111,4 +111,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+        android:id="@+id/fragment_other_games_back_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/back"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
