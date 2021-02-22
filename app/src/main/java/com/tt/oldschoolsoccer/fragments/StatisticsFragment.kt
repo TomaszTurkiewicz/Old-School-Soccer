@@ -2,7 +2,7 @@ package com.tt.oldschoolsoccer.fragments
 
 import android.graphics.Shader
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +15,21 @@ import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.LoggedInStatus
 import com.tt.oldschoolsoccer.classes.User
 import com.tt.oldschoolsoccer.database.UserDBDatabase
+import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
-import kotlinx.android.synthetic.main.fragment_main.view.*
+import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
 import kotlinx.android.synthetic.main.fragment_statistics.view.*
 import kotlinx.coroutines.launch
 
 class StatisticsFragment : FragmentCoroutine() {
 
-    var rootView:View? = null
+    private lateinit var rootView:View
     private var screenUnit:Int=0
     private var loggedInStatus = LoggedInStatus()
+    private var tableHeight = 0
+    private var tableWidthLarge = 0
+    private var tableWidthNormal = 0
+    private var tableWidthBig = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,46 +39,51 @@ class StatisticsFragment : FragmentCoroutine() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_statistics, container, false)
 
         makeUI()
 
+        rootView.fragment_statistics_back_button.setOnClickListener {
+            goToMainMenu()
+        }
+
         return rootView
+    }
+
+    private fun goToMainMenu() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
     }
 
     override fun onResume() {
         super.onResume()
         launch {
-            requireContext()?.let {
-                val list = UserDBDatabase(it).getUserDBDao().getAllUsers()
-
-                rootView!!.fragment_statistics_records_in_db_real.text = list.size.toString()
+            requireContext().let {
 
                 val user = User().userFromDB(UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid))
+                rootView.fragment_statistics_user_name_user.text = user.userName
+                rootView.fragment_statistics_image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
 
-                rootView!!.fragment_statistics_user_id_user.text = user.id
-                rootView!!.fragment_statistics_user_name_user.text = user.userName
+                rootView.fragment_statistics_user_easy_number_of_games_user.text = user.easyGame.numberOfGames.toString()
+                rootView.fragment_statistics_user_easy_win_user.text = user.easyGame.win.toString()
+                rootView.fragment_statistics_user_easy_lose_user.text = user.easyGame.lose.toString()
+                rootView.fragment_statistics_user_easy_tie_user.text = user.easyGame.tie.toString()
 
-                rootView!!.fragment_statistics_user_easy_number_of_games_user.text = user.easyGame.numberOfGames.toString()
-                rootView!!.fragment_statistics_user_easy_win_user.text = user.easyGame.win.toString()
-                rootView!!.fragment_statistics_user_easy_lose_user.text = user.easyGame.lose.toString()
-                rootView!!.fragment_statistics_user_easy_tie_user.text = user.easyGame.tie.toString()
+                rootView.fragment_statistics_user_normal_number_of_games_user.text = user.normalGame.numberOfGames.toString()
+                rootView.fragment_statistics_user_normal_win_user.text = user.normalGame.win.toString()
+                rootView.fragment_statistics_user_normal_lose_user.text = user.normalGame.lose.toString()
+                rootView.fragment_statistics_user_normal_tie_user.text = user.normalGame.tie.toString()
 
-                rootView!!.fragment_statistics_user_normal_number_of_games_user.text = user.normalGame.numberOfGames.toString()
-                rootView!!.fragment_statistics_user_normal_win_user.text = user.normalGame.win.toString()
-                rootView!!.fragment_statistics_user_normal_lose_user.text = user.normalGame.lose.toString()
-                rootView!!.fragment_statistics_user_normal_tie_user.text = user.normalGame.tie.toString()
+                rootView.fragment_statistics_user_hard_number_of_games_user.text = user.hardGame.numberOfGames.toString()
+                rootView.fragment_statistics_user_hard_win_user.text = user.hardGame.win.toString()
+                rootView.fragment_statistics_user_hard_lose_user.text = user.hardGame.lose.toString()
+                rootView.fragment_statistics_user_hard_tie_user.text = user.hardGame.tie.toString()
 
-                rootView!!.fragment_statistics_user_hard_number_of_games_user.text = user.hardGame.numberOfGames.toString()
-                rootView!!.fragment_statistics_user_hard_win_user.text = user.hardGame.win.toString()
-                rootView!!.fragment_statistics_user_hard_lose_user.text = user.hardGame.lose.toString()
-                rootView!!.fragment_statistics_user_hard_tie_user.text = user.hardGame.tie.toString()
+                rootView.fragment_statistics_user_multi_number_of_games_user.text = user.multiGame.numberOfGames.toString()
+                rootView.fragment_statistics_user_multi_win_user.text = user.multiGame.win.toString()
+                rootView.fragment_statistics_user_multi_lose_user.text = user.multiGame.lose.toString()
+                rootView.fragment_statistics_user_multi_tie_user.text = user.multiGame.tie.toString()
 
-                rootView!!.fragment_statistics_user_multi_number_of_games_user.text = user.multiGame.numberOfGames.toString()
-                rootView!!.fragment_statistics_user_multi_win_user.text = user.multiGame.win.toString()
-                rootView!!.fragment_statistics_user_multi_lose_user.text = user.multiGame.lose.toString()
-                rootView!!.fragment_statistics_user_multi_tie_user.text = user.multiGame.tie.toString()
             }
         }
     }
@@ -88,271 +98,347 @@ class StatisticsFragment : FragmentCoroutine() {
 
     private fun makeConstraintLayout() {
         val set = ConstraintSet()
-        set.clone(rootView!!.fragment_statistics_layout)
+        set.clone(rootView.fragment_statistics_layout)
 
-        set.connect(rootView!!.fragment_statistics_user_id_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_layout.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_id_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_image_view.id,ConstraintSet.TOP,rootView.fragment_statistics_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_statistics_image_view.id,ConstraintSet.LEFT,rootView.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
-        set.connect(rootView!!.fragment_statistics_user_id_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_layout.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_id_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_id_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_name_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_statistics_user_name_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_image_view.id,ConstraintSet.RIGHT,0)
+        set.connect(rootView.fragment_statistics_user_name_user.id,
+                ConstraintSet.RIGHT,rootView.fragment_statistics_layout.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_name_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_id_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_name_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_easy_games_title.id,ConstraintSet.TOP,rootView.fragment_statistics_user_name_user.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_statistics_easy_games_title.id,ConstraintSet.LEFT,rootView.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
-        set.connect(rootView!!.fragment_statistics_user_name_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_name_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_name_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_name_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_number_of_games_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_number_of_games_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_statistics_user_easy_number_of_games_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_number_of_games_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_easy_number_of_games_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_name_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_easy_number_of_games_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_win_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_win_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_easy_number_of_games_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_easy_number_of_games_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_win_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_easy_win_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_win_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_win_default.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_statistics_user_easy_lose_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_lose_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_win_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_easy_win_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_number_of_games_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_easy_win_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_lose_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_easy_lose_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_lose_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_lose_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_easy_win_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_win_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_easy_win_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_easy_win_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_tie_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_tie_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_lose_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_easy_lose_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_win_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_easy_lose_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_easy_lose_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_lose_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_easy_lose_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_easy_lose_default.id,ConstraintSet.RIGHT,screenUnit)
-
-
-        set.connect(rootView!!.fragment_statistics_user_easy_tie_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_lose_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_easy_tie_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_easy_tie_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_tie_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_easy_tie_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_easy_tie_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_easy_tie_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_easy_tie_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_easy_tie_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_easy_tie_default.id,ConstraintSet.LEFT,0)
 
 
-        set.connect(rootView!!.fragment_statistics_user_normal_number_of_games_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_easy_tie_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_normal_number_of_games_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_number_of_games_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_normal_number_of_games_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_normal_games_title.id,ConstraintSet.TOP,rootView.fragment_statistics_easy_games_title.id,ConstraintSet.BOTTOM,6*screenUnit)
+        set.connect(rootView.fragment_statistics_normal_games_title.id,ConstraintSet.LEFT,rootView.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
+        set.connect(rootView.fragment_statistics_user_normal_number_of_games_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_number_of_games_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_win_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_normal_win_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_normal_number_of_games_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_number_of_games_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_win_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_win_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_normal_win_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_normal_win_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_normal_win_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_win_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_number_of_games_default.id,ConstraintSet.RIGHT,0)
 
+        set.connect(rootView.fragment_statistics_user_normal_win_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_normal_win_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_win_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_win_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_lose_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_win_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_normal_lose_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_normal_lose_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_lose_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_win_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_lose_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_lose_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_normal_lose_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_normal_lose_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_normal_lose_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_normal_lose_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_lose_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_lose_default.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_statistics_user_normal_tie_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_tie_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_lose_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_normal_tie_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_lose_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_normal_tie_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_normal_tie_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_tie_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_normal_tie_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_normal_tie_default.id,ConstraintSet.RIGHT,screenUnit)
-
-
-        set.connect(rootView!!.fragment_statistics_user_hard_number_of_games_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_normal_tie_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_hard_number_of_games_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_hard_number_of_games_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_hard_number_of_games_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_normal_tie_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_normal_tie_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_normal_tie_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_normal_tie_default.id,ConstraintSet.LEFT,0)
 
 
-        set.connect(rootView!!.fragment_statistics_user_hard_win_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_hard_win_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_hard_games_title.id,ConstraintSet.TOP,rootView.fragment_statistics_normal_games_title.id,ConstraintSet.BOTTOM,6*screenUnit)
+        set.connect(rootView.fragment_statistics_hard_games_title.id,ConstraintSet.LEFT,rootView.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
-        set.connect(rootView!!.fragment_statistics_user_hard_win_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_win_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_hard_win_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_hard_win_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_number_of_games_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_number_of_games_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_statistics_user_hard_number_of_games_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_number_of_games_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_hard_lose_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_win_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_hard_lose_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_win_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_win_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_number_of_games_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_hard_lose_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_lose_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_hard_lose_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_hard_lose_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_win_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_hard_win_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_win_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_win_default.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_statistics_user_hard_lose_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_lose_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_win_default.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_hard_tie_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_lose_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_hard_tie_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_lose_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_hard_lose_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_lose_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_lose_default.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView!!.fragment_statistics_user_hard_tie_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_tie_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_hard_tie_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_hard_tie_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_tie_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_tie_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_lose_default.id,ConstraintSet.RIGHT,0)
 
-
-        set.connect(rootView!!.fragment_statistics_user_multi_number_of_games_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_hard_tie_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_multi_number_of_games_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_multi_number_of_games_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_multi_number_of_games_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.RIGHT,screenUnit)
-
-
-        set.connect(rootView!!.fragment_statistics_user_multi_win_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_multi_win_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_multi_win_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_win_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_multi_win_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_multi_win_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_hard_tie_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_hard_tie_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_hard_tie_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_hard_tie_default.id,ConstraintSet.LEFT,0)
 
 
-        set.connect(rootView!!.fragment_statistics_user_multi_lose_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_win_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_multi_lose_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_statistics_multi_games_title.id,ConstraintSet.TOP,rootView.fragment_statistics_hard_games_title.id,ConstraintSet.BOTTOM,6*screenUnit)
+        set.connect(rootView.fragment_statistics_multi_games_title.id,ConstraintSet.LEFT,rootView.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
 
-        set.connect(rootView!!.fragment_statistics_user_multi_lose_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_lose_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_multi_lose_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_multi_lose_default.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_statistics_user_multi_number_of_games_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_multi_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_number_of_games_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_multi_games_title.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_number_of_games_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_number_of_games_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_win_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_multi_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_win_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_number_of_games_default.id,ConstraintSet.RIGHT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_win_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_multi_win_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_win_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_win_default.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_lose_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_multi_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_lose_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_win_default.id,ConstraintSet.RIGHT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_lose_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_multi_lose_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_lose_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_lose_default.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_tie_default.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_multi_games_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_tie_default.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_lose_default.id,ConstraintSet.RIGHT,0)
+
+        set.connect(rootView.fragment_statistics_user_multi_tie_user.id,
+                ConstraintSet.TOP,rootView.fragment_statistics_user_multi_tie_default.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_statistics_user_multi_tie_user.id,
+                ConstraintSet.LEFT,rootView.fragment_statistics_user_multi_tie_default.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_statistics_back_button.id, ConstraintSet.TOP,rootView.fragment_statistics_multi_games_title.id, ConstraintSet.BOTTOM,6*screenUnit)
+        set.connect(rootView.fragment_statistics_back_button.id, ConstraintSet.LEFT,rootView.fragment_statistics_layout.id, ConstraintSet.LEFT,15*screenUnit)
 
 
-        set.connect(rootView!!.fragment_statistics_user_multi_tie_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_lose_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_user_multi_tie_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_user_multi_tie_user.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_tie_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_user_multi_tie_user.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_user_multi_tie_default.id,ConstraintSet.RIGHT,screenUnit)
 
 
-        set.connect(rootView!!.fragment_statistics_records_in_db_default.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_user_multi_tie_default.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView!!.fragment_statistics_records_in_db_default.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_layout.id,ConstraintSet.LEFT,screenUnit)
-
-        set.connect(rootView!!.fragment_statistics_records_in_db_real.id,
-                ConstraintSet.TOP,rootView!!.fragment_statistics_records_in_db_default.id,ConstraintSet.TOP,0)
-        set.connect(rootView!!.fragment_statistics_records_in_db_real.id,
-                ConstraintSet.LEFT,rootView!!.fragment_statistics_records_in_db_default.id,ConstraintSet.RIGHT,screenUnit)
-
-        set.applyTo(rootView!!.fragment_statistics_layout)
+        set.applyTo(rootView.fragment_statistics_layout)
     }
 
     private fun setButtonsUI() {
-        rootView!!.fragment_statistics_user_id_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_id_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_win_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_win_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_lose_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_lose_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_tie_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_easy_tie_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+        rootView.fragment_statistics_easy_games_title.background = ButtonDrawable(requireContext(), (tableWidthLarge).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_win_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_tie_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_lose_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_number_of_games_default.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_win_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_tie_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_lose_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_easy_number_of_games_user.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
 
-        rootView!!.fragment_statistics_user_normal_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_win_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_win_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_lose_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_lose_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_tie_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_normal_tie_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+        rootView.fragment_statistics_normal_games_title.background = ButtonDrawable(requireContext(), (tableWidthLarge).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_win_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_tie_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_lose_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_number_of_games_default.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_win_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_tie_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_lose_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_normal_number_of_games_user.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
 
-        rootView!!.fragment_statistics_user_hard_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_win_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_win_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_lose_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_lose_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_tie_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_hard_tie_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+        rootView.fragment_statistics_hard_games_title.background = ButtonDrawable(requireContext(), (tableWidthLarge).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_win_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_tie_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_lose_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_number_of_games_default.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_win_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_tie_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_lose_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_hard_number_of_games_user.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
 
-        rootView!!.fragment_statistics_user_multi_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_win_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_win_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_lose_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_lose_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_tie_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_user_multi_tie_user.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-
-        rootView!!.fragment_statistics_records_in_db_default.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-        rootView!!.fragment_statistics_records_in_db_real.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-
-
-
-
-
+        rootView.fragment_statistics_multi_games_title.background = ButtonDrawable(requireContext(), (tableWidthLarge).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_win_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_tie_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_lose_default.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_number_of_games_default.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_win_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_tie_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_lose_user.background = ButtonDrawable(requireContext(), (tableWidthNormal).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
+        rootView.fragment_statistics_user_multi_number_of_games_user.background = ButtonDrawable(requireContext(), (tableWidthBig).toDouble(), (tableHeight).toDouble(),screenUnit.toDouble())
     }
 
     private fun setSizes() {
-        // TODO maybe later
+
+        tableHeight = 2*screenUnit
+        tableWidthLarge = 18*screenUnit
+        tableWidthBig = 6*screenUnit
+        tableWidthNormal = 4*screenUnit
+
+        rootView.fragment_statistics_user_name_user.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,3*screenUnit)
+        rootView.fragment_statistics_user_name_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_image_view.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+
+        rootView.fragment_statistics_easy_games_title.layoutParams = ConstraintLayout.LayoutParams(tableWidthLarge,tableHeight)
+        rootView.fragment_statistics_easy_games_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_easy_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_easy_win_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_tie_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_lose_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_win_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_tie_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_lose_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_easy_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_easy_win_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_tie_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_lose_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_easy_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_win_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_tie_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_easy_lose_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_normal_games_title.layoutParams = ConstraintLayout.LayoutParams(tableWidthLarge,tableHeight)
+        rootView.fragment_statistics_normal_games_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_normal_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_normal_win_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_tie_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_lose_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_win_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_tie_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_lose_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_normal_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_normal_win_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_tie_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_lose_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_normal_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_win_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_tie_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_normal_lose_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_hard_games_title.layoutParams = ConstraintLayout.LayoutParams(tableWidthLarge,tableHeight)
+        rootView.fragment_statistics_hard_games_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_hard_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_hard_win_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_tie_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_lose_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_win_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_tie_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_lose_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_hard_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_hard_win_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_tie_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_lose_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_hard_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_win_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_tie_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_hard_lose_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_multi_games_title.layoutParams = ConstraintLayout.LayoutParams(tableWidthLarge,tableHeight)
+        rootView.fragment_statistics_multi_games_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_multi_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_multi_win_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_tie_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_lose_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_win_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_tie_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_lose_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_user_multi_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,tableHeight)
+        rootView.fragment_statistics_user_multi_win_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_tie_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_lose_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,tableHeight)
+        rootView.fragment_statistics_user_multi_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_win_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_tie_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_statistics_user_multi_lose_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_statistics_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_statistics_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_statistics_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
     }
 
     private fun setBackgroundGrid() {
-        rootView!!.fragment_statistics_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
+        rootView.fragment_statistics_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
             Shader.TileMode.REPEAT,screenUnit)
 
     }

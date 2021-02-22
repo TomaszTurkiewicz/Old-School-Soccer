@@ -7,13 +7,12 @@
     android:id="@+id/fragment_statistics_layout"
     tools:context=".fragments.StatisticsFragment">
 
-    <TextView
-        android:id="@+id/fragment_statistics_user_name_default"
+    <ImageView
+        android:id="@+id/fragment_statistics_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="user name"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_name_user"
@@ -21,23 +20,34 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="user_name"/>
 
     <TextView
-        android:id="@+id/fragment_statistics_user_id_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/fragment_statistics_back_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/back"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:clickable="true"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="user id"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
+
+<!--  EASY GAME -->
     <TextView
-        android:id="@+id/fragment_statistics_user_id_user"
+        android:id="@+id/fragment_statistics_easy_games_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="user_id"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="EASY GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_easy_number_of_games_default"
@@ -45,7 +55,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="EASY No GAMES"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_easy_number_of_games_user"
@@ -53,6 +66,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="easy games"/>
 
     <TextView
@@ -61,7 +77,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="EASY WINS"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_easy_win_user"
@@ -69,6 +88,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="easy wins"/>
 
     <TextView
@@ -77,7 +99,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="EASY LOSE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_easy_lose_user"
@@ -85,6 +110,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="easy lose"/>
 
     <TextView
@@ -93,7 +121,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="EASY TIE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_easy_tie_user"
@@ -101,9 +132,24 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
         android:text="easy tie"/>
 
 
+    <!--  NORMAL GAME -->
+
+    <TextView
+        android:id="@+id/fragment_statistics_normal_games_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="NORMAL GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_number_of_games_default"
@@ -111,7 +157,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="NORMAL No GAMES"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_number_of_games_user"
@@ -119,7 +168,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="normal games"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_win_default"
@@ -127,7 +178,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="NORMAL WINS"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_win_user"
@@ -135,7 +189,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="normal wins"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_lose_default"
@@ -143,7 +199,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="NORMAL LOSE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_lose_user"
@@ -151,7 +210,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="normal lose"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_tie_default"
@@ -159,7 +220,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="NORMAL TIE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_normal_tie_user"
@@ -167,10 +231,23 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="normal tie"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
 
+    <!--  HARD GAME -->
 
+    <TextView
+        android:id="@+id/fragment_statistics_hard_games_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="HARD GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_number_of_games_default"
@@ -178,7 +255,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="HARD No GAMES"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_number_of_games_user"
@@ -186,7 +266,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="hard games"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_win_default"
@@ -194,7 +276,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="HARD WINS"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_win_user"
@@ -202,7 +287,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="hard wins"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_lose_default"
@@ -210,7 +297,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="HARD LOSE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_lose_user"
@@ -218,7 +308,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="hard lose"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_tie_default"
@@ -226,7 +318,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="HARD TIE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_hard_tie_user"
@@ -234,11 +329,24 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="hard tie"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
 
 
+    <!--  MULTI GAME -->
 
+    <TextView
+        android:id="@+id/fragment_statistics_multi_games_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="MULTI GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_number_of_games_default"
@@ -246,7 +354,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="MULTI No GAMES"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_number_of_games_user"
@@ -254,7 +365,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="multi games"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_win_default"
@@ -262,7 +375,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="MULTI WINS"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_win_user"
@@ -270,7 +386,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="multi wins"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_lose_default"
@@ -278,7 +396,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="MULTI LOSE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_lose_user"
@@ -286,7 +407,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="multi lose"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_tie_default"
@@ -294,7 +417,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="MULTI TIE"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
 
     <TextView
         android:id="@+id/fragment_statistics_user_multi_tie_user"
@@ -302,23 +428,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="multi tie"/>
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
-    <TextView
-        android:id="@+id/fragment_statistics_records_in_db_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="COUNTER"/>
 
-    <TextView
-        android:id="@+id/fragment_statistics_records_in_db_real"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="zero"/>
 
 
 
