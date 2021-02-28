@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -48,6 +49,7 @@ class MainFragment : FragmentCoroutine() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private var rootView: View? = null
     private var updateObject=Update()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,7 +176,7 @@ class MainFragment : FragmentCoroutine() {
                                     if(userDB==null){
                                         createDB(it,user)
                                         Toast.makeText(requireContext(), "CREATING DATABASE", Toast.LENGTH_SHORT).show()
-                                        updateLoginUI()
+
 
                                     }
                                     else{
@@ -209,6 +211,7 @@ class MainFragment : FragmentCoroutine() {
                 if(!snapshot.exists()){
                     // doesn't exist - create record in database
                     dbRef.setValue(normalUser)
+                    updateLoginUI()
                 }
                 else{
 
@@ -309,9 +312,69 @@ class MainFragment : FragmentCoroutine() {
 
         val userDB = UserDB().dbUser(userFb)
 
-        UserDBDatabase(it).getUserDBDao().addUser(UserDB().dbUser(userFb))
 
-        synchronizeUserDB(it,userDB)
+
+        val mBuilder = AlertDialog.Builder(requireContext())
+        val mView = layoutInflater.inflate(R.layout.alert_dialog_user_name,null)
+        mBuilder.setView(mView)
+        val dialog = mBuilder.create()
+        val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        dialog.window!!.decorView.systemUiVisibility = flags
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
+                Shader.TileMode.REPEAT,screenUnit)
+
+        mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_title.text = "SET NEW USER NAME"
+        mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_cancel_button.visibility = View.GONE
+        mView.alert_dialog_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
+        mView.alert_dialog_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_ok_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+
+        val set = ConstraintSet()
+        set.clone(mView.alert_dialog_user_name)
+
+        set.connect(mView.alert_dialog_title.id,ConstraintSet.TOP,mView.alert_dialog_user_name.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_title.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.TOP,mView.alert_dialog_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_user_name.id,ConstraintSet.RIGHT,screenUnit)
+
+        set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_ok_button.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+        set.applyTo(mView.alert_dialog_user_name)
+
+        dialog.show()
+
+        mView.alert_dialog_ok_button.setOnClickListener { itView ->
+            val newName = mView.alert_dialog_input_user_name.text.toString().trim()
+            if(newName.isNotEmpty()){
+                userDB.name = newName
+                launch {
+                    requireContext().let {
+                        UserDBDatabase(it).getUserDBDao().addUser(userDB)
+                    }
+                }
+
+                synchronizeUserDB(it,userDB)
+                dialog.dismiss()
+            }
+        }
+
+
 
 
 
@@ -325,39 +388,36 @@ class MainFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
             rootView!!.fragment_main_user_name.visibility = View.VISIBLE
+            rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE
             launch {
-                requireContext().let {
+                requireContext().let { it ->
                     val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
-                    val username = userTemp.name.trim()
                     rootView!!.fragment_main_user_name.text = userTemp.name
+                    updateUserInFirebase(userTemp)
 
-                    if(username.isEmpty()){
-                        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.alert_dialog_user_name, null)
-                        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-                        val mAlertDialog = mBuilder.show()
-
-                        mDialogView.alert_dialog_ok_button.setOnClickListener{
-                            val username = mDialogView.alert_dialog_input_user_name.text.toString().trim()
-                            if(username.isNotEmpty()){
-                                userTemp.name=username
-                                synchronizeUserDB(requireContext(),userTemp)
-                                mAlertDialog.dismiss()
-                            }
-                            else{
-                                mDialogView.alert_dialog_input_user_name.error = "WRONG USER NAME"
-                            }
-                        }
-                    }else{
-                        synchronizeUserDB(requireContext(),userTemp)
-                    }
                 }
             }
-            rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE
+
         }else {
             rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_grey)
             rootView!!.fragment_main_user_name.visibility = View.GONE
             rootView!!.fragment_main_statistics_button.visibility = View.GONE
         }
+    }
+
+    private fun updateUserInFirebase(userTemp: UserDB) {
+        val dbRef = Firebase.database.getReference("User").child(userTemp.id)
+        val userFB = User().userFromDB(userTemp)
+        dbRef.setValue(userFB)
+
+    }
+
+
+    private fun updateFirebase(userTemp: UserDB) {
+        val userFB = User().userFromDB(userTemp)
+        val dbRef = Firebase.database.getReference("User").child(userFB.id)
+        dbRef.setValue(userFB)
+
     }
 
     /**
