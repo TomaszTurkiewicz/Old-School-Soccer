@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 }
 
 /*
-* todo przerobić sharedpreferences na database room - user statistics and saved games and creating database for user
 * todo connect to firebase (picture, user, login)
 * todo add admob
 * todo activity multiplayer
@@ -82,12 +81,8 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 * todo puchary (rozgrywki)
 * todo nagrody za strzelone branki i wygrane mecze
 * todo ikona aplikacji
-* todo update helper listener
 * todo add sounds
 *
 */
 // todo make ui for single player activity
 // todo samouczek
-// todo different types of games (single, liga, tournament)
-// todo make logic for single player game normal (choosing best moves and checking if phone can score)!!!
-// todo make logic for single player game (checking if phone can score if not blocking user moves)!!!

@@ -1,11 +1,15 @@
 package com.tt.oldschoolsoccer.fragments
 
+import android.app.AlertDialog
 import android.graphics.Shader
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -17,6 +21,8 @@ import com.tt.oldschoolsoccer.classes.User
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import kotlinx.android.synthetic.main.alert_dialog_user_name.*
+import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
 import kotlinx.android.synthetic.main.fragment_statistics.view.*
 import kotlinx.coroutines.launch
@@ -57,6 +63,9 @@ class StatisticsFragment : FragmentCoroutine() {
 
     override fun onResume() {
         super.onResume()
+
+
+
         launch {
             requireContext().let {
 
@@ -83,6 +92,65 @@ class StatisticsFragment : FragmentCoroutine() {
                 rootView.fragment_statistics_user_multi_win_user.text = user.multiGame.win.toString()
                 rootView.fragment_statistics_user_multi_lose_user.text = user.multiGame.lose.toString()
                 rootView.fragment_statistics_user_multi_tie_user.text = user.multiGame.tie.toString()
+
+                rootView.fragment_statistics_user_name_user.setOnClickListener {
+                    val mBuilder = AlertDialog.Builder(requireContext())
+                    val mView = layoutInflater.inflate(R.layout.alert_dialog_user_name,null)
+                    mBuilder.setView(mView)
+                    val dialog = mBuilder.create()
+                    val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_FULLSCREEN or
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    dialog.window!!.decorView.systemUiVisibility = flags
+                    dialog.setCancelable(false)
+                    dialog.setCanceledOnTouchOutside(false)
+
+
+                    mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
+                    Shader.TileMode.REPEAT,screenUnit)
+
+                    mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+                    mView.alert_dialog_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                    mView.alert_dialog_title.text = "SET NEW USER NAME"
+
+                    mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+                    mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                    mView.alert_dialog_input_user_name.setText(user.userName)
+
+                    mView.alert_dialog_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
+                    mView.alert_dialog_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                    mView.alert_dialog_cancel_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+
+                    mView.alert_dialog_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
+                    mView.alert_dialog_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                    mView.alert_dialog_ok_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+
+                    val set = ConstraintSet()
+                    set.clone(mView.alert_dialog_user_name)
+
+                    set.connect(mView.alert_dialog_title.id,ConstraintSet.TOP,mView.alert_dialog_user_name.id,ConstraintSet.TOP,0)
+                    set.connect(mView.alert_dialog_title.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+                    set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.TOP,mView.alert_dialog_title.id,ConstraintSet.BOTTOM,0)
+                    set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+                    set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenUnit)
+                    set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,screenUnit)
+
+                    set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenUnit)
+                    set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_user_name.id,ConstraintSet.RIGHT,screenUnit)
+
+                    set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_cancel_button.id,ConstraintSet.BOTTOM,0)
+                    set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
+
+                    set.applyTo(mView.alert_dialog_user_name)
+
+                    dialog.show()
+
+                }
 
             }
         }

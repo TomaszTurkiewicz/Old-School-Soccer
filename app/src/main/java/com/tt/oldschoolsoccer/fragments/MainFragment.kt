@@ -258,7 +258,7 @@ class MainFragment : FragmentCoroutine() {
         createUserEasyField(it)
         createUserNormalField(it)
         createUserHardField(it)
-        //todo multiplayer database
+
 
     }
 
