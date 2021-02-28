@@ -347,6 +347,8 @@ class MainFragment : FragmentCoroutine() {
                                 mDialogView.alert_dialog_input_user_name.error = "WRONG USER NAME"
                             }
                         }
+                    }else{
+                        synchronizeUserDB(requireContext(),userTemp)
                     }
                 }
             }

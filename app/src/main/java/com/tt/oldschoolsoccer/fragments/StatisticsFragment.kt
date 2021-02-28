@@ -13,8 +13,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.FragmentCoroutine
 import com.tt.oldschoolsoccer.classes.Functions
@@ -156,9 +154,6 @@ class StatisticsFragment : FragmentCoroutine() {
         launch {
             requireContext().let {
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
-                val userFB = User().userFromDB(user)
-                val dbRef = Firebase.database.getReference("User").child(user.id)
-                dbRef.setValue(userFB)
                 updateUI(user)
             }
         }

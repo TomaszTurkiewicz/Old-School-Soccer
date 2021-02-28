@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
@@ -167,9 +165,6 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
 
-                val userFb = User().userFromDB(user)
-                val dbRef = Firebase.database.getReference("User").child(userFb.id)
-                dbRef.setValue(userFb)
             }
         }
     }
