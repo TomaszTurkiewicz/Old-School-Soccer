@@ -13,11 +13,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.FragmentCoroutine
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.LoggedInStatus
 import com.tt.oldschoolsoccer.classes.User
+import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
@@ -68,31 +71,8 @@ class StatisticsFragment : FragmentCoroutine() {
 
         launch {
             requireContext().let {
-
-                val user = User().userFromDB(UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid))
-                rootView.fragment_statistics_user_name_user.text = user.userName
-                rootView.fragment_statistics_image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
-
-                rootView.fragment_statistics_user_easy_number_of_games_user.text = user.easyGame.numberOfGames.toString()
-                rootView.fragment_statistics_user_easy_win_user.text = user.easyGame.win.toString()
-                rootView.fragment_statistics_user_easy_lose_user.text = user.easyGame.lose.toString()
-                rootView.fragment_statistics_user_easy_tie_user.text = user.easyGame.tie.toString()
-
-                rootView.fragment_statistics_user_normal_number_of_games_user.text = user.normalGame.numberOfGames.toString()
-                rootView.fragment_statistics_user_normal_win_user.text = user.normalGame.win.toString()
-                rootView.fragment_statistics_user_normal_lose_user.text = user.normalGame.lose.toString()
-                rootView.fragment_statistics_user_normal_tie_user.text = user.normalGame.tie.toString()
-
-                rootView.fragment_statistics_user_hard_number_of_games_user.text = user.hardGame.numberOfGames.toString()
-                rootView.fragment_statistics_user_hard_win_user.text = user.hardGame.win.toString()
-                rootView.fragment_statistics_user_hard_lose_user.text = user.hardGame.lose.toString()
-                rootView.fragment_statistics_user_hard_tie_user.text = user.hardGame.tie.toString()
-
-                rootView.fragment_statistics_user_multi_number_of_games_user.text = user.multiGame.numberOfGames.toString()
-                rootView.fragment_statistics_user_multi_win_user.text = user.multiGame.win.toString()
-                rootView.fragment_statistics_user_multi_lose_user.text = user.multiGame.lose.toString()
-                rootView.fragment_statistics_user_multi_tie_user.text = user.multiGame.tie.toString()
-
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                updateUI(user)
                 rootView.fragment_statistics_user_name_user.setOnClickListener {
                     val mBuilder = AlertDialog.Builder(requireContext())
                     val mView = layoutInflater.inflate(R.layout.alert_dialog_user_name,null)
@@ -118,7 +98,7 @@ class StatisticsFragment : FragmentCoroutine() {
 
                     mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
                     mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-                    mView.alert_dialog_input_user_name.setText(user.userName)
+                    mView.alert_dialog_input_user_name.setText(user.name)
 
                     mView.alert_dialog_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
                     mView.alert_dialog_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
@@ -150,10 +130,65 @@ class StatisticsFragment : FragmentCoroutine() {
 
                     dialog.show()
 
+                    mView.alert_dialog_cancel_button.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    mView.alert_dialog_ok_button.setOnClickListener {
+                       val newName =  mView.alert_dialog_input_user_name.text.toString().trim()
+                        if(newName.isNotEmpty()){
+                            user.name = newName
+                            updateUser(user)
+                            dialog.dismiss()
+                        }
+                        else{
+                            mView.alert_dialog_input_user_name.error = "WRONG USER NAME"
+                        }
+                    }
+
                 }
 
             }
         }
+    }
+
+    private fun updateUser(user: UserDB) {
+        launch {
+            requireContext().let {
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+                val userFB = User().userFromDB(user)
+                val dbRef = Firebase.database.getReference("User").child(user.id)
+                dbRef.setValue(userFB)
+                updateUI(user)
+            }
+        }
+
+    }
+
+    private fun updateUI(user: UserDB) {
+        rootView.fragment_statistics_user_name_user.text = user.name
+        rootView.fragment_statistics_image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
+
+        rootView.fragment_statistics_user_easy_number_of_games_user.text = user.easyGameNumberOfGame.toString()
+        rootView.fragment_statistics_user_easy_win_user.text = user.easyGameWin.toString()
+        rootView.fragment_statistics_user_easy_lose_user.text = user.easyGameLose.toString()
+        rootView.fragment_statistics_user_easy_tie_user.text = user.easyGameTie.toString()
+
+        rootView.fragment_statistics_user_normal_number_of_games_user.text = user.normalGameNumberOfGame.toString()
+        rootView.fragment_statistics_user_normal_win_user.text = user.normalGameWin.toString()
+        rootView.fragment_statistics_user_normal_lose_user.text = user.normalGameLose.toString()
+        rootView.fragment_statistics_user_normal_tie_user.text = user.normalGameTie.toString()
+
+        rootView.fragment_statistics_user_hard_number_of_games_user.text = user.hardGameNumberOfGame.toString()
+        rootView.fragment_statistics_user_hard_win_user.text = user.hardGameWin.toString()
+        rootView.fragment_statistics_user_hard_lose_user.text = user.hardGameLose.toString()
+        rootView.fragment_statistics_user_hard_tie_user.text = user.hardGameTie.toString()
+
+        rootView.fragment_statistics_user_multi_number_of_games_user.text = user.multiGameNumberOfGame.toString()
+        rootView.fragment_statistics_user_multi_win_user.text = user.multiGameWin.toString()
+        rootView.fragment_statistics_user_multi_lose_user.text = user.multiGameLose.toString()
+        rootView.fragment_statistics_user_multi_tie_user.text = user.multiGameTie.toString()
+
     }
 
     private fun makeUI() {
