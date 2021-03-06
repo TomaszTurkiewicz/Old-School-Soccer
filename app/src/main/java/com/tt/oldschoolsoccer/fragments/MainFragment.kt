@@ -55,6 +55,8 @@ class MainFragment : FragmentCoroutine() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,ChangeIconFragment()).commit()
+
         /**
          * read screenUnit for making any UI in this fragment
          */
@@ -411,14 +413,7 @@ class MainFragment : FragmentCoroutine() {
         dbRef.setValue(userFB)
 
     }
-
-
-    private fun updateFirebase(userTemp: UserDB) {
-        val userFB = User().userFromDB(userTemp)
-        val dbRef = Firebase.database.getReference("User").child(userFB.id)
-        dbRef.setValue(userFB)
-
-    }
+    
 
     /**
      * check user in database and synchronize with shared preferences

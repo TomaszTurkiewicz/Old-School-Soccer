@@ -55,7 +55,16 @@ class StatisticsFragment : FragmentCoroutine() {
             goToMainMenu()
         }
 
+        rootView.fragment_statistics_image_view.setOnClickListener {
+            goToChangeIconFragment()
+        }
+
         return rootView
+    }
+
+    private fun goToChangeIconFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ChangeIconFragment()).commit()
+
     }
 
     private fun goToMainMenu() {
