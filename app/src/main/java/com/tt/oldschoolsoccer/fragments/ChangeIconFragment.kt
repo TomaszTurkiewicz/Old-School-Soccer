@@ -51,7 +51,7 @@ class ChangeIconFragment : FragmentCoroutine() {
     }
 
     private fun updateUI() {
-        rootView.fragment_change_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), (18*screenUnit).toDouble(), screenUnit.toDouble()))
+        rootView.fragment_change_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), (18*screenUnit).toDouble()))
 
     }
 

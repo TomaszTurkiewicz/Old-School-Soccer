@@ -31,6 +31,15 @@ data class UserDB(
         var multiGameLose: Int = 0,
         var multiGameTie: Int = 0,
         var multiGameNumberOfGame: Int = 0,
+        var backgroundColor: Int = 0,
+        var leftArmColor: Int = 0,
+        var rightArmColor: Int = 0,
+        var overArmsColor: Int = 0,
+        var bodyLeftColor: Int = 0,
+        var bodyRightColor: Int = 0,
+        var trouserExternalColor: Int = 0,
+        var trousersInternalColor: Int = 0,
+        var trousersBody: Int = 0
 ) {
     fun dbUser(user: User): UserDB{
 
@@ -52,6 +61,15 @@ data class UserDB(
         this.multiGameLose = user.multiGame.lose
         this.multiGameTie = user.multiGame.tie
         this.multiGameNumberOfGame = user.multiGame.numberOfGames
+        this.backgroundColor = user.icon.getBackgroundColor()
+        this.leftArmColor = user.icon.getLeftArmColor()
+        this.rightArmColor = user.icon.getRightArmColor()
+        this.overArmsColor = user.icon.getOverArmsColor()
+        this.bodyLeftColor = user.icon.getBodyLeftColor()
+        this.bodyRightColor = user.icon.getBodyRightColor()
+        this.trouserExternalColor = user.icon.getTrousersExternalColor()
+        this.trousersInternalColor = user.icon.getTrousersInternalColor()
+        this.trousersBody = user.icon.getTrousersBodyColor()
         return this
     }
 }
