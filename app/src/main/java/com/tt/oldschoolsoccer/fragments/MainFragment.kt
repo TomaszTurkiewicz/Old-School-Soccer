@@ -33,6 +33,7 @@ import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.*
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
@@ -49,6 +50,7 @@ class MainFragment : FragmentCoroutine() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private var rootView: View? = null
     private var updateObject=Update()
+
 
 
 
@@ -401,7 +403,7 @@ class MainFragment : FragmentCoroutine() {
             }
 
         }else {
-            rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_grey)
+            rootView!!.fragment_main_login_logout_Image_view.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),UserIconColors().notLoggedIn()))
             rootView!!.fragment_main_user_name.visibility = View.GONE
             rootView!!.fragment_main_statistics_button.visibility = View.GONE
         }

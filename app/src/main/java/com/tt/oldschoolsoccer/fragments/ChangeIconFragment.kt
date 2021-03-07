@@ -14,6 +14,7 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.FragmentCoroutine
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.LoggedInStatus
+import com.tt.oldschoolsoccer.classes.UserIconColors
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
@@ -51,7 +52,7 @@ class ChangeIconFragment : FragmentCoroutine() {
     }
 
     private fun updateUI() {
-        rootView.fragment_change_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), (18*screenUnit).toDouble()))
+        rootView.fragment_change_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), (18*screenUnit).toDouble(), UserIconColors()))
 
     }
 

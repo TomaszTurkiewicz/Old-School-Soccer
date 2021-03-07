@@ -85,7 +85,7 @@ class UserIconColors() {
     }
 
 
-    fun notLoggedIn(){
+    fun notLoggedIn():UserIconColors{
         this.backgroundColor = -1
         this.leftArmColor = -1
         this.rightArmColor = -1
@@ -95,6 +95,7 @@ class UserIconColors() {
         this.trousersExternalColor = -1
         this.trousersInternalColor = -1
         this.trousersBodyColor = -1
+        return this
     }
 }
 

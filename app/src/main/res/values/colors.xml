@@ -12,4 +12,9 @@
     <color name="test">#FF5900</color>
     <color name="win">#158A00</color>
     <color name="lost">#CF0000</color>
+
+    <color name="icon_background_grey">#BFBFBF</color>
+    <color name="icon_grey_light">#E3E3E3</color>
+    <color name="icon_grey_medium">#978F8F</color>
+    <color name="icon_grey_dark">#717171</color>
 </resources>

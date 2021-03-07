@@ -5,8 +5,9 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
+import com.tt.oldschoolsoccer.classes.UserIconColors
 
-class UserIconDrawable(private val context: Context, size:Double): Drawable() {
+class UserIconDrawable(private val context: Context, size:Double, private val colors:UserIconColors): Drawable() {
 
     private val paint = Paint()
 
@@ -27,19 +28,19 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * first variable background
          */
 
-        paint.color = ContextCompat.getColor(context,R.color.test)
+        paint.color = backgroundColor()
         paint.style = Paint.Style.FILL
 
         canvas.drawCircle((9*unit).toFloat(), (9*unit).toFloat(), radius.toFloat(),paint)
 
 
-        paint.color = ContextCompat.getColor(context, R.color.win)
-        paint.strokeWidth = lineWidth.toFloat()
-        paint.style = Paint.Style.FILL
+
+
 
         /**
          * second variable left arm
          */
+        paint.color = leftArmColor()
 
         val pathLeftArm = Path()
         pathLeftArm.moveTo((a*unit).toFloat(),4*unit.toFloat())
@@ -54,6 +55,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * third variable right arm
          */
 
+        paint.color = rightArmColor()
         val pathRightArm = Path()
         pathRightArm.moveTo(((18-a)*unit).toFloat(),4*unit.toFloat())
         pathRightArm.lineTo(((18-b)*unit).toFloat(),(5.5*unit).toFloat())
@@ -68,6 +70,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * fourth variable overarms
          */
 
+        paint.color = overArmsColor()
         val pathLeftOverArm = Path()
         pathLeftOverArm.moveTo((a*unit).toFloat(),4*unit.toFloat())
         pathLeftOverArm.lineTo(((a-0.25)*unit).toFloat(),(3.75*unit).toFloat())
@@ -97,6 +100,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * fifth left body
          */
 
+        paint.color = leftBodyColor()
         val pathBodyLeft = Path()
 
         pathBodyLeft.moveTo((c*unit).toFloat(),(2.5*unit).toFloat())
@@ -115,6 +119,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * sixth right body
          */
 
+        paint.color = rightBodyColor()
         val pathBodyRight = Path()
 
         pathBodyRight.moveTo(((18-c)*unit).toFloat(),(2.5*unit).toFloat())
@@ -132,6 +137,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * seventh trousers external
          */
 
+        paint.color = trousersExternalColor()
         val pathLeftTrousersExternal = Path()
 
         pathLeftTrousersExternal.moveTo((c*unit).toFloat(),(10.5*unit).toFloat())
@@ -157,6 +163,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
          * eighth trousers internal
          */
 
+        paint.color = trousersInternalColor()
         val pathLeftTrousersInternal = Path()
 
         pathLeftTrousersInternal.moveTo((8*unit).toFloat(), (17.43*unit).toFloat())
@@ -190,7 +197,7 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
         /**
          * ninth trousers body
          */
-
+        paint.color = trousersBodyColor()
         val pathTrousersBody = Path()
 
         pathTrousersBody.moveTo(((c+0.5)*unit).toFloat(),(10.5*unit).toFloat())
@@ -212,6 +219,9 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
 
     }
 
+
+
+
     override fun setAlpha(alpha: Int) {
         paint.alpha = alpha
     }
@@ -221,4 +231,75 @@ class UserIconDrawable(private val context: Context, size:Double): Drawable() {
     }
 
     override fun getOpacity(): Int = PixelFormat.OPAQUE
+
+    private fun backgroundColor():Int{
+        val color = ContextCompat.getColor(context,R.color.icon_background_grey)
+        when (colors.getBackgroundColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun leftArmColor():Int{
+        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        when (colors.getLeftArmColor()){
+            //different colors
+        }
+        return color
+    }
+    private fun rightArmColor():Int{
+        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        when (colors.getRightArmColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun overArmsColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        when (colors.getOverArmsColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun leftBodyColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_light)
+        when (colors.getBodyLeftColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun rightBodyColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_light)
+        when (colors.getBodyRightColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun trousersExternalColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        when (colors.getTrousersExternalColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun trousersInternalColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        when (colors.getTrousersInternalColor()){
+            //different colors
+        }
+        return color
+    }
+
+    private fun trousersBodyColor(): Int {
+        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        when (colors.getTrousersBodyColor()){
+            //different colors
+        }
+        return color
+    }
 }
