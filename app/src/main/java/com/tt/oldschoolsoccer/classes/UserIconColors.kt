@@ -11,6 +11,85 @@ class UserIconColors() {
     private var trousersInternalColor = 0
     private var trousersBodyColor = 0
 
+    fun addOneToBackgroundColor() {
+        if (backgroundColor == Static.BACKGROUND_COLORS_MAX_VALUE) {
+            this.backgroundColor = 0
+        } else {
+            this.backgroundColor += 1
+        }
+    }
+
+    fun minusOneFromBackgroundColor(){
+        if(backgroundColor == 0){
+            this.backgroundColor = Static.BACKGROUND_COLORS_MAX_VALUE
+        }else{
+            this.backgroundColor -= 1
+        }
+    }
+
+    fun addOneToOverArmsColor() {
+        if (overArmsColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.overArmsColor = 0
+        } else {
+            this.overArmsColor += 1
+        }
+    }
+
+    fun addOneToLeftSleeveColor() {
+        if (leftArmColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.leftArmColor = 0
+        } else {
+            this.leftArmColor += 1
+        }
+    }
+
+    fun addOneToRightSleeveColor() {
+        if (rightArmColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.rightArmColor = 0
+        } else {
+            this.rightArmColor += 1
+        }
+    }
+
+    fun addOneToLeftShirtColor() {
+        if (bodyLeftColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.bodyLeftColor = 0
+        } else {
+            this.bodyLeftColor += 1
+        }
+    }
+
+    fun addOneToRightShirtColor() {
+        if (bodyRightColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.bodyRightColor = 0
+        } else {
+            this.bodyRightColor += 1
+        }
+    }
+
+    fun addOneToTrouserColor() {
+        if (trousersBodyColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.trousersBodyColor = 0
+        } else {
+            this.trousersBodyColor += 1
+        }
+    }
+
+    fun addOneToTrouserExternalColor() {
+        if (trousersExternalColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.trousersExternalColor = 0
+        } else {
+            this.trousersExternalColor += 1
+        }
+    }
+
+    fun addOneToTrouserInternalColor() {
+        if (trousersInternalColor == Static.OTHER_COLORS_MAX_VALUE) {
+            this.trousersInternalColor = 0
+        } else {
+            this.trousersInternalColor += 1
+        }
+    }
 
     fun getTrousersBodyColor():Int{
         return this.trousersBodyColor

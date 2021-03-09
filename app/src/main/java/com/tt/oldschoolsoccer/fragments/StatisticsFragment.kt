@@ -22,6 +22,7 @@ import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.alert_dialog_user_name.*
 import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
@@ -170,8 +171,9 @@ class StatisticsFragment : FragmentCoroutine() {
     }
 
     private fun updateUI(user: UserDB) {
+        val userNormal = User().userFromDB(user)
         rootView.fragment_statistics_user_name_user.text = user.name
-        rootView.fragment_statistics_image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
+        rootView.fragment_statistics_image_view.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),userNormal.icon))
 
         rootView.fragment_statistics_user_easy_number_of_games_user.text = user.easyGameNumberOfGame.toString()
         rootView.fragment_statistics_user_easy_win_user.text = user.easyGameWin.toString()

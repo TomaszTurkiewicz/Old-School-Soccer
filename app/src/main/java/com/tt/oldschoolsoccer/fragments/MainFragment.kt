@@ -390,14 +390,16 @@ class MainFragment : FragmentCoroutine() {
     private fun updateLoginUI() {
         val loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
         if(loggedInStatus.loggedIn){
-            rootView!!.fragment_main_login_logout_Image_view.background = ContextCompat.getDrawable(requireContext(), R.drawable.account_green)
+
             rootView!!.fragment_main_user_name.visibility = View.VISIBLE
             rootView!!.fragment_main_statistics_button.visibility = View.VISIBLE
             launch {
                 requireContext().let { it ->
                     val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
                     rootView!!.fragment_main_user_name.text = userTemp.name
-                    updateUserInFirebase(userTemp)
+                    val user = User().userFromDB(userTemp)
+                    rootView!!.fragment_main_login_logout_Image_view.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),user.icon))
+                    updateUserInFirebase(user)
 
                 }
             }
@@ -409,10 +411,9 @@ class MainFragment : FragmentCoroutine() {
         }
     }
 
-    private fun updateUserInFirebase(userTemp: UserDB) {
+    private fun updateUserInFirebase(userTemp: User) {
         val dbRef = Firebase.database.getReference("User").child(userTemp.id)
-        val userFB = User().userFromDB(userTemp)
-        dbRef.setValue(userFB)
+        dbRef.setValue(userTemp)
 
     }
     

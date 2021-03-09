@@ -17,4 +17,14 @@
     <color name="icon_grey_light">#E3E3E3</color>
     <color name="icon_grey_medium">#978F8F</color>
     <color name="icon_grey_dark">#717171</color>
+
+    <color name="icon_background_green">#A6FA85</color>
+    <color name="icon_green_light">#BDFBA5</color>
+    <color name="icon_green_medium">#5ABC35</color>
+    <color name="icon_green_dark">#1E6A00</color>
+
+    <color name="icon_background_red">#FA8484</color>
+    <color name="icon_red_light">#FDA5A5</color>
+    <color name="icon_red_medium">#FF4444</color>
+    <color name="icon_red_dark">#FA0000</color>
 </resources>

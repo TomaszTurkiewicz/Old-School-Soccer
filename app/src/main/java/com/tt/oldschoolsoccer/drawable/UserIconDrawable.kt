@@ -233,73 +233,96 @@ class UserIconDrawable(private val context: Context, size:Double, private val co
     override fun getOpacity(): Int = PixelFormat.OPAQUE
 
     private fun backgroundColor():Int{
-        val color = ContextCompat.getColor(context,R.color.icon_background_grey)
-        when (colors.getBackgroundColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_background_grey)
+        if(colors.getBackgroundColor()!=-1){
+            color = background()
         }
         return color
     }
 
     private fun leftArmColor():Int{
-        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
-        when (colors.getLeftArmColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        if(colors.getLeftArmColor()!=-1){
+            color = colorId(colors.getLeftArmColor())
         }
         return color
     }
+
     private fun rightArmColor():Int{
-        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
-        when (colors.getRightArmColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        if(colors.getRightArmColor()!=-1){
+            color = colorId(colors.getRightArmColor())
         }
         return color
     }
 
     private fun overArmsColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
-        when (colors.getOverArmsColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        if(colors.getOverArmsColor()!=-1){
+            color = colorId(colors.getOverArmsColor())
         }
         return color
     }
 
     private fun leftBodyColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_light)
-        when (colors.getBodyLeftColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_light)
+        if(colors.getBodyLeftColor()!=-1){
+            color = colorId(colors.getBodyLeftColor())
         }
         return color
     }
 
     private fun rightBodyColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_light)
-        when (colors.getBodyRightColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_light)
+        if(colors.getBodyRightColor()!=-1){
+            color = colorId(colors.getBodyRightColor())
         }
         return color
     }
 
     private fun trousersExternalColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
-        when (colors.getTrousersExternalColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        if(colors.getTrousersExternalColor()!=-1){
+            color = colorId(colors.getTrousersExternalColor())
         }
         return color
     }
 
     private fun trousersInternalColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_dark)
-        when (colors.getTrousersInternalColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_dark)
+        if(colors.getTrousersInternalColor()!=-1){
+            color = colorId(colors.getTrousersInternalColor())
         }
         return color
     }
 
     private fun trousersBodyColor(): Int {
-        val color = ContextCompat.getColor(context,R.color.icon_grey_medium)
-        when (colors.getTrousersBodyColor()){
-            //different colors
+        var color = ContextCompat.getColor(context,R.color.icon_grey_medium)
+        if(colors.getTrousersBodyColor()!=-1){
+            color = colorId(colors.getTrousersBodyColor())
         }
         return color
+    }
+
+    private fun colorId(colorSave: Int): Int {
+        return when(colorSave){
+            0 -> ContextCompat.getColor(context,R.color.icon_green_dark)
+            1 -> ContextCompat.getColor(context,R.color.icon_green_medium)
+            2 -> ContextCompat.getColor(context,R.color.icon_green_light)
+            3 -> ContextCompat.getColor(context,R.color.icon_red_dark)
+            4 -> ContextCompat.getColor(context,R.color.icon_red_medium)
+            5 -> ContextCompat.getColor(context,R.color.icon_red_light)
+
+            else ->ContextCompat.getColor(context,R.color.icon_grey_medium)
+
+        }
+    }
+
+    private fun background(): Int {
+        return when(colors.getBackgroundColor()){
+            0 -> ContextCompat.getColor(context,R.color.icon_background_green)
+            1 -> ContextCompat.getColor(context,R.color.icon_background_red)
+            else -> ContextCompat.getColor(context,R.color.icon_background_grey)
+        }
     }
 }
