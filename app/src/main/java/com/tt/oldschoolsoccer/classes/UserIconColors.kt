@@ -35,11 +35,27 @@ class UserIconColors() {
         }
     }
 
+    fun minusOneFromArmsColor(){
+        if(overArmsColor == 0){
+            this.overArmsColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.overArmsColor -= 1
+        }
+    }
+
     fun addOneToLeftSleeveColor() {
         if (leftArmColor == Static.OTHER_COLORS_MAX_VALUE) {
             this.leftArmColor = 0
         } else {
             this.leftArmColor += 1
+        }
+    }
+
+    fun minusOneFromLeftSleeveColor(){
+        if(leftArmColor == 0){
+            this.leftArmColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.leftArmColor -= 1
         }
     }
 
@@ -51,11 +67,27 @@ class UserIconColors() {
         }
     }
 
+    fun minusOneFromRightSleeveColor(){
+        if(rightArmColor == 0){
+            this.rightArmColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.rightArmColor -= 1
+        }
+    }
+
     fun addOneToLeftShirtColor() {
         if (bodyLeftColor == Static.OTHER_COLORS_MAX_VALUE) {
             this.bodyLeftColor = 0
         } else {
             this.bodyLeftColor += 1
+        }
+    }
+
+    fun minusOneFromLeftShirtColor(){
+        if(bodyLeftColor == 0){
+            this.bodyLeftColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.bodyLeftColor -= 1
         }
     }
 
@@ -67,11 +99,27 @@ class UserIconColors() {
         }
     }
 
+    fun minusOneFromRightShirtColor(){
+        if(bodyRightColor == 0){
+            this.bodyRightColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.bodyRightColor -= 1
+        }
+    }
+
     fun addOneToTrouserColor() {
         if (trousersBodyColor == Static.OTHER_COLORS_MAX_VALUE) {
             this.trousersBodyColor = 0
         } else {
             this.trousersBodyColor += 1
+        }
+    }
+
+    fun minusOneFromTrouserColor(){
+        if(trousersBodyColor == 0){
+            this.trousersBodyColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.trousersBodyColor -= 1
         }
     }
 
@@ -83,11 +131,27 @@ class UserIconColors() {
         }
     }
 
+    fun minusOneFromTrouserExternalColor(){
+        if(trousersExternalColor == 0){
+            this.trousersExternalColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.trousersExternalColor -= 1
+        }
+    }
+
     fun addOneToTrouserInternalColor() {
         if (trousersInternalColor == Static.OTHER_COLORS_MAX_VALUE) {
             this.trousersInternalColor = 0
         } else {
             this.trousersInternalColor += 1
+        }
+    }
+
+    fun minusOneFromTrouserInternalColor(){
+        if(trousersInternalColor == 0){
+            this.trousersInternalColor = Static.OTHER_COLORS_MAX_VALUE
+        }else{
+            this.trousersInternalColor -= 1
         }
     }
 

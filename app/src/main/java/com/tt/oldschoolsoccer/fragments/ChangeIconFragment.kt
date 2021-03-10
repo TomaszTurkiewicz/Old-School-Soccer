@@ -61,8 +61,18 @@ class ChangeIconFragment : FragmentCoroutine() {
             updateUI(user)
         }
 
+        rootView.fragment_change_icon_left_arrow_over_arms.setOnClickListener {
+            user.icon.minusOneFromArmsColor()
+            updateUI(user)
+        }
+
         rootView.fragment_change_icon_right_arrow_left_sleeve.setOnClickListener {
             user.icon.addOneToLeftSleeveColor()
+            updateUI(user)
+        }
+
+        rootView.fragment_change_icon_left_arrow_left_sleeve.setOnClickListener {
+            user.icon.minusOneFromLeftSleeveColor()
             updateUI(user)
         }
 
@@ -71,8 +81,18 @@ class ChangeIconFragment : FragmentCoroutine() {
             updateUI(user)
         }
 
+        rootView.fragment_change_icon_left_arrow_right_sleeve.setOnClickListener {
+            user.icon.minusOneFromRightSleeveColor()
+            updateUI(user)
+        }
+
         rootView.fragment_change_icon_right_arrow_left_shirt.setOnClickListener {
             user.icon.addOneToLeftShirtColor()
+            updateUI(user)
+        }
+
+        rootView.fragment_change_icon_left_arrow_left_shirt.setOnClickListener {
+            user.icon.minusOneFromLeftShirtColor()
             updateUI(user)
         }
 
@@ -81,8 +101,18 @@ class ChangeIconFragment : FragmentCoroutine() {
             updateUI(user)
         }
 
+        rootView.fragment_change_icon_left_arrow_right_shirt.setOnClickListener {
+            user.icon.minusOneFromRightShirtColor()
+            updateUI(user)
+        }
+
         rootView.fragment_change_icon_right_arrow_trousers.setOnClickListener {
             user.icon.addOneToTrouserColor()
+            updateUI(user)
+        }
+
+        rootView.fragment_change_icon_left_arrow_trousers.setOnClickListener {
+            user.icon.minusOneFromTrouserColor()
             updateUI(user)
         }
 
@@ -91,8 +121,18 @@ class ChangeIconFragment : FragmentCoroutine() {
             updateUI(user)
         }
 
+        rootView.fragment_change_icon_left_arrow_trousers_external.setOnClickListener {
+            user.icon.minusOneFromTrouserExternalColor()
+            updateUI(user)
+        }
+
         rootView.fragment_change_icon_right_arrow_trousers_internal.setOnClickListener {
             user.icon.addOneToTrouserInternalColor()
+            updateUI(user)
+        }
+
+        rootView.fragment_change_icon_left_arrow_trousers_internal.setOnClickListener {
+            user.icon.minusOneFromTrouserInternalColor()
             updateUI(user)
         }
 
