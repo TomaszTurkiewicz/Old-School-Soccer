@@ -33,8 +33,8 @@ class Static {
         const val MOVE_CHECKING = 4
         const val MOVE_BEST = 5
 
-        const val BACKGROUND_COLORS_MAX_VALUE = 1
-        const val OTHER_COLORS_MAX_VALUE = 5
+        const val BACKGROUND_COLORS_MAX_VALUE = 2
+        const val OTHER_COLORS_MAX_VALUE = 8
 
     }
 }
