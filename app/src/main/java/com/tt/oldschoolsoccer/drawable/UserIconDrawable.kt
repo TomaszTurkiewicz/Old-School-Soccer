@@ -315,6 +315,11 @@ class UserIconDrawable(private val context: Context, size:Double, private val co
             6 -> ContextCompat.getColor(context,R.color.icon_blue_dark)
             7 -> ContextCompat.getColor(context,R.color.icon_blue_medium)
             8 -> ContextCompat.getColor(context,R.color.icon_blue_light)
+            9 -> ContextCompat.getColor(context,R.color.icon_yellow_dark)
+            10 -> ContextCompat.getColor(context,R.color.icon_yellow_medium)
+            11 -> ContextCompat.getColor(context,R.color.icon_yellow_light)
+            12 -> ContextCompat.getColor(context,R.color.icon_white)
+            13 -> ContextCompat.getColor(context,R.color.icon_black)
 
             else ->ContextCompat.getColor(context,R.color.icon_grey_medium)
 
@@ -326,6 +331,7 @@ class UserIconDrawable(private val context: Context, size:Double, private val co
             0 -> ContextCompat.getColor(context,R.color.icon_background_green)
             1 -> ContextCompat.getColor(context,R.color.icon_background_red)
             2 -> ContextCompat.getColor(context,R.color.icon_background_blue)
+            3 -> ContextCompat.getColor(context,R.color.icon_background_yellow)
             else -> ContextCompat.getColor(context,R.color.icon_background_grey)
         }
     }

@@ -32,4 +32,16 @@
     <color name="icon_blue_light">#ADD4FD</color>
     <color name="icon_blue_medium">#6AB2FD</color>
     <color name="icon_blue_dark">#007CFF</color>
+
+    <color name="icon_background_yellow">#FFF090</color>
+    <color name="icon_yellow_light">#FFFEBC</color>
+    <color name="icon_yellow_medium">#F6F447</color>
+    <color name="icon_yellow_dark">#FFA000</color>
+
+    <color name="icon_white">#FFFFFF</color>
+
+    <color name="icon_black">#000000</color>
+
+
+
 </resources>
