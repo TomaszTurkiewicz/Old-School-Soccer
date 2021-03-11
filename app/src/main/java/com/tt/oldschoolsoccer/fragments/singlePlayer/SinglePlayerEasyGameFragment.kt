@@ -591,7 +591,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_easy_game_move_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.left)
         rootView.fragment_single_player_easy_game_move_down_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down_left)
 
-        rootView.fragment_single_player_easy_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+
         rootView.fragment_single_player_easy_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
         rootView.fragment_single_player_easy_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
     }

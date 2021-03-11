@@ -18,6 +18,7 @@ import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.fragment_change_icon.view.*
+import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.android.synthetic.main.fragment_statistics.view.*
 import kotlinx.coroutines.launch
 
@@ -46,97 +47,134 @@ class ChangeIconFragment : FragmentCoroutine() {
 
         makeUI()
 
+        rootView.fragment_change_icon_back_button.setOnClickListener {
+            goToMainMenu()
+        }
+
         rootView.fragment_change_icon_left_arrow_background.setOnClickListener {
             user.icon.minusOneFromBackgroundColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_background.setOnClickListener {
             user.icon.addOneToBackgroundColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_over_arms.setOnClickListener {
             user.icon.addOneToOverArmsColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_over_arms.setOnClickListener {
             user.icon.minusOneFromArmsColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_left_sleeve.setOnClickListener {
             user.icon.addOneToLeftSleeveColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_left_sleeve.setOnClickListener {
             user.icon.minusOneFromLeftSleeveColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_right_sleeve.setOnClickListener {
             user.icon.addOneToRightSleeveColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_right_sleeve.setOnClickListener {
             user.icon.minusOneFromRightSleeveColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_left_shirt.setOnClickListener {
             user.icon.addOneToLeftShirtColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_left_shirt.setOnClickListener {
             user.icon.minusOneFromLeftShirtColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_right_shirt.setOnClickListener {
             user.icon.addOneToRightShirtColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_right_shirt.setOnClickListener {
             user.icon.minusOneFromRightShirtColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_trousers.setOnClickListener {
             user.icon.addOneToTrouserColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_trousers.setOnClickListener {
             user.icon.minusOneFromTrouserColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_trousers_external.setOnClickListener {
             user.icon.addOneToTrouserExternalColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_trousers_external.setOnClickListener {
             user.icon.minusOneFromTrouserExternalColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_right_arrow_trousers_internal.setOnClickListener {
             user.icon.addOneToTrouserInternalColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         rootView.fragment_change_icon_left_arrow_trousers_internal.setOnClickListener {
             user.icon.minusOneFromTrouserInternalColor()
-            updateUI(user)
+            updateUserDB()
+            updateUI()
         }
 
         return rootView
+    }
+
+    private fun goToMainMenu() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,MainFragment()).commit()
+
+    }
+
+    private fun updateUserDB() {
+        launch {
+            requireContext().let {
+                val userDB = UserDB().dbUser(user)
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(userDB)
+            }
+        }
+
     }
 
     override fun onResume() {
@@ -145,14 +183,14 @@ class ChangeIconFragment : FragmentCoroutine() {
             requireContext().let {
                 val userDB = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
                 user = User().userFromDB(userDB)
-                updateUI(user)
+                updateUI()
 
 
             }
         }
     }
 
-    private fun updateUI(user: User) {
+    private fun updateUI() {
         rootView.fragment_change_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), (imageSize).toDouble(), user.icon))
 
 
@@ -262,7 +300,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_internal.id,ConstraintSet.TOP,rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_internal.id,ConstraintSet.LEFT,rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.RIGHT,0)
 
-
+        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.TOP,rootView.fragment_change_icon_layout.id,ConstraintSet.TOP,2*screenUnit)
+        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,14*screenUnit)
 
 
 
@@ -307,10 +346,16 @@ class ChangeIconFragment : FragmentCoroutine() {
 
         rootView.fragment_change_icon_left_arrow_trousers_internal.background = ContextCompat.getDrawable(requireContext(),R.drawable.left)
         rootView.fragment_change_icon_right_arrow_trousers_internal.background = ContextCompat.getDrawable(requireContext(),R.drawable.right)
+
+
     }
 
     private fun setSizes() {
-        imageSize = 12*screenUnit
+        imageSize = 6*screenUnit
+
+        rootView.fragment_change_icon_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
+        rootView.fragment_change_icon_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
         rootView.fragment_change_icon_image_view.layoutParams = ConstraintLayout.LayoutParams(imageSize,imageSize)
 
