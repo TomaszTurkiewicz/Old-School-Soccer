@@ -14,8 +14,12 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
-import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerChooseGameLevelFragment
+import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
+import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
+import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
+
+
 
 class ChooseGameTypeFragment : Fragment() {
 
@@ -44,53 +48,93 @@ class ChooseGameTypeFragment : Fragment() {
         return rootView
     }
 
-    private fun setOnClickListeners(rootView: View) {
-        rootView.fragment_choose_game_type_single_player_btn.setOnClickListener {
-            goToSinglePlayerChooseGameLevelFragment()
+    private fun setOnClickListeners(rootView: View){
+        rootView.fragment_choose_game_type_easy_btn.setOnClickListener {
+            goToSinglePlayerEasyGame()
         }
 
+        rootView.fragment_choose_game_type_normal_btn.setOnClickListener {
+            goToSinglePlayerNormalGame()
+        }
+
+        rootView.fragment_choose_game_type_hard_btn.setOnClickListener {
+            goToSinglePlayerHardGame()
+        }
     }
 
-    private fun goToSinglePlayerChooseGameLevelFragment() {
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerChooseGameLevelFragment()).commit()
+    private fun goToSinglePlayerHardGame() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerHardGameFragment()).commit()
     }
 
-    private fun makeUI(rootView: View) {
+    private fun goToSinglePlayerNormalGame() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerNormalGameFragment()).commit()
+    }
+
+    private fun goToSinglePlayerEasyGame() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SinglePlayerEasyGameFragment()).commit()
+    }
+
+    private fun makeUI(rootView: View){
         setBackgroundGrid(rootView)
         setSizes()
-        setButtonUI(rootView)
+        setButtonsUI(rootView)
         makeConstraintLayout(rootView)
     }
 
-    private fun makeConstraintLayout(rootView: View) {
+    private fun makeConstraintLayout(rootView: View){
         val set = ConstraintSet()
         set.clone(rootView.fragment_choose_game_type_layout)
 
-        set.connect(rootView.fragment_choose_game_type_single_player_btn.id,ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id,ConstraintSet.TOP,marginTop)
-        set.connect(rootView.fragment_choose_game_type_single_player_btn.id,ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView.fragment_choose_game_type_easy_btn.id,
+            ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id,
+            ConstraintSet.TOP,marginTop)
+        set.connect(rootView.fragment_choose_game_type_easy_btn.id,
+            ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
+            ConstraintSet.LEFT,marginLeft)
+
+        set.connect(rootView.fragment_choose_game_type_normal_btn.id,
+            ConstraintSet.TOP,rootView.fragment_choose_game_type_easy_btn.id,
+            ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_choose_game_type_normal_btn.id,
+            ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
+            ConstraintSet.LEFT,marginLeft)
+
+        set.connect(rootView.fragment_choose_game_type_hard_btn.id,
+                ConstraintSet.TOP,rootView.fragment_choose_game_type_normal_btn.id,
+                ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_choose_game_type_hard_btn.id,
+                ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
+                ConstraintSet.LEFT,marginLeft)
+
 
         set.applyTo(rootView.fragment_choose_game_type_layout)
 
     }
 
-    private fun setButtonUI(rootView: View) {
-        rootView.fragment_choose_game_type_single_player_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_single_player_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        rootView.fragment_choose_game_type_single_player_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+    private fun setButtonsUI(rootView: View){
+        rootView.fragment_choose_game_type_easy_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_easy_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_choose_game_type_easy_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        rootView.fragment_choose_game_type_normal_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_normal_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_choose_game_type_normal_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        rootView.fragment_choose_game_type_hard_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_choose_game_type_hard_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
-    private fun setSizes() {
+    private fun setSizes(){
         buttonsWidth=16*screenUnit
         buttonsHeight=4*screenUnit
         marginLeft = 2*screenUnit
         marginTop=buttonsHeight/2
-
     }
 
-    private fun setBackgroundGrid(rootView: View?) {
-        rootView!!.fragment_choose_game_type_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
+    private fun setBackgroundGrid(rootView: View){
+        rootView.fragment_choose_game_type_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
             Shader.TileMode.REPEAT,screenUnit)
-
     }
 
 }
