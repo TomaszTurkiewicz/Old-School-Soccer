@@ -71,6 +71,17 @@
         android:clickable="true"
         android:focusable="true"/>
 
+    <TextView
+        android:id="@+id/fragment_main_back_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="@string/back"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
