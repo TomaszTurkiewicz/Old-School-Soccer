@@ -1,6 +1,7 @@
 package com.tt.oldschoolsoccer.fragments.singlePlayer
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.graphics.Point
 import android.graphics.Shader
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
+import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
@@ -35,12 +37,18 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     private var nextMovePhone:Boolean=false
     private val startGameHandler = Handler()
     private val score = Point(4,12)
+    private val endGameWinHandler = Handler()
+    private var endGameLoopCounter=0
+    private lateinit var userName:String
+    private lateinit var dialog:AlertDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /**
          * read screen unit, read logged in status and create field
          */
+
         screenUnit= Functions.readScreenUnit(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
         createField()
@@ -65,7 +73,10 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
          */
         startGame().run()
 
+
     }
+
+
 
     override fun onPause() {
         super.onPause()
@@ -74,6 +85,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
          */
         gameLoopHandler.removeCallbacksAndMessages(null)
         startGameHandler.removeCallbacksAndMessages(null)
+        endGameWinHandler.removeCallbacksAndMessages(null)
         if(loggedInStatus.loggedIn){
             Functions.saveMyMoveEasyToSharedPreferences(requireContext(),field.myMove,loggedInStatus.userid)
         }
@@ -150,6 +162,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
     }
 
+
+
     /**
      * updating user statistics after:
      * - new game
@@ -167,10 +181,11 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                 user.easyGameTie+=tie
 
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
-
             }
         }
     }
+
+
 
     private fun makeUI() {
         makeBackgroundGrid()
@@ -505,18 +520,60 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             clearDatabaseAndSharedPreferences()
         }
 
-        displayWinAlertDialog()
+
+        endGameWinHandler.postDelayed(endGameWinRunnable(),100)
+
+
         //todo wait second before displaying alert dialog
         // todo change color of background and texts (green)
         rootView.fragment_single_player_easy_game_win.text = "WIN"
         rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.win))
     }
 
+    private fun endGameWinRunnable()= Runnable {
+        when(endGameLoopCounter){
+            0 -> prepareUserName()
+            1 -> displayWinAlertDialog()
+            2 -> doNothing()
+            3 -> removeDialog()
+            4 -> goToMainMenu()
+        }
+    }
+
+    private fun removeDialog() {
+        dialog.dismiss()
+        endGameLoopCounter+=1
+        endGameWinHandler.postDelayed(endGameWinRunnable(),100)
+
+    }
+
+    private fun doNothing() {
+        endGameLoopCounter+=1
+        endGameWinHandler.postDelayed(endGameWinRunnable(),1000)
+
+    }
+
+    private fun prepareUserName() {
+        if(loggedInStatus.loggedIn){
+            launch {
+                requireContext().let {
+                    val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                    userName = user.name
+                }
+            }
+        }
+        else{
+            userName = "YOU"
+        }
+        endGameLoopCounter += 1
+        endGameWinHandler.postDelayed(endGameWinRunnable(),1000)
+    }
+
     private fun displayWinAlertDialog() {
         val mBuilder = AlertDialog.Builder(requireContext())
         val mView = layoutInflater.inflate(R.layout.alert_dialog_end_game,null)
         mBuilder.setView(mView)
-        val dialog = mBuilder.create()
+        dialog = mBuilder.create()
         val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
@@ -527,16 +584,19 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
 
-        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background_green)!!),
                 Shader.TileMode.REPEAT,screenUnit)
 
         mView.alert_dialog_end_game_title.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
-        mView.alert_dialog_end_game_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        mView.alert_dialog_end_game_title.text = "WIN"
+        mView.alert_dialog_end_game_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_title.text = "CONGRATULATION"
+        mView.alert_dialog_end_game_title.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_green_dark))
 
-        mView.alert_dialog_end_game_ok_btn.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
-        mView.alert_dialog_end_game_ok_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        mView.alert_dialog_end_game_ok_btn.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+        mView.alert_dialog_end_game_message.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_end_game_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_message.text = "$userName WINS"
+        mView.alert_dialog_end_game_message.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_green_dark))
+
 
         val set = ConstraintSet()
         set.clone(mView.alert_dialog_end_game)
@@ -544,28 +604,18 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.TOP,mView.alert_dialog_end_game.id,ConstraintSet.TOP,0)
         set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
 
-        set.connect(mView.alert_dialog_end_game_ok_btn.id,ConstraintSet.TOP,mView.alert_dialog_end_game_title.id,ConstraintSet.BOTTOM,0)
-        set.connect(mView.alert_dialog_end_game_ok_btn.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.TOP,mView.alert_dialog_end_game_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
 
-        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_end_game_ok_btn.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_end_game_message.id,ConstraintSet.BOTTOM,0)
         set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
 
         set.applyTo(mView.alert_dialog_end_game)
 
         dialog.show()
 
-        if(loggedInStatus.loggedIn){
-            //todo show additional text
-        }
-
-        mView.alert_dialog_end_game_ok_btn.setOnClickListener {
-            dialog.dismiss()
-            goToMainMenu()
-        }
-
-
-
-
+        endGameLoopCounter +=1
+        endGameWinHandler.postDelayed(endGameWinRunnable(),1000)
 
     }
 
