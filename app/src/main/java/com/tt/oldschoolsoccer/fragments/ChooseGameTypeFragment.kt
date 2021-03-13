@@ -60,6 +60,14 @@ class ChooseGameTypeFragment : Fragment() {
         rootView.fragment_choose_game_type_hard_btn.setOnClickListener {
             goToSinglePlayerHardGame()
         }
+        rootView.fragment_choose_game_type_back_button.setOnClickListener {
+            goToMainMenu()
+        }
+
+    }
+
+    private fun goToMainMenu() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
     }
 
     private fun goToSinglePlayerHardGame() {
@@ -106,6 +114,12 @@ class ChooseGameTypeFragment : Fragment() {
                 ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
                 ConstraintSet.LEFT,marginLeft)
 
+        set.connect(rootView.fragment_choose_game_type_back_button.id,
+                ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id,
+                ConstraintSet.TOP,35*screenUnit)
+        set.connect(rootView.fragment_choose_game_type_back_button.id,
+                ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
+                ConstraintSet.LEFT,marginLeft)
 
         set.applyTo(rootView.fragment_choose_game_type_layout)
 
@@ -123,6 +137,10 @@ class ChooseGameTypeFragment : Fragment() {
         rootView.fragment_choose_game_type_hard_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_choose_game_type_hard_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        rootView.fragment_choose_game_type_back_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_back_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_choose_game_type_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     private fun setSizes(){
