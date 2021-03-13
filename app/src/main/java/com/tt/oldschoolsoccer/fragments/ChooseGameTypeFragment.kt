@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.classes.LoggedInStatus
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
@@ -28,12 +29,24 @@ class ChooseGameTypeFragment : Fragment() {
     private var buttonsWidth=0
     private var marginLeft=0
     private var marginTop=0
+    private var loggedInStatus = LoggedInStatus()
+    private var easyGameSaved = false
+    private var normalGameSaved = false
+    private var hardGameSaved = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         screenUnit = Functions.readScreenUnit(requireContext())
+        loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
+
+        if(loggedInStatus.loggedIn){
+            easyGameSaved = Functions.readEasyGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+            normalGameSaved = Functions.readNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+            hardGameSaved = Functions.readHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+        }
 
     }
 
@@ -141,6 +154,17 @@ class ChooseGameTypeFragment : Fragment() {
         rootView.fragment_choose_game_type_back_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_choose_game_type_back_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_choose_game_type_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+        if(easyGameSaved){
+            rootView.fragment_choose_game_type_easy_btn.text = "EASY (SAVED GAME)"
+        }
+        if(normalGameSaved){
+            rootView.fragment_choose_game_type_normal_btn.text = "NORMAL (SAVED GAME)"
+        }
+        if(hardGameSaved){
+            rootView.fragment_choose_game_type_hard_btn.text = "HARD (SAVED GAME)"
+        }
+
     }
 
     private fun setSizes(){
