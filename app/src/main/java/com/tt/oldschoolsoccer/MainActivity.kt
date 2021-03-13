@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 }
 
 /*
-* todo connect to firebase (picture, user, login)
+
 * todo add admob
 * todo activity multiplayer
 * todo samouczek koniecznie !!!

@@ -100,11 +100,11 @@ class StatisticsFragment : FragmentCoroutine() {
                     mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
                     Shader.TileMode.REPEAT,screenUnit)
 
-                    mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+                    mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
                     mView.alert_dialog_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
                     mView.alert_dialog_title.text = "SET NEW USER NAME"
 
-                    mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+                    mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
                     mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
                     mView.alert_dialog_input_user_name.setText(user.name)
 
