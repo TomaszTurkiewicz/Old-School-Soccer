@@ -129,9 +129,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_single_player_hard_game_win"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
