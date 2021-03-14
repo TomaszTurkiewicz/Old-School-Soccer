@@ -30,6 +30,7 @@ class UserIconDrawable(private val context: Context, size:Double, private val co
 
         paint.color = backgroundColor()
         paint.style = Paint.Style.FILL
+        paint.isAntiAlias = true
 
         canvas.drawCircle((9*unit).toFloat(), (9*unit).toFloat(), radius.toFloat(),paint)
 
