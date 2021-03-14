@@ -46,6 +46,8 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private lateinit var userName:String
     private lateinit var dialog: AlertDialog
 
+    private var phoneIcon = UserIconColors()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -460,6 +462,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             val savedGame = Functions.readNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
             if(savedGame){
+                phoneIcon = Functions.readRandomIconFromSharedPreferences(requireContext(),"NORMAL")
                 launch {
                     requireContext().let {
                         val list = PointOnFieldNormalDatabase(it).getPointOnFieldDao().getAllPointsOnField()
@@ -475,6 +478,9 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                 }
             }
             else{
+                phoneIcon = UserIconColors().randomColors()
+                Functions.saveRandomIconToSharedPreferences(requireContext(),"NORMAL",phoneIcon)
+
                 Functions.saveNormalGameToSharedPreferences(requireContext(), true, loggedInStatus.userid)
                 updateUserCounters(1,0,0,0)
 
@@ -533,7 +539,25 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         setConstraintLayout()
         setOnClickListeners()
         disableButtons()
+        makeIcons()
 
+    }
+
+    private fun makeIcons() {
+        if(loggedInStatus.loggedIn){
+
+            launch {
+                requireContext().let {
+                    val user = User().userFromDB(UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid))
+                    rootView.fragment_single_player_normal_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),user.icon))
+                }
+            }
+            rootView.fragment_single_player_normal_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),phoneIcon))
+        }
+        else{
+            rootView.fragment_single_player_normal_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),UserIconColors().randomColors()))
+            rootView.fragment_single_player_normal_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),UserIconColors().notLoggedIn()))
+        }
     }
 
     private fun disableButtons() {
@@ -1001,6 +1025,15 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.TOP,2*screenUnit)
         set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.LEFT,14*screenUnit)
 
+        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.RIGHT,2*screenUnit)
+
+        set.connect(rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_single_player_normal_user_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_user_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.LEFT,0)
+
         set.applyTo(rootView.fragment_single_player_normal_game_layout)
 
     }
@@ -1018,6 +1051,11 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_up_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+
+        rootView.fragment_single_player_normal_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_normal_phone_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_normal_vs_tv.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_normal_vs_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     private fun makeBackgroundGrid() {
