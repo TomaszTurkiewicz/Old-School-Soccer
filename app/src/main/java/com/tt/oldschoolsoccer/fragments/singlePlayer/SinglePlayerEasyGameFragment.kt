@@ -43,6 +43,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     private var endGameLoopCounter=0
     private lateinit var userName:String
     private lateinit var dialog:AlertDialog
+    private var phoneIcon = UserIconColors()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +54,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
         screenUnit= Functions.readScreenUnit(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
+
+
         createField()
     }
 
@@ -126,10 +129,13 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         field.generate(Static.EASY)
         // if logged in
         if(loggedInStatus.loggedIn) {
+
             //check if game is saved for user
             val savedGame = Functions.readEasyGameFromSharedPreferences(requireContext(), loggedInStatus.userid)
             // if is saved - read from database
             if (savedGame) {
+                phoneIcon = Functions.readRandomIconFromSharedPreferences(requireContext(),"EASY")
+
                 launch {
                     requireContext().let {
                         val list = PointOnFieldEasyDatabase(it).getPointOnFieldDao().getAllPointsOnField()
@@ -145,6 +151,9 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             }
             //if is not saved update counter, shared preferences and database
             else {
+                phoneIcon = UserIconColors().randomColors()
+                Functions.saveRandomIconToSharedPreferences(requireContext(),"EASY",phoneIcon)
+
                 Functions.saveEasyGameToSharedPreferences(requireContext(), true, loggedInStatus.userid)
                 updateUserCounters(1,0,0,0)
                 launch {
@@ -162,6 +171,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         }
         //if not logged in
         else{
+
             fieldReady = true
         }
     }
@@ -198,6 +208,24 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         setConstraintLayout()
         setOnClickListeners()
         disableButtons()
+        makeIcons()
+    }
+
+    private fun makeIcons() {
+        if(loggedInStatus.loggedIn){
+
+            launch {
+                    requireContext().let {
+                        val user = User().userFromDB(UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid))
+                        rootView.fragment_single_player_easy_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),user.icon))
+                    }
+                }
+            rootView.fragment_single_player_easy_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),phoneIcon))
+        }
+        else{
+            rootView.fragment_single_player_easy_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),UserIconColors().randomColors()))
+            rootView.fragment_single_player_easy_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),UserIconColors().notLoggedIn()))
+        }
     }
 
     private fun setOnClickListeners() {
@@ -899,6 +927,15 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_easy_back_button.id,ConstraintSet.TOP,rootView.fragment_single_player_easy_game_layout.id,ConstraintSet.TOP,2*screenUnit)
         set.connect(rootView.fragment_single_player_easy_back_button.id,ConstraintSet.LEFT,rootView.fragment_single_player_easy_game_layout.id,ConstraintSet.LEFT,14*screenUnit)
 
+        set.connect(rootView.fragment_single_player_easy_phone_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_easy_game_field.id,ConstraintSet.TOP,0)
+        set.connect(rootView.fragment_single_player_easy_phone_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_easy_game_field.id,ConstraintSet.RIGHT,screenUnit)
+
+        set.connect(rootView.fragment_single_player_easy_vs_tv.id,ConstraintSet.TOP,rootView.fragment_single_player_easy_phone_icon.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_easy_vs_tv.id,ConstraintSet.LEFT,rootView.fragment_single_player_easy_phone_icon.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_single_player_easy_user_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_easy_vs_tv.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_easy_user_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_easy_vs_tv.id,ConstraintSet.LEFT,0)
+
         set.applyTo(rootView.fragment_single_player_easy_game_layout)
     }
 
@@ -915,6 +952,10 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_easy_game_move_up_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_easy_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_easy_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+
+        rootView.fragment_single_player_easy_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_easy_phone_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_easy_vs_tv.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
     }
 
     private fun makeBackgroundGrid() {
@@ -924,8 +965,3 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     }
 
 }
-/*
-todo lost animation
-todo win animation
-todo stuck animation
- */

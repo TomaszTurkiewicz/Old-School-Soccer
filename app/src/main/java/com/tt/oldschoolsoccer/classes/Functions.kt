@@ -249,6 +249,40 @@ class Functions {
             return update
         }
 
+        fun saveRandomIconToSharedPreferences(context: Context,gameType:String, userIconColors: UserIconColors){
+            context.let {
+                val sharedPreferences = context.getSharedPreferences("$gameType PHONE ICON",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putInt("background",userIconColors.getBackgroundColor())
+                editor.putInt("leftArm",userIconColors.getLeftArmColor())
+                editor.putInt("rightArm",userIconColors.getRightArmColor())
+                editor.putInt("overArms",userIconColors.getOverArmsColor())
+                editor.putInt("bodyLeft",userIconColors.getBodyLeftColor())
+                editor.putInt("bodyRight",userIconColors.getBodyRightColor())
+                editor.putInt("trousersExternal",userIconColors.getTrousersExternalColor())
+                editor.putInt("trousersInternal",userIconColors.getTrousersInternalColor())
+                editor.putInt("trousersBody",userIconColors.getTrousersBodyColor())
+                editor.apply()
+            }
+        }
+
+        fun readRandomIconFromSharedPreferences(context: Context,gameType:String):UserIconColors{
+            val phoneIconColors = UserIconColors()
+            context.let {
+             val sharedPreferences = context.getSharedPreferences("$gameType PHONE ICON",Context.MODE_PRIVATE)
+             phoneIconColors.setBackgroundColor(sharedPreferences.getInt("background",-1))
+             phoneIconColors.setLeftArmColor(sharedPreferences.getInt("leftArm",-1))
+             phoneIconColors.setRightArmColor(sharedPreferences.getInt("rightArm",-1))
+             phoneIconColors.setOverArmColor(sharedPreferences.getInt("overArms",-1))
+             phoneIconColors.setBodyLeftColor(sharedPreferences.getInt("bodyLeft",-1))
+             phoneIconColors.setBodyRightColor(sharedPreferences.getInt("bodyRight",-1))
+             phoneIconColors.setTrousersExternalColor(sharedPreferences.getInt("trousersExternal",-1))
+             phoneIconColors.setTrousersInternalColor(sharedPreferences.getInt("trousersInternal",-1))
+             phoneIconColors.setTrousersBodyColor(sharedPreferences.getInt("trousersBody",-1))
+            }
+            return phoneIconColors
+        }
+
 
     }
 }

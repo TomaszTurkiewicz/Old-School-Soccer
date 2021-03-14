@@ -1,5 +1,7 @@
 package com.tt.oldschoolsoccer.classes
 
+import kotlin.random.Random
+
 class UserIconColors() {
     private var backgroundColor = 0
     private var leftArmColor = 0
@@ -238,6 +240,23 @@ class UserIconColors() {
         this.trousersExternalColor = -1
         this.trousersInternalColor = -1
         this.trousersBodyColor = -1
+        return this
+    }
+
+    fun randomColors():UserIconColors{
+        val base = Random.nextInt(0,4)
+        val baseLight = base*3+2
+        val baseMedium = base*3+1
+        val baseDark = base*3
+        this.backgroundColor = base
+        this.overArmsColor = baseDark
+        this.leftArmColor = baseMedium
+        this.rightArmColor = baseMedium
+        this.bodyLeftColor = baseLight
+        this.bodyRightColor = baseLight
+        this.trousersExternalColor = baseDark
+        this.trousersInternalColor = baseDark
+        this.trousersBodyColor = baseMedium
         return this
     }
 }
