@@ -25,8 +25,8 @@
 
     <color name="icon_background_red">#FA8484</color>
     <color name="icon_red_light">#FDA5A5</color>
-    <color name="icon_red_medium">#FF4444</color>
-    <color name="icon_red_dark">#FA0000</color>
+    <color name="icon_red_medium">#FD5F5F</color>
+    <color name="icon_red_dark">#CA0000</color>
 
     <color name="icon_background_blue">#84C3FA</color>
     <color name="icon_blue_light">#ADD4FD</color>

@@ -510,11 +510,14 @@ class GameField {
      * finding ball coordinates
      */
     fun findBall(): Point {
+        val ball = Point()
         if (level != Static.HARD) {
             for (i in 0..8) {
                 for (j in 0..12) {
                     if (field[i][j].ball) {
-                        return Point(i, j)
+                        ball.x=i
+                        ball.y=j
+                        return ball
                     }
                 }
             }
@@ -522,12 +525,14 @@ class GameField {
             for (i in 0..12) {
                 for (j in 0..20) {
                     if (field[i][j].ball) {
-                        return Point(i, j)
+                        ball.x=i
+                        ball.y=j
+                        return ball
                     }
                 }
             }
         }
-        return Point(-1, -1)
+        return ball
 
     }
 

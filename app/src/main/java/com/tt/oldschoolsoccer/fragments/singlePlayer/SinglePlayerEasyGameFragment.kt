@@ -38,6 +38,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     private val startGameHandler = Handler()
     private val score = Point(4,12)
     private val endGameWinHandler = Handler()
+    private val endGameLoseHandler = Handler()
+    private val endGameTieHandler = Handler()
     private var endGameLoopCounter=0
     private lateinit var userName:String
     private lateinit var dialog:AlertDialog
@@ -86,6 +88,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         gameLoopHandler.removeCallbacksAndMessages(null)
         startGameHandler.removeCallbacksAndMessages(null)
         endGameWinHandler.removeCallbacksAndMessages(null)
+        endGameTieHandler.removeCallbacksAndMessages(null)
+        endGameLoseHandler.removeCallbacksAndMessages(null)
         if(loggedInStatus.loggedIn){
             Functions.saveMyMoveEasyToSharedPreferences(requireContext(),field.myMove,loggedInStatus.userid)
         }
@@ -315,18 +319,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      */
     private fun makeMovePhone() {
         val ball = field.findBall()
-
-        if(ball.x == -1){
-            //todo change to error
-            tieAnimation()
-        }
-        else{
-            movePhone(ball)
-        }
-
-
-
-
+        movePhone(ball)
     }
 
     private fun compareDistance(oldDistance:Point?, newDistance:Point):Boolean{
@@ -475,14 +468,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
         nextMovePhone=stuckAndMovePhone.nextMove
     }
 
-    private fun tieAnimation() {
-        if(loggedInStatus.loggedIn) {
-            updateUserCounters(0,0,1,0)
-            clearDatabaseAndSharedPreferences()
-        }
-        rootView.fragment_single_player_easy_game_win.text = "TIE"
-        rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.test))
-    }
+
 
     private fun clearDatabaseAndSharedPreferences() {
         Functions.saveEasyGameToSharedPreferences(requireContext(),false,loggedInStatus.userid)
@@ -519,41 +505,211 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
             updateUserCounters(0,1,0,0)
             clearDatabaseAndSharedPreferences()
         }
-
-
         endGameWinHandler.postDelayed(endGameWinRunnable(),100)
-
-
-        //todo wait second before displaying alert dialog
-        // todo change color of background and texts (green)
-        rootView.fragment_single_player_easy_game_win.text = "WIN"
-        rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.win))
     }
 
-    private fun endGameWinRunnable()= Runnable {
+    private fun tieAnimation() {
+        if(loggedInStatus.loggedIn) {
+            updateUserCounters(0,0,1,0)
+            clearDatabaseAndSharedPreferences()
+        }
+        endGameTieHandler.postDelayed(endGameTieRunnable(),100)
+    }
+
+    private fun lostAnimation() {
+        if(loggedInStatus.loggedIn) {
+            updateUserCounters(0,0,0,1)
+            clearDatabaseAndSharedPreferences()
+        }
+        endGameLoseHandler.postDelayed(endGameLoseRunnable(),100)
+    }
+
+
+
+    private fun endGameLoseRunnable() = Runnable {
         when(endGameLoopCounter){
-            0 -> prepareUserName()
-            1 -> displayWinAlertDialog()
-            2 -> doNothing()
-            3 -> removeDialog()
+            0 -> prepareUserNameLose()
+            1 -> displayLoseAlertDialog()
+            2 -> doNothingLose()
+            3 -> removeDialogLose()
             4 -> goToMainMenu()
         }
     }
 
-    private fun removeDialog() {
+    private fun removeDialogLose() {
+        dialog.dismiss()
+        endGameLoopCounter+=1
+        endGameLoseHandler.postDelayed(endGameLoseRunnable(),100)
+
+    }
+
+    private fun doNothingLose() {
+        endGameLoopCounter+=1
+        endGameLoseHandler.postDelayed(endGameLoseRunnable(),1000)
+
+    }
+
+    private fun displayLoseAlertDialog() {
+        val mBuilder = AlertDialog.Builder(requireContext())
+        val mView = layoutInflater.inflate(R.layout.alert_dialog_end_game,null)
+        mBuilder.setView(mView)
+        dialog = mBuilder.create()
+        val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        dialog.window!!.decorView.systemUiVisibility = flags
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background_red)!!),
+                Shader.TileMode.REPEAT,screenUnit)
+
+        mView.alert_dialog_end_game_title.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_end_game_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_title.text = "SORRY"
+        mView.alert_dialog_end_game_title.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_red_dark))
+
+        mView.alert_dialog_end_game_message.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_end_game_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_message.text = "$userName WINS"
+        mView.alert_dialog_end_game_message.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_red_dark))
+
+
+        val set = ConstraintSet()
+        set.clone(mView.alert_dialog_end_game)
+
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.TOP,mView.alert_dialog_end_game.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.TOP,mView.alert_dialog_end_game_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_end_game_message.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.applyTo(mView.alert_dialog_end_game)
+
+        dialog.show()
+
+        endGameLoopCounter +=1
+        endGameLoseHandler.postDelayed(endGameLoseRunnable(),1000)
+
+    }
+
+    private fun prepareUserNameLose() {
+        userName = "PHONE"
+        endGameLoopCounter += 1
+        endGameLoseHandler.postDelayed(endGameLoseRunnable(),1000)
+
+    }
+
+    private fun endGameTieRunnable() = Runnable {
+        when(endGameLoopCounter){
+            0 -> prepareUserNameTie()
+            1 -> displayTieAlertDialog()
+            2 -> doNothingTie()
+            3 -> removeDialogTie()
+            4 -> goToMainMenu()
+        }
+    }
+
+    private fun removeDialogTie() {
+        dialog.dismiss()
+        endGameLoopCounter+=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),100)
+
+    }
+
+    private fun doNothingTie() {
+        endGameLoopCounter+=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
+    }
+
+    private fun prepareUserNameTie() {
+        userName = "NOBODY"
+        endGameLoopCounter += 1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
+    }
+
+    private fun displayTieAlertDialog() {
+        val mBuilder = AlertDialog.Builder(requireContext())
+        val mView = layoutInflater.inflate(R.layout.alert_dialog_end_game,null)
+        mBuilder.setView(mView)
+        dialog = mBuilder.create()
+        val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        dialog.window!!.decorView.systemUiVisibility = flags
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background_yellow)!!),
+                Shader.TileMode.REPEAT,screenUnit)
+
+        mView.alert_dialog_end_game_title.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_end_game_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_title.text = "UNFORTUNATELY"
+        mView.alert_dialog_end_game_title.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_yellow_dark))
+
+        mView.alert_dialog_end_game_message.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_end_game_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenUnit).toFloat())
+        mView.alert_dialog_end_game_message.text = "$userName WINS"
+        mView.alert_dialog_end_game_message.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_yellow_dark))
+
+
+        val set = ConstraintSet()
+        set.clone(mView.alert_dialog_end_game)
+
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.TOP,mView.alert_dialog_end_game.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.TOP,mView.alert_dialog_end_game_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_end_game_message.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.applyTo(mView.alert_dialog_end_game)
+
+        dialog.show()
+
+        endGameLoopCounter +=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
+    }
+
+    private fun endGameWinRunnable()= Runnable {
+        when(endGameLoopCounter){
+            0 -> prepareUserNameWin()
+            1 -> displayWinAlertDialog()
+            2 -> doNothingWin()
+            3 -> removeDialogWin()
+            4 -> goToMainMenu()
+        }
+    }
+
+    private fun removeDialogWin() {
         dialog.dismiss()
         endGameLoopCounter+=1
         endGameWinHandler.postDelayed(endGameWinRunnable(),100)
 
     }
 
-    private fun doNothing() {
+    private fun doNothingWin() {
         endGameLoopCounter+=1
         endGameWinHandler.postDelayed(endGameWinRunnable(),1000)
 
     }
 
-    private fun prepareUserName() {
+    private fun prepareUserNameWin() {
         if(loggedInStatus.loggedIn){
             launch {
                 requireContext().let {
@@ -619,14 +775,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
 
     }
 
-    private fun lostAnimation() {
-        if(loggedInStatus.loggedIn) {
-            updateUserCounters(0,0,0,1)
-            clearDatabaseAndSharedPreferences()
-        }
-        rootView.fragment_single_player_easy_game_win.text = "LOST"
-        rootView.fragment_single_player_easy_game_win.setTextColor(ContextCompat.getColor(requireContext(),R.color.lost))
-    }
+
 
     private fun updateButtons() {
         disableButtons()
