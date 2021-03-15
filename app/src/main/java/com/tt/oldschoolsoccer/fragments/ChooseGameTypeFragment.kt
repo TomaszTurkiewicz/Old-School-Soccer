@@ -108,7 +108,7 @@ class ChooseGameTypeFragment : Fragment() {
 
         set.connect(rootView.fragment_choose_game_type_easy_btn.id,
             ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id,
-            ConstraintSet.TOP,marginTop)
+            ConstraintSet.TOP,marginTop+2*screenUnit)
         set.connect(rootView.fragment_choose_game_type_easy_btn.id,
             ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
             ConstraintSet.LEFT,marginLeft)
@@ -129,10 +129,10 @@ class ChooseGameTypeFragment : Fragment() {
 
         set.connect(rootView.fragment_choose_game_type_back_button.id,
                 ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id,
-                ConstraintSet.TOP,35*screenUnit)
+                ConstraintSet.TOP,screenUnit)
         set.connect(rootView.fragment_choose_game_type_back_button.id,
                 ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,
-                ConstraintSet.LEFT,marginLeft)
+                ConstraintSet.LEFT,16*screenUnit)
 
         set.applyTo(rootView.fragment_choose_game_type_layout)
 
@@ -151,9 +151,9 @@ class ChooseGameTypeFragment : Fragment() {
         rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_choose_game_type_hard_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
-        rootView.fragment_choose_game_type_back_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_back_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        rootView.fragment_choose_game_type_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_choose_game_type_back_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_choose_game_type_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
+
 
         if(easyGameSaved){
             rootView.fragment_choose_game_type_easy_btn.text = "EASY (SAVED GAME)"

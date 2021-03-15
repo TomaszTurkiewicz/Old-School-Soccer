@@ -17,6 +17,7 @@
         android:text="@string/easy"
         android:textAlignment="center"
         android:gravity="center"
+        android:textColor="@color/black"
         android:clickable="true"
         android:focusable="true"/>
 
@@ -27,6 +28,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/normal"
+        android:textColor="@color/black"
         android:textAlignment="center"
         android:gravity="center"
         android:clickable="true"
@@ -39,18 +41,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/hard"
+        android:textColor="@color/black"
         android:textAlignment="center"
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"/>
 
-    <TextView
+    <ImageView
         android:id="@+id/fragment_choose_game_type_back_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:text="@string/back"
-        android:textAlignment="center"
-        android:gravity="center"
         android:clickable="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
