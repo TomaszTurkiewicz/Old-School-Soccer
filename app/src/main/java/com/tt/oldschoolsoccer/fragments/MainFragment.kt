@@ -490,8 +490,8 @@ class MainFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_main_update_button.id, ConstraintSet.TOP,rootView.fragment_main_other_games_button.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_update_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.connect(rootView.fragment_main_back_button.id, ConstraintSet.TOP,rootView.fragment_main_layout.id, ConstraintSet.TOP,35*screenUnit)
-        set.connect(rootView.fragment_main_back_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView.fragment_main_back_button.id, ConstraintSet.TOP,rootView.fragment_main_layout.id, ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_main_back_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,16*screenUnit)
 
 
         set.applyTo(rootView.fragment_main_layout)
@@ -517,9 +517,8 @@ class MainFragment : FragmentCoroutine() {
         rootView.fragment_main_other_games_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_main_other_games_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
-        rootView.fragment_main_back_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_main_back_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        rootView.fragment_main_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_main_back_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_main_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
     }
 
     /**
