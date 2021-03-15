@@ -472,10 +472,11 @@ class MainFragment : FragmentCoroutine() {
         set.clone(rootView.fragment_main_layout)
 
         set.connect(rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.TOP, rootView.fragment_main_layout.id, ConstraintSet.TOP, screenUnit)
-        set.connect(rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.RIGHT, rootView.fragment_main_layout.id, ConstraintSet.RIGHT, screenUnit)
+        set.connect(rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.LEFT, rootView.fragment_main_layout.id, ConstraintSet.LEFT, marginLeft)
 
         set.connect(rootView.fragment_main_user_name.id, ConstraintSet.TOP,rootView.fragment_main_layout.id, ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_main_user_name.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView.fragment_main_user_name.id, ConstraintSet.LEFT,rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.LEFT,0)
+        set.connect(rootView.fragment_main_user_name.id, ConstraintSet.RIGHT,rootView.fragment_main_layout.id, ConstraintSet.RIGHT,0)
 
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.TOP,rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)

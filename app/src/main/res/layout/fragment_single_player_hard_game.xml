@@ -8,6 +8,31 @@
     android:layout_height="match_parent"
     tools:context=".fragments.singlePlayer.SinglePlayerHardGameFragment">
 
+    <ImageView
+        android:id="@+id/fragment_single_player_hard_user_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+        android:id="@+id/fragment_single_player_hard_phone_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/fragment_single_player_hard_vs_tv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="VS"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
     <TextView
         android:id="@+id/fragment_single_player_hard_back_button"
         android:layout_width="100dp"

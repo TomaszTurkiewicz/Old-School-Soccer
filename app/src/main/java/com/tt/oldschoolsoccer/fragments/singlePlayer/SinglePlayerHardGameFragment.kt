@@ -20,6 +20,7 @@ import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.alert_dialog_end_game.view.*
+import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_normal_game.view.*
 import kotlinx.coroutines.launch
@@ -46,6 +47,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private lateinit var userName:String
     private lateinit var dialog: AlertDialog
 
+    private var phoneIcon = UserIconColors()
+
 
     /**
      * read screen unit, check if logged in and create empty field
@@ -71,6 +74,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
             val savedGame = Functions.readHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
             if(savedGame){
+                phoneIcon = Functions.readRandomIconFromSharedPreferences(requireContext(),"HARD")
                 launch {
                     requireContext().let {
                         val list = PointOnFieldHardDatabase(it).getPointOnFieldDao().getAllPointsOnField()
@@ -86,6 +90,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 }
             }
             else{
+                phoneIcon = UserIconColors().randomColors()
+                Functions.saveRandomIconToSharedPreferences(requireContext(),"HARD",phoneIcon)
                 Functions.saveHardGameToSharedPreferences(requireContext(), true, loggedInStatus.userid)
                 updateUserCounters(1,0,0,0)
 
@@ -648,7 +654,25 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         setConstraintLayout()
         setOnClickListeners()
         disableButtons()
+        makeIcons()
 
+    }
+
+    private fun makeIcons() {
+        if(loggedInStatus.loggedIn){
+
+            launch {
+                requireContext().let {
+                    val user = User().userFromDB(UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid))
+                    rootView.fragment_single_player_hard_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),user.icon))
+                }
+            }
+            rootView.fragment_single_player_hard_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),phoneIcon))
+        }
+        else{
+            rootView.fragment_single_player_hard_phone_icon.setImageDrawable(UserIconDrawable(requireContext(),(3*screenUnit).toDouble(),UserIconColors().randomColors()))
+            rootView.fragment_single_player_hard_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),UserIconColors().notLoggedIn()))
+        }
     }
 
     private fun disableButtons() {
@@ -1113,6 +1137,19 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_hard_back_button.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.TOP,2*screenUnit)
         set.connect(rootView.fragment_single_player_hard_back_button.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,15*screenUnit)
 
+
+
+        set.connect(rootView.fragment_single_player_hard_phone_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_hard_game_field.id,ConstraintSet.TOP,2*screenUnit)
+        set.connect(rootView.fragment_single_player_hard_phone_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_field.id,ConstraintSet.RIGHT,0)
+
+        set.connect(rootView.fragment_single_player_hard_vs_tv.id,ConstraintSet.TOP,rootView.fragment_single_player_hard_phone_icon.id,ConstraintSet.BOTTOM, (4.5*screenUnit).toInt())
+        set.connect(rootView.fragment_single_player_hard_vs_tv.id,ConstraintSet.LEFT,rootView.fragment_single_player_hard_phone_icon.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_single_player_hard_user_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_hard_vs_tv.id,ConstraintSet.BOTTOM, (4.5*screenUnit).toInt())
+        set.connect(rootView.fragment_single_player_hard_user_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_hard_vs_tv.id,ConstraintSet.LEFT,0)
+
+
+
         set.applyTo(rootView.fragment_single_player_hard_game_layout)
 
     }
@@ -1131,6 +1168,10 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_hard_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_hard_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
 
+        rootView.fragment_single_player_hard_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_hard_phone_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_hard_vs_tv.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+        rootView.fragment_single_player_hard_vs_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
     }
 
     private fun makeBackgroundGrid() {
