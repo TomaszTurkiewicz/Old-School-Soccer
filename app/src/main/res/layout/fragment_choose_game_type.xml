@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ChooseGameTypeFragment">
 
+<!--    EASY GAME-->
     <TextView
         android:id="@+id/fragment_choose_game_type_easy_btn"
         android:layout_width="100dp"
@@ -22,6 +23,96 @@
         android:focusable="true"/>
 
     <TextView
+        android:id="@+id/fragment_choose_game_type_easy_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="easy games"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="easy wins"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="easy lose"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_easy_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="easy tie"/>
+
+
+    <!--    NORMAL GAME-->
+    <TextView
         android:id="@+id/fragment_choose_game_type_normal_btn"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -35,6 +126,97 @@
         android:focusable="true"/>
 
     <TextView
+        android:id="@+id/fragment_choose_game_type_normal_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="normal games"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="normal wins"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="normal lose"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="normal tie"/>
+
+
+
+    <!--    HARD GAME-->
+    <TextView
         android:id="@+id/fragment_choose_game_type_hard_btn"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -46,6 +228,197 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="hard games"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="hard wins"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="hard lose"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_hard_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="hard tie"/>
+
+    <!--    MULTI GAME-->
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/multi"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_number_of_games_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="GAMES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_number_of_games_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="multi games"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_win_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="WINS"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_win_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="multi wins"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_lose_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="LOSES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_lose_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="multi lose"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_tie_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="TIES"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_tie_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="multi tie"/>
+
 
     <ImageView
         android:id="@+id/fragment_choose_game_type_back_button"
