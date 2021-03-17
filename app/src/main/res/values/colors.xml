@@ -42,6 +42,8 @@
 
     <color name="icon_black">#000000</color>
 
+    <color name="icon_grey_buttons">#BFBFBF</color>
+
 
 
 </resources>
