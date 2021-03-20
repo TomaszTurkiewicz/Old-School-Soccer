@@ -422,6 +422,13 @@ class MainFragment : FragmentCoroutine() {
     private fun updateUserInFirebase(userTemp: User) {
         val dbRef = Firebase.database.getReference("User").child(userTemp.id)
         dbRef.setValue(userTemp)
+        val gameCount = userTemp.easyGame.numberOfGames+
+                userTemp.normalGame.numberOfGames+
+                userTemp.hardGame.numberOfGames
+        if(gameCount>=30){
+            val dbRefRanking = Firebase.database.getReference("Ranking").child(userTemp.id)
+            dbRefRanking.setValue(userTemp)
+        }
 
     }
     
