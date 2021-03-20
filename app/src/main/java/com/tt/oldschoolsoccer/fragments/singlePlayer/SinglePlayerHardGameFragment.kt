@@ -75,6 +75,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
             val savedGame = Functions.readHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
             if(savedGame){
                 phoneIcon = Functions.readRandomIconFromSharedPreferences(requireContext(),"HARD")
+                turn = Functions.readGameMoveStateHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+
                 launch {
                     requireContext().let {
                         val list = PointOnFieldHardDatabase(it).getPointOnFieldDao().getAllPointsOnField()
@@ -83,7 +85,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                             val j = item.position / 13
                             field.field[i][j] = item
                         }
-                        turn = Functions.readGameMoveStateHardGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
+
                     }
                     fieldReady = true
                     firstMove=false
@@ -147,7 +149,9 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
      */
     override fun onPause() {
         super.onPause()
-
+        if(loggedInStatus.loggedIn){
+            Functions.saveGameMoveStateHardToSharedPreferences(requireContext(),turn,loggedInStatus.userid)
+        }
         gameLoopHandler.removeCallbacksAndMessages(null)
         startGameHandler.removeCallbacksAndMessages(null)
 
@@ -155,9 +159,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         endGameTieHandler.removeCallbacksAndMessages(null)
         endGameLoseHandler.removeCallbacksAndMessages(null)
 
-        if(loggedInStatus.loggedIn){
-            Functions.saveGameMoveStateHardToSharedPreferences(requireContext(),turn,loggedInStatus.userid)
-        }
+
     }
 
     /**
@@ -355,6 +357,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),500)
             }
             (size+1) -> {
+                turn.nextMovePlayerAfterChecking()
+
                 phoneMoveHandler.removeCallbacksAndMessages(null)
 
                 updateField()
@@ -365,7 +369,6 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
                 if(available){
                 val end = checkWin()
-                turn.nextMovePlayerAfterChecking()
                 if (!end) {
                     gameLoopHandler.postDelayed(gameLoop(), 100)
                     }
@@ -378,7 +381,10 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                 val move = bestMove[counter-1]
                 makeMovePhone(move)
                 updateField()
-                phoneMoveHandler.postDelayed(phoneMoveRunnable(size,counter+1,bestMove),1000)
+                val end = checkWin()
+                if(!end) {
+                    phoneMoveHandler.postDelayed(phoneMoveRunnable(size, counter + 1, bestMove), 1000)
+                }
             }
         }
     }
