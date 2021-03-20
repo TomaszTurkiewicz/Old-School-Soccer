@@ -980,9 +980,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.left)
         rootView.fragment_single_player_normal_game_move_down_left_btn.background = ContextCompat.getDrawable(requireContext(),R.drawable.down_left)
 
-        rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
-        rootView.fragment_single_player_normal_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
-        rootView.fragment_single_player_normal_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_single_player_normal_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
     }
 
     private fun setConstraintLayout() {
@@ -1022,16 +1020,16 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_normal_game_move_up_left_btn.id, ConstraintSet.BOTTOM,rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.TOP,3*screenUnit)
         set.connect(rootView.fragment_single_player_normal_game_move_up_left_btn.id, ConstraintSet.RIGHT,rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.LEFT,3*screenUnit)
 
-        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.TOP,2*screenUnit)
-        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.LEFT,14*screenUnit)
+        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_back_button.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id,ConstraintSet.LEFT,16*screenUnit)
 
-        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.RIGHT,2*screenUnit)
+        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.TOP,2*screenUnit)
+        set.connect(rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_field.id,ConstraintSet.RIGHT,screenUnit)
 
-        set.connect(rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.BOTTOM, (0.5*screenUnit).toInt())
         set.connect(rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_phone_icon.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView.fragment_single_player_normal_user_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_single_player_normal_user_icon.id,ConstraintSet.TOP,rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.BOTTOM, (0.5*screenUnit).toInt())
         set.connect(rootView.fragment_single_player_normal_user_icon.id,ConstraintSet.LEFT,rootView.fragment_single_player_normal_vs_tv.id,ConstraintSet.LEFT,0)
 
         set.applyTo(rootView.fragment_single_player_normal_game_layout)
@@ -1050,7 +1048,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         rootView.fragment_single_player_normal_game_move_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_game_move_up_left_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_single_player_normal_game_middle.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
+        rootView.fragment_single_player_normal_back_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
 
         rootView.fragment_single_player_normal_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
         rootView.fragment_single_player_normal_phone_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
@@ -1065,6 +1063,3 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
 }
 
-/*
-todo change best moves... what if stuck somewhere around my score...
- */

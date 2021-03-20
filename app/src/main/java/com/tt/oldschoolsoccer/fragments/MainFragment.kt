@@ -245,7 +245,6 @@ class MainFragment : FragmentCoroutine() {
                             normalUser.multiGame = fUser.multiGame
                         }
 
-                        //todo when different user names ask user which one to choose and then save
                         dbRef.setValue(normalUser)
 
                         launch {
