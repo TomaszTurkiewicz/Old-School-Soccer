@@ -23,7 +23,6 @@ import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragmen
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
-import kotlinx.android.synthetic.main.fragment_statistics.view.*
 import kotlinx.coroutines.launch
 
 

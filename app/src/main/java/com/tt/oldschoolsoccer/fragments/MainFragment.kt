@@ -57,7 +57,7 @@ class MainFragment : FragmentCoroutine() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
- //       activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,ChangeIconFragment()).commit()
+
 
         /**
          * read screenUnit for making any UI in this fragment
@@ -113,9 +113,6 @@ class MainFragment : FragmentCoroutine() {
             }
         }
 
-        rootView.fragment_main_statistics_button.setOnClickListener {
-            goToStatisticFragment()
-        }
 
         rootView.fragment_main_other_games_button.setOnClickListener {
             goToOtherGamesFragment()
@@ -137,9 +134,7 @@ class MainFragment : FragmentCoroutine() {
 
     }
 
-    private fun goToStatisticFragment(){
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,StatisticsFragment()).commit()
-    }
+
 
     private fun signIn(){
         val signInIntent = googleSignInClient.signInIntent

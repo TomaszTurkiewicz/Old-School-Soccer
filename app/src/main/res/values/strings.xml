@@ -2,10 +2,11 @@
     <string name="app_name">Old School Soccer</string>
     <string name="single_player">SINGLE PLAYER</string>
     <string name="easy">EASY</string>
+
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="google_link">https://drive.google.com/drive/folders/1GUA5d5Sd7bCDL2_JzkpVegaK2SEt3YR4?usp=sharing</string>
 
     <string name="play">PLAY</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="statistics">STATISTICS</string>
     <string name="normal">NORMAL</string>

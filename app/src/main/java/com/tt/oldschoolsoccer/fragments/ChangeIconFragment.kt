@@ -19,7 +19,6 @@ import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.fragment_change_icon.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
-import kotlinx.android.synthetic.main.fragment_statistics.view.*
 import kotlinx.coroutines.launch
 
 

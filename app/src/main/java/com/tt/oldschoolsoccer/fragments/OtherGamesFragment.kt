@@ -218,8 +218,7 @@ class OtherGamesFragment : FragmentCoroutine() {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/plain"
                 intent.putExtra(Intent.EXTRA_SUBJECT,"Old School Soccer Game")
-                //todo REPLACE THIS LINK WITH LINK TO OLD SCHOOL SOCCER IN GOOGLE PLAY STORE!!!
-                val message = "https://drive.google.com/drive/folders/1GUA5d5Sd7bCDL2_JzkpVegaK2SEt3YR4?usp=sharing"
+                val message = getString(R.string.google_link)
                 intent.putExtra(Intent.EXTRA_TEXT,message)
                 startActivity(Intent.createChooser(intent,"CHOOSE"))
             } catch (e:Exception){

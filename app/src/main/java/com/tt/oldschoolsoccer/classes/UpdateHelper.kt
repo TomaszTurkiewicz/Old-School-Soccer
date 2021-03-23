@@ -50,7 +50,7 @@ class UpdateHelper(
             result=result.replace(Regex("[a-zA-Z]|-"),"")
         }
         catch(e: PackageManager.NameNotFoundException){
-            Log.e(TAG,e.message)
+            Log.e(TAG,e.message.toString())
         }
 
         return result
