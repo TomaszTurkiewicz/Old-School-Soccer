@@ -122,6 +122,15 @@ class MainFragment : FragmentCoroutine() {
             finishApp()
         }
 
+        rootView.fragment_main_settings_button.setOnClickListener {
+            goToSettingsFragment()
+        }
+
+    }
+
+    private fun goToSettingsFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,SettingsFragment()).commit()
+
     }
 
     private fun finishApp() {
@@ -395,7 +404,6 @@ class MainFragment : FragmentCoroutine() {
         if(loggedInStatus.loggedIn){
 
             rootView.fragment_main_user_name.visibility = View.VISIBLE
-            rootView.fragment_main_statistics_button.visibility = View.VISIBLE
             launch {
                 requireContext().let { it ->
                     val userTemp = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
@@ -410,7 +418,7 @@ class MainFragment : FragmentCoroutine() {
         }else {
             rootView.fragment_main_login_logout_Image_view.setImageDrawable(UserIconDrawable(requireContext(), (3*screenUnit).toDouble(),UserIconColors().notLoggedIn()))
             rootView.fragment_main_user_name.visibility = View.GONE
-            rootView.fragment_main_statistics_button.visibility = View.GONE
+
         }
     }
 
@@ -482,10 +490,10 @@ class MainFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.TOP,rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.connect(rootView.fragment_main_statistics_button.id, ConstraintSet.TOP,rootView.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
-        set.connect(rootView.fragment_main_statistics_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+        set.connect(rootView.fragment_main_settings_button.id, ConstraintSet.TOP,rootView.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_main_settings_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.connect(rootView.fragment_main_other_games_button.id, ConstraintSet.TOP,rootView.fragment_main_statistics_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_main_other_games_button.id, ConstraintSet.TOP,rootView.fragment_main_settings_button.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_other_games_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
         set.connect(rootView.fragment_main_update_button.id, ConstraintSet.TOP,rootView.fragment_main_other_games_button.id, ConstraintSet.BOTTOM,marginTop)
@@ -508,9 +516,9 @@ class MainFragment : FragmentCoroutine() {
         rootView.fragment_main_choose_game_type_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_main_choose_game_type_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_main_choose_game_type_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
-        rootView.fragment_main_statistics_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_main_statistics_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-        rootView.fragment_main_statistics_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_main_settings_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_main_settings_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_main_settings_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_main_update_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_main_update_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_main_update_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
