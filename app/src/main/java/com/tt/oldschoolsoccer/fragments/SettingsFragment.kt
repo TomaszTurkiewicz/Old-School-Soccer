@@ -13,13 +13,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
-import com.tt.oldschoolsoccer.classes.FragmentCoroutine
-import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.classes.LoggedInStatus
+import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
@@ -31,6 +30,8 @@ class SettingsFragment : FragmentCoroutine() {
     private var screenUnit = 0
     private var loggedInStatus = LoggedInStatus()
     private lateinit var rootView: View
+    private var iconSize = 0
+    private var userIconSize = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +76,7 @@ class SettingsFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.TOP,rootView.fragment_settings_layout.id, ConstraintSet.TOP,screenUnit)
         set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.LEFT,rootView.fragment_settings_layout.id, ConstraintSet.LEFT,16*screenUnit)
 
-        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,3*screenUnit)
+        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,4*screenUnit)
         set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
 
         set.connect(rootView.fragment_settings_your_name_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,3*screenUnit)
@@ -83,6 +84,15 @@ class SettingsFragment : FragmentCoroutine() {
 
         set.connect(rootView.fragment_settings_user_name.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,5*screenUnit)
         set.connect(rootView.fragment_settings_user_name.id,ConstraintSet.LEFT,rootView.fragment_settings_your_name_string.id,ConstraintSet.LEFT,0)
+
+        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenUnit)
+        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
+
+        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,8*screenUnit)
+        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.RIGHT,screenUnit)
+
+        set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenUnit)
+        set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.LEFT,rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,0)
 
 
 
@@ -94,6 +104,8 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_your_name_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
             rootView.fragment_settings_user_name.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
             rootView.fragment_settings_change_user_name_button.visibility = View.VISIBLE
+            rootView.fragment_settings_your_icon_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
+            rootView.fragment_settings_change_user_icon_button.visibility = View.VISIBLE
 
 
 
@@ -101,9 +113,14 @@ class SettingsFragment : FragmentCoroutine() {
             launch {
                 requireContext().let{
                     val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                    val userIconColors = User().userFromDB(user).icon
                     rootView.fragment_settings_change_user_name_button.setOnClickListener {
                         openChangeUserNameDialog(user)
                     }
+                    rootView.fragment_settings_change_user_icon_button.setOnClickListener {
+                        openChangeUserIconFragment()
+                    }
+                    rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(),userIconColors))
 
 
                     rootView.fragment_settings_user_name.text = user.name
@@ -115,8 +132,16 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_user_name.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
             rootView.fragment_settings_user_name.text = "---------"
             rootView.fragment_settings_change_user_name_button.visibility = View.GONE
+            rootView.fragment_settings_your_icon_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
+            rootView.fragment_settings_change_user_icon_button.visibility = View.GONE
+            rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(), UserIconColors().notLoggedIn()))
         }
 
+
+    }
+
+    private fun openChangeUserIconFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,ChangeIconFragment()).commit()
 
     }
 
@@ -196,18 +221,25 @@ class SettingsFragment : FragmentCoroutine() {
     }
 
     private fun setButtonsUI() {
-        rootView.fragment_settings_back_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_settings_back_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
 
         rootView.fragment_settings_your_name_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_settings_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
-        rootView.fragment_settings_change_user_name_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_settings_change_user_name_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_change_user_name_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.settings))
+
+        rootView.fragment_settings_your_icon_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_settings_icon_image_view.layoutParams = ConstraintLayout.LayoutParams(userIconSize,userIconSize)
+
+        rootView.fragment_settings_change_user_icon_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
+        rootView.fragment_settings_change_user_icon_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.settings))
     }
 
     private fun setSizes() {
-
+        iconSize=2*screenUnit
+        userIconSize = 3*screenUnit
     }
 
     private fun setBackgroundGrid() {

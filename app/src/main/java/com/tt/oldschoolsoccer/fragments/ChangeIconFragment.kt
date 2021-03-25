@@ -3,7 +3,6 @@ package com.tt.oldschoolsoccer.fragments
 import android.graphics.Shader
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.fragment_change_icon.view.*
-import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.coroutines.launch
 
 
@@ -47,7 +45,7 @@ class ChangeIconFragment : FragmentCoroutine() {
         makeUI()
 
         rootView.fragment_change_icon_back_button.setOnClickListener {
-            goToMainMenu()
+            goBackToSettingsFragment()
         }
 
         rootView.fragment_change_icon_left_arrow_background.setOnClickListener {
@@ -161,8 +159,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         return rootView
     }
 
-    private fun goToMainMenu() {
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,MainFragment()).commit()
+    private fun goBackToSettingsFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,SettingsFragment()).commit()
 
     }
 
