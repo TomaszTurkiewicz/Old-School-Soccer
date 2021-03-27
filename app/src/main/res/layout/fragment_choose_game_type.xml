@@ -18,9 +18,7 @@
         android:text="@string/easy"
         android:textAlignment="center"
         android:gravity="center"
-        android:textColor="@color/icon_grey_buttons"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:textColor="@color/icon_grey_buttons"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_easy_dummy"
@@ -91,9 +89,7 @@
         android:text="@string/normal"
         android:textColor="@color/icon_grey_buttons"
         android:textAlignment="center"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_normal_dummy"
@@ -163,9 +159,7 @@
         android:text="@string/hard"
         android:textColor="@color/icon_grey_buttons"
         android:textAlignment="center"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_hard_dummy"
@@ -234,9 +228,7 @@
         android:text="@string/multi"
         android:textColor="@color/icon_grey_buttons"
         android:textAlignment="center"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"/>
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_multi_dummy"
@@ -304,5 +296,26 @@
         android:clickable="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_total_score_string"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/total_score"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="@color/icon_grey_buttons"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_total_score_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/icon_grey_buttons"
+        android:textAlignment="center"
+        android:gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

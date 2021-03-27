@@ -26,10 +26,8 @@ import kotlinx.coroutines.launch
 class ChooseGameTypeFragment : FragmentCoroutine() {
 
     private var tableWidthNormal = 0
-    private var tableWidthBig = 0
     private var screenUnit=0
     private var buttonsHeight=0
-    private var buttonsWidth=0
     private var marginLeft=0
     private var marginTop=0
     private var loggedInStatus = LoggedInStatus()
@@ -37,6 +35,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
     private var normalGameSaved = false
     private var hardGameSaved = false
     private lateinit var rootView: View
+    private var totalScoreString = 0
 
 
 
@@ -104,11 +103,18 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                     val userDB = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
                     val user = User().userFromDB(userDB)
 
-                    rootView.fragment_choose_game_type_easy_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                    rootView.fragment_choose_game_type_easy_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                    rootView.fragment_choose_game_type_total_score_string.background = ButtonDrawable(requireContext(),(totalScoreString).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                    rootView.fragment_choose_game_type_total_score_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_black))
+                    rootView.fragment_choose_game_type_total_score_user.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                    rootView.fragment_choose_game_type_total_score_user.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_black))
+                    rootView.fragment_choose_game_type_total_score_user.text = calculateTotalScore(user)
+
+
+                    rootView.fragment_choose_game_type_easy_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                    rootView.fragment_choose_game_type_easy_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                     rootView.fragment_choose_game_type_easy_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-                    setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_default,tableWidthBig,buttonsHeight,true,null)
-                    setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_user,tableWidthBig,buttonsHeight,true,user.easyGame.numberOfGames.toString())
+                    setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_default,tableWidthNormal,buttonsHeight,true,null)
+                    setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_user,tableWidthNormal,buttonsHeight,true,user.easyGame.numberOfGames.toString())
                     setStatistic(rootView.fragment_choose_game_type_easy_score_default,tableWidthNormal,buttonsHeight,true,null)
                     setStatistic(rootView.fragment_choose_game_type_easy_score_user,tableWidthNormal,buttonsHeight,true,getScore(user.easyGame))
                     if(easyGameSaved){
@@ -122,11 +128,11 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                     }
 
                     if(userDB.easyGameNumberOfGame>=10){
-                        rootView.fragment_choose_game_type_normal_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_normal_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_normal_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_normal_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_normal_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthBig,buttonsHeight,true,null)
-                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthBig,buttonsHeight,true,user.normalGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthNormal,buttonsHeight,true,null)
+                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthNormal,buttonsHeight,true,user.normalGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_normal_score_default,tableWidthNormal,buttonsHeight,true,null)
                         setStatistic(rootView.fragment_choose_game_type_normal_score_user,tableWidthNormal,buttonsHeight,true,getScore(user.normalGame))
                         if(normalGameSaved){
@@ -138,22 +144,22 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                             goToSinglePlayerNormalGame()
                         }
                     }else{
-                        rootView.fragment_choose_game_type_normal_btn.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_normal_dummy.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_normal_btn.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_normal_dummy.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_normal_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
-                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthBig,buttonsHeight,false,user.normalGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+                        setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthNormal,buttonsHeight,false,user.normalGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_normal_score_default,tableWidthNormal,buttonsHeight,false,null)
                         setStatistic(rootView.fragment_choose_game_type_normal_score_user,tableWidthNormal,buttonsHeight,false,getScore(user.normalGame))
                         rootView.fragment_choose_game_type_normal_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play_grey))
                     }
 
                     if(userDB.normalGameNumberOfGame>=10){
-                        rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_hard_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_hard_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_hard_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthBig,buttonsHeight,true,null)
-                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthBig,buttonsHeight,true,user.hardGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthNormal,buttonsHeight,true,null)
+                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthNormal,buttonsHeight,true,user.hardGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_hard_score_default,tableWidthNormal,buttonsHeight,true,null)
                         setStatistic(rootView.fragment_choose_game_type_hard_score_user,tableWidthNormal,buttonsHeight,true,getScore(user.hardGame))
 
@@ -167,31 +173,31 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                             goToSinglePlayerHardGame()
                         }
                     }else{
-                        rootView.fragment_choose_game_type_hard_btn.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_hard_dummy.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_hard_btn.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_hard_dummy.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_hard_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
-                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthBig,buttonsHeight,false,user.hardGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+                        setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthNormal,buttonsHeight,false,user.hardGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_hard_score_default,tableWidthNormal,buttonsHeight,false,null)
                         setStatistic(rootView.fragment_choose_game_type_hard_score_user,tableWidthNormal,buttonsHeight,false,getScore(user.hardGame))
                         rootView.fragment_choose_game_type_hard_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play_grey))
                     }
 
                     if(userDB.hardGameNumberOfGame>=10){
-                        rootView.fragment_choose_game_type_multi_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_multi_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_multi_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_multi_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_multi_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthBig,buttonsHeight,true,null)
-                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthBig,buttonsHeight,true,user.multiGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthNormal,buttonsHeight,true,null)
+                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthNormal,buttonsHeight,true,user.multiGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_multi_score_default,tableWidthNormal,buttonsHeight,true,null)
                         setStatistic(rootView.fragment_choose_game_type_multi_score_user,tableWidthNormal,buttonsHeight,true,getScore(user.multiGame))
 
                     }else{
-                        rootView.fragment_choose_game_type_multi_btn.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-                        rootView.fragment_choose_game_type_multi_dummy.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_multi_btn.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+                        rootView.fragment_choose_game_type_multi_dummy.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
                         rootView.fragment_choose_game_type_multi_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
-                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthBig,buttonsHeight,false,user.multiGame.numberOfGames.toString())
+                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+                        setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthNormal,buttonsHeight,false,user.multiGame.numberOfGames.toString())
                         setStatistic(rootView.fragment_choose_game_type_multi_score_default,tableWidthNormal,buttonsHeight,false,null)
                         setStatistic(rootView.fragment_choose_game_type_multi_score_user,tableWidthNormal,buttonsHeight,false,getScore(user.multiGame))
 
@@ -202,42 +208,48 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
             }
         }else{
 
-            rootView.fragment_choose_game_type_easy_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-            rootView.fragment_choose_game_type_easy_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_easy_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_easy_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
             rootView.fragment_choose_game_type_easy_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-            setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_user,tableWidthBig,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+            setStatistic(rootView.fragment_choose_game_type_easy_number_of_games_user,tableWidthNormal,buttonsHeight,false,"0%")
             setStatistic(rootView.fragment_choose_game_type_easy_score_default,tableWidthNormal,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_easy_score_user,tableWidthNormal,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_easy_score_user,tableWidthNormal,buttonsHeight,false,"0%")
             rootView.fragment_choose_game_type_easy_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play))
 
 
-            rootView.fragment_choose_game_type_normal_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-            rootView.fragment_choose_game_type_normal_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_normal_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_normal_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
             rootView.fragment_choose_game_type_normal_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-            setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthBig,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+            setStatistic(rootView.fragment_choose_game_type_normal_number_of_games_user,tableWidthNormal,buttonsHeight,false,"0%")
             setStatistic(rootView.fragment_choose_game_type_normal_score_default,tableWidthNormal,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_normal_score_user,tableWidthNormal,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_normal_score_user,tableWidthNormal,buttonsHeight,false,"0%")
             rootView.fragment_choose_game_type_normal_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play))
 
-            rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-            rootView.fragment_choose_game_type_hard_dummy.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_hard_btn.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_hard_dummy.background = ButtonDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
             rootView.fragment_choose_game_type_hard_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
-            setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthBig,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+            setStatistic(rootView.fragment_choose_game_type_hard_number_of_games_user,tableWidthNormal,buttonsHeight,false,"0%")
             setStatistic(rootView.fragment_choose_game_type_hard_score_default,tableWidthNormal,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_hard_score_user,tableWidthNormal,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_hard_score_user,tableWidthNormal,buttonsHeight,false,"0%")
             rootView.fragment_choose_game_type_hard_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play))
 
-            rootView.fragment_choose_game_type_multi_btn.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
-            rootView.fragment_choose_game_type_multi_dummy.background = ButtonGreyDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_multi_btn.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_multi_dummy.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
             rootView.fragment_choose_game_type_multi_btn.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
-            setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthBig,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthBig,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_default,tableWidthNormal,buttonsHeight,false,null)
+            setStatistic(rootView.fragment_choose_game_type_multi_number_of_games_user,tableWidthNormal,buttonsHeight,false,"0%")
             setStatistic(rootView.fragment_choose_game_type_multi_score_default,tableWidthNormal,buttonsHeight,false,null)
-            setStatistic(rootView.fragment_choose_game_type_multi_score_user,tableWidthNormal,buttonsHeight,false,"0")
+            setStatistic(rootView.fragment_choose_game_type_multi_score_user,tableWidthNormal,buttonsHeight,false,"0%")
             rootView.fragment_choose_game_type_multi_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.play_grey))
+
+            rootView.fragment_choose_game_type_total_score_string.background = ButtonGreyDrawable(requireContext(),(totalScoreString).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_total_score_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
+            rootView.fragment_choose_game_type_total_score_user.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+            rootView.fragment_choose_game_type_total_score_user.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_buttons))
+            rootView.fragment_choose_game_type_total_score_user.text = "0%"
 
             rootView.fragment_choose_game_type_easy_play_pause_btn.setOnClickListener {
                 goToSinglePlayerEasyGame()
@@ -254,22 +266,48 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
     }
 
+    private fun calculateTotalScore(user: User): CharSequence {
+        var totalScore = 0.0
+        val easyScore = calculatePercent(user.easyGame)
+        val normalScore = calculatePercent(user.normalGame)
+        val hardScore = calculatePercent(user.hardGame)
+        val multiScore = calculatePercent(user.multiGame)
+
+        totalScore = (easyScore+2*normalScore+3*hardScore+3*multiScore)/9
+
+        totalScore*=100
+        totalScore = Math.round(totalScore).toDouble()
+        totalScore/=100
+
+
+
+        return "$totalScore%"
+    }
+
     private fun getScore(game: Game):String{
 
         return if(game.numberOfGames==0){
             "0%"
         }else{
-            val wins = (game.win*3).toDouble()
-            val ties = game.tie.toDouble()
-            val total = (game.numberOfGames*3).toDouble()
-            var number:Double = ((wins+ties)/total)*100
 
-            number*=100
-            number = Math.round(number).toDouble()
-            number/=100
+            val number = calculatePercent(game)
+
 
             "$number%"
         }
+    }
+
+    private fun calculatePercent(game: Game):Double {
+        val wins = (game.win*3).toDouble()
+        val ties = game.tie.toDouble()
+        val total = (game.numberOfGames*3).toDouble()
+        var number:Double = ((wins+ties)/total)*100
+
+        number*=100
+        number = Math.round(number).toDouble()
+        number/=100
+
+        return number
     }
 
     private fun setStatistic(view:TextView,width:Int,height:Int,black:Boolean,text:String?){
@@ -387,44 +425,50 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_choose_game_type_back_button.id, ConstraintSet.TOP,rootView.fragment_choose_game_type_layout.id, ConstraintSet.TOP,screenUnit)
         set.connect(rootView.fragment_choose_game_type_back_button.id, ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id, ConstraintSet.LEFT,16*screenUnit)
 
+        set.connect(rootView.fragment_choose_game_type_total_score_string.id, ConstraintSet.TOP,rootView.fragment_choose_game_type_multi_number_of_games_user.id,ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_choose_game_type_total_score_string.id, ConstraintSet.LEFT,rootView.fragment_choose_game_type_layout.id,ConstraintSet.LEFT,screenUnit)
+
+        set.connect(rootView.fragment_choose_game_type_total_score_user.id, ConstraintSet.TOP,rootView.fragment_choose_game_type_total_score_string.id,ConstraintSet.TOP,0)
+        set.connect(rootView.fragment_choose_game_type_total_score_user.id, ConstraintSet.LEFT,rootView.fragment_choose_game_type_total_score_string.id,ConstraintSet.RIGHT,0)
+
         set.applyTo(rootView.fragment_choose_game_type_layout)
 
     }
 
     private fun setButtonsUI(){
-        rootView.fragment_choose_game_type_easy_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_easy_dummy.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_easy_btn.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
+        rootView.fragment_choose_game_type_easy_dummy.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_easy_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
         rootView.fragment_choose_game_type_easy_play_pause_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
 
-        rootView.fragment_choose_game_type_easy_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_easy_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_easy_score_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_easy_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_easy_score_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
-        rootView.fragment_choose_game_type_easy_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_easy_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_easy_score_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_easy_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_easy_score_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
 
-        rootView.fragment_choose_game_type_normal_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_normal_dummy.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_normal_btn.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
+        rootView.fragment_choose_game_type_normal_dummy.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_normal_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_choose_game_type_normal_play_pause_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
 
-        rootView.fragment_choose_game_type_normal_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_normal_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_normal_score_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_normal_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_normal_score_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
 
-        rootView.fragment_choose_game_type_normal_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_normal_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_normal_score_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_normal_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
@@ -432,35 +476,35 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
 
 
-        rootView.fragment_choose_game_type_hard_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_hard_dummy.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_hard_btn.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
+        rootView.fragment_choose_game_type_hard_dummy.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_hard_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_choose_game_type_hard_play_pause_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
 
-        rootView.fragment_choose_game_type_hard_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_hard_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_hard_score_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_hard_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_hard_score_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
-        rootView.fragment_choose_game_type_hard_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_hard_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_hard_score_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_hard_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_hard_score_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
-        rootView.fragment_choose_game_type_multi_btn.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
-        rootView.fragment_choose_game_type_multi_dummy.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_choose_game_type_multi_btn.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
+        rootView.fragment_choose_game_type_multi_dummy.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_multi_btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_choose_game_type_multi_play_pause_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
 
-        rootView.fragment_choose_game_type_multi_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_multi_number_of_games_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_multi_score_default.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_multi_number_of_games_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         rootView.fragment_choose_game_type_multi_score_default.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
-        rootView.fragment_choose_game_type_multi_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthBig,buttonsHeight)
+        rootView.fragment_choose_game_type_multi_number_of_games_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
         rootView.fragment_choose_game_type_multi_score_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
 
         rootView.fragment_choose_game_type_multi_number_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
@@ -469,16 +513,21 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         rootView.fragment_choose_game_type_back_button.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
         rootView.fragment_choose_game_type_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
 
+        rootView.fragment_choose_game_type_total_score_string.layoutParams = ConstraintLayout.LayoutParams(totalScoreString,buttonsHeight)
+        rootView.fragment_choose_game_type_total_score_string.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        rootView.fragment_choose_game_type_total_score_user.layoutParams = ConstraintLayout.LayoutParams(tableWidthNormal,buttonsHeight)
+        rootView.fragment_choose_game_type_total_score_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
 
     }
 
     private fun setSizes(){
-        buttonsWidth=6*screenUnit
+
         buttonsHeight=2*screenUnit
         marginLeft = screenUnit
         marginTop=2*screenUnit
-        tableWidthBig = 6*screenUnit
         tableWidthNormal = 6*screenUnit
+        totalScoreString = 12 * screenUnit
     }
 
     private fun setBackgroundGrid(){
