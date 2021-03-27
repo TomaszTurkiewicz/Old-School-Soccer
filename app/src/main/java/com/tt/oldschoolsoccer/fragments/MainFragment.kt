@@ -438,8 +438,12 @@ class MainFragment : FragmentCoroutine() {
                 userTemp.normalGame.numberOfGames+
                 userTemp.hardGame.numberOfGames
         if(gameCount>=30){
-            val dbRefRanking = Firebase.database.getReference("Ranking").child(userTemp.id)
-            dbRefRanking.setValue(userTemp)
+            val userRanking = UserRanking().createUserRanking(userTemp)
+
+
+
+            val dbRefRanking = Firebase.database.getReference("Ranking").child(userRanking.id)
+            dbRefRanking.setValue(userRanking)
         }
 
     }
