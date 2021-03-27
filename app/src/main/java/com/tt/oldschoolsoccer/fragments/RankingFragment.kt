@@ -1,58 +1,98 @@
 package com.tt.oldschoolsoccer.fragments
 
+import android.graphics.Shader
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
+import com.tt.oldschoolsoccer.classes.FragmentCoroutine
+import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.classes.LoggedInStatus
+import com.tt.oldschoolsoccer.database.UserDB
+import com.tt.oldschoolsoccer.drawable.TileDrawable
+import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
+import kotlinx.android.synthetic.main.fragment_ranking.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RankingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class RankingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class RankingFragment : FragmentCoroutine() {
+
+    private var screenUnit = 0
+    private var loggedInStatus = LoggedInStatus()
+    private lateinit var userDB: UserDB
+    private lateinit var rootView: View
+    private var iconSize = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+        screenUnit = Functions.readScreenUnit(requireContext())
+        loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ranking, container, false)
+        rootView =  inflater.inflate(R.layout.fragment_ranking, container, false)
+
+        makeUI()
+
+        return rootView
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RankingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                RankingFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    private fun makeUI() {
+
+        setBackgroundGrid()
+        setSizes()
+        setButtonsUI()
+        setViewForLoggedInNotLoggedIn()
+        makeConstraintLayout()
+        setOnClickListeners()
     }
+
+    private fun setOnClickListeners() {
+        rootView.fragment_ranking_back_button.setOnClickListener {
+            goToMainMenu()
+        }
+
+    }
+
+    private fun goToMainMenu() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
+
+    }
+
+    private fun makeConstraintLayout() {
+        val set = ConstraintSet()
+        set.clone(rootView.fragment_ranking_layout)
+
+        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.TOP,rootView.fragment_ranking_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.LEFT,rootView.fragment_ranking_layout.id,ConstraintSet.LEFT,16*screenUnit)
+
+        set.applyTo(rootView.fragment_ranking_layout)
+    }
+
+    private fun setViewForLoggedInNotLoggedIn() {
+
+    }
+
+    private fun setButtonsUI() {
+        rootView.fragment_ranking_back_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
+        rootView.fragment_ranking_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
+    }
+
+    private fun setSizes() {
+        iconSize = 2*screenUnit
+    }
+
+    private fun setBackgroundGrid() {
+        rootView.fragment_ranking_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
+                Shader.TileMode.REPEAT,screenUnit)
+    }
+
 }
