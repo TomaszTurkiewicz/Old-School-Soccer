@@ -126,6 +126,15 @@ class MainFragment : FragmentCoroutine() {
             goToSettingsFragment()
         }
 
+        rootView.fragment_main_ranking_button.setOnClickListener {
+            goToRankingFragment()
+        }
+
+    }
+
+    private fun goToRankingFragment() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container,RankingFragment()).commit()
+
     }
 
     private fun goToSettingsFragment() {
@@ -490,7 +499,10 @@ class MainFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.TOP,rootView.fragment_main_login_logout_Image_view.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_choose_game_type_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
-        set.connect(rootView.fragment_main_settings_button.id, ConstraintSet.TOP,rootView.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_main_ranking_button.id, ConstraintSet.TOP,rootView.fragment_main_choose_game_type_button.id, ConstraintSet.BOTTOM,marginTop)
+        set.connect(rootView.fragment_main_ranking_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
+
+        set.connect(rootView.fragment_main_settings_button.id, ConstraintSet.TOP,rootView.fragment_main_ranking_button.id, ConstraintSet.BOTTOM,marginTop)
         set.connect(rootView.fragment_main_settings_button.id, ConstraintSet.LEFT,rootView.fragment_main_layout.id, ConstraintSet.LEFT,marginLeft)
 
         set.connect(rootView.fragment_main_other_games_button.id, ConstraintSet.TOP,rootView.fragment_main_settings_button.id, ConstraintSet.BOTTOM,marginTop)
@@ -516,6 +528,9 @@ class MainFragment : FragmentCoroutine() {
         rootView.fragment_main_choose_game_type_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_main_choose_game_type_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_main_choose_game_type_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_main_ranking_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
+        rootView.fragment_main_ranking_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_main_ranking_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         rootView.fragment_main_settings_button.layoutParams = ConstraintLayout.LayoutParams(buttonsWidth,buttonsHeight)
         rootView.fragment_main_settings_button.background = ButtonDrawable(requireContext(),(buttonsWidth).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
         rootView.fragment_main_settings_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
