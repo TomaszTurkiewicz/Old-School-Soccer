@@ -16,9 +16,7 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
-import com.tt.oldschoolsoccer.drawable.ButtonDrawable
-import com.tt.oldschoolsoccer.drawable.TileDrawable
-import com.tt.oldschoolsoccer.drawable.UserIconDrawable
+import com.tt.oldschoolsoccer.drawable.*
 import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
@@ -94,7 +92,11 @@ class SettingsFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenUnit)
         set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.LEFT,rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,0)
 
+        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,15*screenUnit)
 
+        set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.LEFT,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.TOP,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,0)
 
         set.applyTo(rootView.fragment_settings_layout)
     }
@@ -108,11 +110,9 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_change_user_icon_button.visibility = View.VISIBLE
 
 
-
-
             launch {
-                requireContext().let{
-                    val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                requireContext().let{ it1 ->
+                    val user = UserDBDatabase(it1).getUserDBDao().getUser(loggedInStatus.userid)
                     val userIconColors = User().userFromDB(user).icon
                     rootView.fragment_settings_change_user_name_button.setOnClickListener {
                         openChangeUserNameDialog(user)
@@ -121,9 +121,29 @@ class SettingsFragment : FragmentCoroutine() {
                         openChangeUserIconFragment()
                     }
                     rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(),userIconColors))
-
-
                     rootView.fragment_settings_user_name.text = user.name
+                    if(user.hardGameNumberOfGame>=10){
+                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
+                        rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
+                        if(user.playWithPeople){
+                            rootView.fragment_settings_multi_player_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+                        }else{
+                            rootView.fragment_settings_multi_player_check_box.setImageDrawable(null)
+                        }
+
+                        rootView.fragment_settings_multi_player_check_box.setOnClickListener {view ->
+                            changePlayWithPeopleState(user)
+                        }
+
+                        rootView.fragment_settings_play_with_people_string.setOnClickListener {
+                            changePlayWithPeopleState(user)
+                        }
+
+
+                    }else{
+                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),false)
+                        rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
+                    }
                 }
             }
         }
@@ -135,8 +155,25 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_your_icon_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
             rootView.fragment_settings_change_user_icon_button.visibility = View.GONE
             rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(), UserIconColors().notLoggedIn()))
+            rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(), screenUnit.toDouble(), screenUnit.toDouble(),false)
+            rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
         }
 
+
+    }
+
+    private fun changePlayWithPeopleState(user: UserDB) {
+        user.playWithPeople = !user.playWithPeople
+        if(user.playWithPeople){
+            rootView.fragment_settings_multi_player_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        }else{
+            rootView.fragment_settings_multi_player_check_box.setImageDrawable(null)
+        }
+        launch {
+            requireContext().let { it ->
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+            }
+        }
 
     }
 
@@ -235,6 +272,12 @@ class SettingsFragment : FragmentCoroutine() {
 
         rootView.fragment_settings_change_user_icon_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_change_user_icon_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.settings))
+
+        rootView.fragment_settings_multi_player_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
+
+        rootView.fragment_settings_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+
     }
 
     private fun setSizes() {

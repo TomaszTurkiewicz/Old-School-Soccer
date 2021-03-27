@@ -11,6 +11,7 @@ import com.tt.oldschoolsoccer.database.UserDB
                     var normalGame:Game = Game(),
                     var hardGame:Game = Game(),
                     var multiGame:Game = Game(),
+                    var playWithPeople:Boolean = false,
                     var icon:UserIconColors = UserIconColors())   {
 
    fun userFromDB(userDB: UserDB):User{
@@ -32,6 +33,7 @@ import com.tt.oldschoolsoccer.database.UserDB
    this.multiGame.win = userDB.multiGameWin
    this.multiGame.lose = userDB.multiGameLose
    this.multiGame.tie = userDB.multiGameTie
+   this.playWithPeople = userDB.playWithPeople
    this.icon.setBackgroundColor(userDB.backgroundColor)
    this.icon.setLeftArmColor(userDB.leftArmColor)
    this.icon.setRightArmColor(userDB.rightArmColor)

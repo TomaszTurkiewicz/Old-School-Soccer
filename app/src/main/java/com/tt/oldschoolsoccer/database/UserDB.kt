@@ -31,6 +31,7 @@ data class UserDB(
         var multiGameLose: Int = 0,
         var multiGameTie: Int = 0,
         var multiGameNumberOfGame: Int = 0,
+        var playWithPeople: Boolean = false,
         var backgroundColor: Int = 0,
         var leftArmColor: Int = 0,
         var rightArmColor: Int = 0,
@@ -61,6 +62,7 @@ data class UserDB(
         this.multiGameLose = user.multiGame.lose
         this.multiGameTie = user.multiGame.tie
         this.multiGameNumberOfGame = user.multiGame.numberOfGames
+        this.playWithPeople = user.playWithPeople
         this.backgroundColor = user.icon.getBackgroundColor()
         this.leftArmColor = user.icon.getLeftArmColor()
         this.rightArmColor = user.icon.getRightArmColor()

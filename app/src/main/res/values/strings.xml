@@ -22,5 +22,6 @@
     <string name="multi">MULTI</string>
     <string name="settings">SETTINGS</string>
     <string name="your_name">YOUR NAME:</string>
-    <string name="your_icon">YOUR ICON</string>
+    <string name="your_icon">YOUR ICON:</string>
+    <string name="play_with_people">PLAY WITH PEOPLE</string>
 </resources>
