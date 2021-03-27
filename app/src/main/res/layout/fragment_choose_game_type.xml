@@ -23,6 +23,21 @@
         android:focusable="true"/>
 
     <TextView
+        android:id="@+id/fragment_choose_game_type_easy_dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+        android:id="@+id/fragment_choose_game_type_easy_play_pause_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
         android:id="@+id/fragment_choose_game_type_easy_number_of_games_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,6 +94,21 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_normal_dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+        android:id="@+id/fragment_choose_game_type_normal_play_pause_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_normal_number_of_games_default"
@@ -138,6 +168,21 @@
         android:focusable="true"/>
 
     <TextView
+        android:id="@+id/fragment_choose_game_type_hard_dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+        android:id="@+id/fragment_choose_game_type_hard_play_pause_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
         android:id="@+id/fragment_choose_game_type_hard_number_of_games_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -192,6 +237,21 @@
         android:gravity="center"
         android:clickable="true"
         android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/fragment_choose_game_type_multi_dummy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+        android:id="@+id/fragment_choose_game_type_multi_play_pause_btn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/fragment_choose_game_type_multi_number_of_games_default"
