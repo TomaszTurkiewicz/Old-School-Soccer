@@ -283,6 +283,23 @@ class Functions {
             return phoneIconColors
         }
 
+        fun readSoundFromSharedPreferences(context: Context):Boolean{
+            var sound = false
+            context.let {
+                val sharedPreferences = context.getSharedPreferences("SOUND",Context.MODE_PRIVATE)
+                sound = sharedPreferences.getBoolean("SOUND",false)
+            }
+            return sound
+        }
+
+        fun saveSoundToSharedPreferences(context: Context,sound:Boolean){
+            context.let {
+                val sharedPreferences = context.getSharedPreferences("SOUND",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("SOUND",sound)
+                editor.apply()
+            }
+        }
 
     }
 }

@@ -89,6 +89,24 @@
         android:gravity="center"
         android:includeFontPadding="false"/>
 
+    <ImageView
+        android:id="@+id/fragment_settings_sound_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/fragment_settings_sound_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/sound"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:includeFontPadding="false"/>
+
 
 
 

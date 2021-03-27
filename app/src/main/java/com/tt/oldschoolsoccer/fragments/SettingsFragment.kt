@@ -98,10 +98,33 @@ class SettingsFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.LEFT,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.RIGHT,screenUnit)
         set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.TOP,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,0)
 
+
+        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,18*screenUnit)
+
+        set.connect(rootView.fragment_settings_sound_string.id,ConstraintSet.LEFT,rootView.fragment_settings_sound_check_box.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_sound_string.id,ConstraintSet.TOP,rootView.fragment_settings_sound_check_box.id,ConstraintSet.TOP,0)
+
         set.applyTo(rootView.fragment_settings_layout)
     }
 
     private fun setViewForLoggedInNotLoggedIn() {
+        rootView.fragment_settings_sound_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
+        rootView.fragment_settings_sound_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
+        displaySoundCheckBox()
+        rootView.fragment_settings_sound_check_box.setOnClickListener {
+            var sound = Functions.readSoundFromSharedPreferences(requireContext())
+            sound = !sound
+            Functions.saveSoundToSharedPreferences(requireContext(),sound)
+            displaySoundCheckBox()
+        }
+        rootView.fragment_settings_sound_string.setOnClickListener {
+            var sound = Functions.readSoundFromSharedPreferences(requireContext())
+            sound = !sound
+            Functions.saveSoundToSharedPreferences(requireContext(),sound)
+            displaySoundCheckBox()
+        }
+
         if(loggedInStatus.loggedIn){
             rootView.fragment_settings_your_name_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
             rootView.fragment_settings_user_name.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
@@ -159,6 +182,17 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
         }
 
+
+    }
+
+    private fun displaySoundCheckBox() {
+        val sound = Functions.readSoundFromSharedPreferences(requireContext())
+
+        if(sound){
+            rootView.fragment_settings_sound_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        }else{
+            rootView.fragment_settings_sound_check_box.setImageDrawable(null)
+        }
 
     }
 
@@ -277,6 +311,8 @@ class SettingsFragment : FragmentCoroutine() {
 
         rootView.fragment_settings_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
+        rootView.fragment_settings_sound_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
+        rootView.fragment_settings_sound_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
     }
 
