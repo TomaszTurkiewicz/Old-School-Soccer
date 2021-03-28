@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ranking_row_l_l"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ranking_row_position_and_total_score_l_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ranking_row_position_text_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="POSITION"/>
+        <TextView
+            android:id="@+id/ranking_row_total_score_text_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="TOTAL SCORE"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ranking_row_icon_image_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <LinearLayout
+        android:id="@+id/ranking_row_user_name_and_scores_l_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ranking_row_user_name_text_view"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="USER NAME"/>
+
+        <LinearLayout
+            android:id="@+id/ranking_row_user_scores_l_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ranking_row_multi_score"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="MULTI"/>
+
+            <TextView
+                android:id="@+id/ranking_row_hard_score"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="HARD"/>
+
+            <TextView
+                android:id="@+id/ranking_row_normal_score"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="NORMAL"/>
+
+            <TextView
+                android:id="@+id/ranking_row_easy_score"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="EASY"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
