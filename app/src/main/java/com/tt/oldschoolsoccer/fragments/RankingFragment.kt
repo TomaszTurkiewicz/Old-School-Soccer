@@ -23,12 +23,14 @@ import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.LoggedInStatus
 import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.database.UserDB
+import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.recyclerViews.RankingRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_ranking.view.*
+import kotlinx.coroutines.launch
 
 
 class RankingFragment : FragmentCoroutine() {
@@ -84,7 +86,7 @@ class RankingFragment : FragmentCoroutine() {
                         val tUser = user.getValue(UserRanking::class.java)
                         userList.add(tUser!!)
                     }
-                    sortAndDisplay()
+                    checkLoggedInUser()
                 }
             }
 
@@ -95,13 +97,48 @@ class RankingFragment : FragmentCoroutine() {
 
     }
 
+    private fun checkLoggedInUser() {
+        if(loggedInStatus.loggedIn){
+            val userInList = findUserInList(userList)
+            if(userInList){
+                sortAndDisplay()
+            }else{
+                addUser()
+            }
+        }else{
+            sortAndDisplay()
+        }
+
+    }
+
+    private fun addUser() {
+        launch {
+            requireContext().let {
+                val userDB = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                val userRanking = UserRanking().createUserRankingFromDB(userDB)
+                userList.add(userRanking)
+                sortAndDisplay()
+            }
+        }
+
+    }
+
+    private fun findUserInList(userList: MutableList<UserRanking>): Boolean {
+        for(i in 0 until userList.size-1){
+            if(userList[i].id == loggedInStatus.userid)
+            return true
+        }
+        return false
+    }
+
     private fun sortAndDisplay() {
+
         initRecyclerView()
 
     }
 
     private fun initRecyclerView() {
-        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenUnit,null)
+        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenUnit,loggedInStatus.userid)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

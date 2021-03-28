@@ -1,5 +1,7 @@
 package com.tt.oldschoolsoccer.classes
 
+import com.tt.oldschoolsoccer.database.UserDB
+
 class UserRanking(var id:String = "",
                   var userName:String = "",
                   var easyGame:Double = 0.0,
@@ -31,6 +33,45 @@ class UserRanking(var id:String = "",
         val multiGame = calculateGame(user.multiGame)
         this.multiGame = multiGame
         this.multiNoOfGames = user.multiGame.numberOfGames
+        this.totalScore = calculateTotalScore(easyGame,normalGame,hardGame,multiGame)
+
+        return this
+    }
+
+    fun createUserRankingFromDB(userDB: UserDB):UserRanking{
+        this.id = userDB.id
+        this.userName = userDB.name
+        this.playWithPeople = userDB.playWithPeople
+        this.icon.setBackgroundColor(userDB.backgroundColor)
+        this.icon.setBodyLeftColor(userDB.bodyLeftColor)
+        this.icon.setBodyRightColor(userDB.bodyRightColor)
+        this.icon.setLeftArmColor(userDB.leftArmColor)
+        this.icon.setRightArmColor(userDB.rightArmColor)
+        this.icon.setOverArmColor(userDB.overArmsColor)
+        this.icon.setTrousersBodyColor(userDB.trousersBody)
+        this.icon.setTrousersExternalColor(userDB.trouserExternalColor)
+        this.icon.setTrousersInternalColor(userDB.trousersInternalColor)
+        val easyGameO = Game(userDB.easyGameNumberOfGame,userDB.easyGameWin,userDB.easyGameTie,userDB.easyGameLose)
+        val easyGame = calculateGame(easyGameO)
+        this.easyGame = easyGame
+        this.easyNoOfGames = userDB.easyGameNumberOfGame
+
+        val normalGameO = Game(userDB.normalGameNumberOfGame,userDB.normalGameWin,userDB.normalGameTie,userDB.normalGameLose)
+        val normalGame = calculateGame(normalGameO)
+        this.normalGame = normalGame
+        this.normalNoOfGames = userDB.normalGameNumberOfGame
+
+        val hardGameO = Game(userDB.hardGameNumberOfGame,userDB.hardGameWin,userDB.hardGameTie,userDB.hardGameLose)
+        val hardGame = calculateGame(hardGameO)
+        this.hardGame = hardGame
+        this.hardNoOfGames = userDB.hardGameNumberOfGame
+
+        val multiGameO = Game(userDB.multiGameNumberOfGame,userDB.multiGameWin,userDB.multiGameTie,userDB.multiGameLose)
+        val multiGame = calculateGame(multiGameO)
+        this.multiGame = multiGame
+        this.multiNoOfGames = userDB.multiGameNumberOfGame
+
+
         this.totalScore = calculateTotalScore(easyGame,normalGame,hardGame,multiGame)
 
         return this

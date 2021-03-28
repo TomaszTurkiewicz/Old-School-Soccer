@@ -15,7 +15,7 @@ import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.ranking_row_layout.view.*
 
-class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, val userId:String?) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
+class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, val userId:String) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,10 +24,12 @@ class RankingRecyclerViewAdapter(val context: Context, private val userList: Lis
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.position.text = "999999"
+        holder.position.text = (position+1).toString()
         holder.userName.text = userList[position].userName
-        holder.totalScore.text = "88.88%"
-        holder.games.text = "999999"
+        holder.totalScore.text = userList[position].totalScore.toString()
+        val numberOfGames = userList[position].easyNoOfGames+userList[position].normalNoOfGames+userList[position].hardNoOfGames+userList[position].multiNoOfGames
+
+        holder.games.text = numberOfGames.toString()
         holder.userIcon.setImageDrawable(UserIconDrawable(context, (2*screenUnit).toDouble(),userList[position].icon))
     }
 
@@ -44,9 +46,13 @@ class RankingRecyclerViewAdapter(val context: Context, private val userList: Lis
         val userIcon: ImageView = itemView.ranking_row_icon_image_view
         val userName: TextView = itemView.ranking_row_user_name_text_view
         val games: TextView = itemView.ranking_row_games_text_view
+        val layout: LinearLayout = itemView.ranking_row_l_l
 
 
         init {
+            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams.setMargins(0,screenUnit/2,0,screenUnit/2)
+            layout.layoutParams = layoutParams
             position.layoutParams = LinearLayout.LayoutParams(3*screenUnit,2*screenUnit)
             totalScore.layoutParams = LinearLayout.LayoutParams(3*screenUnit,2*screenUnit)
             userIcon.layoutParams = LinearLayout.LayoutParams(2*screenUnit,2*screenUnit)
