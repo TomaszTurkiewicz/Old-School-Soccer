@@ -8,18 +8,74 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RankingFragment">
 
+
+    <TextView
+        android:id="@+id/fragment_ranking_total_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/total"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/fragment_ranking_multi_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/multi"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/fragment_ranking_hard_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/hard"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/fragment_ranking_normal_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/normal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/fragment_ranking_easy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/easy"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_ranking_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
     <ImageView
         android:id="@+id/fragment_ranking_back_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:clickable="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_ranking_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 

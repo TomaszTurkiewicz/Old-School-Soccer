@@ -28,7 +28,8 @@
         android:inputType="text"
         app:layout_constraintTop_toBottomOf="@id/alert_dialog_title"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:hint="new user name"/>
+        android:hint="new user name"
+        android:maxLength="15"/>
 
         <TextView
             android:id="@+id/alert_dialog_cancel_button"

@@ -3,9 +3,13 @@ package com.tt.oldschoolsoccer.classes
 class UserRanking(var id:String = "",
                   var userName:String = "",
                   var easyGame:Double = 0.0,
+                  var easyNoOfGames:Int = 0,
                   var normalGame:Double = 0.0,
+                  var normalNoOfGames:Int = 0,
                   var hardGame:Double = 0.0,
+                  var hardNoOfGames:Int = 0,
                   var multiGame:Double = 0.0,
+                  var multiNoOfGames:Int = 0,
                   var totalScore:Double = 0.0,
                   var playWithPeople:Boolean = false,
                   var icon:UserIconColors = UserIconColors()) {
@@ -17,12 +21,16 @@ class UserRanking(var id:String = "",
         this.icon = user.icon
         val easyGame = calculateGame(user.easyGame)
         this.easyGame = easyGame
+        this.easyNoOfGames = user.easyGame.numberOfGames
         val normalGame = calculateGame(user.normalGame)
         this.normalGame = normalGame
+        this.normalNoOfGames = user.normalGame.numberOfGames
         val hardGame = calculateGame(user.hardGame)
         this.hardGame = hardGame
+        this.hardNoOfGames = user.hardGame.numberOfGames
         val multiGame = calculateGame(user.multiGame)
         this.multiGame = multiGame
+        this.multiNoOfGames = user.multiGame.numberOfGames
         this.totalScore = calculateTotalScore(easyGame,normalGame,hardGame,multiGame)
 
         return this
