@@ -15,7 +15,7 @@ import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.ranking_row_layout.view.*
 
-class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, val userId:String) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
+class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, private val userId:String) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,6 +24,19 @@ class RankingRecyclerViewAdapter(val context: Context, private val userList: Lis
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if(userList[position].id == userId){
+            holder.position.setTextColor(ContextCompat.getColor(context,R.color.icon_green_dark))
+            holder.userName.setTextColor(ContextCompat.getColor(context,R.color.icon_green_dark))
+            holder.totalScore.setTextColor(ContextCompat.getColor(context,R.color.icon_green_dark))
+            holder.games.setTextColor(ContextCompat.getColor(context,R.color.icon_green_dark))
+        }else{
+            holder.position.setTextColor(ContextCompat.getColor(context,R.color.black))
+            holder.userName.setTextColor(ContextCompat.getColor(context,R.color.black))
+            holder.totalScore.setTextColor(ContextCompat.getColor(context,R.color.black))
+            holder.games.setTextColor(ContextCompat.getColor(context,R.color.black))
+        }
+
+
         holder.position.text = (position+1).toString()
         holder.userName.text = userList[position].userName
         holder.totalScore.text = userList[position].totalScore.toString()
