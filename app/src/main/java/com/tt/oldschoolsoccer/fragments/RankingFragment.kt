@@ -18,10 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
-import com.tt.oldschoolsoccer.classes.FragmentCoroutine
-import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.classes.LoggedInStatus
-import com.tt.oldschoolsoccer.classes.UserRanking
+import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
@@ -43,6 +40,7 @@ class RankingFragment : FragmentCoroutine() {
     private var buttonWidth = 0
     private lateinit var userList: MutableList<UserRanking>
     private lateinit var recyclerView:RecyclerView
+    private var sortType:Int = Static.TOTAL_SORTING
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,13 +130,110 @@ class RankingFragment : FragmentCoroutine() {
     }
 
     private fun sortAndDisplay() {
+        var sorted = false
+
+        while (!sorted) {
+            sorted = true
+            for (i in 0 until userList.size - 1) {
+                if (hasToBeSorted(i)) {
+                    val userTmp = userList[i]
+                    userList[i] = userList[i + 1]
+                    userList[i + 1] = userTmp
+                    sorted = false
+                }
+            }
+        }
 
         initRecyclerView()
 
     }
 
+    private fun hasToBeSorted(i: Int): Boolean {
+        var x = false
+        when(sortType){
+            Static.TOTAL_SORTING -> x = totalSort(i)
+            Static.MULTI_SORTING -> x = multiSort(i)
+            Static.HARD_SORTING -> x = hardSort(i)
+            Static.NORMAL_SORTING -> x = normalSort(i)
+            Static.EASY_SORTING -> x = easySort(i)
+        }
+        return x
+    }
+
+    private fun easySort(i: Int): Boolean {
+        return when {
+            userList[i].easyGame<userList[i+1].easyGame -> {
+                true
+            }
+            userList[i].easyGame==userList[i+1].easyGame -> {
+                userList[i].easyNoOfGames<userList[i+1].easyNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun normalSort(i: Int): Boolean {
+        return when {
+            userList[i].normalGame<userList[i+1].normalGame -> {
+                true
+            }
+            userList[i].normalGame==userList[i+1].normalGame -> {
+                userList[i].normalNoOfGames<userList[i+1].normalNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun hardSort(i: Int): Boolean {
+        return when {
+            userList[i].hardGame<userList[i+1].hardGame -> {
+                true
+            }
+            userList[i].hardGame==userList[i+1].hardGame -> {
+                userList[i].hardNoOfGames<userList[i+1].hardNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun multiSort(i: Int): Boolean {
+        return when {
+            userList[i].multiGame<userList[i+1].multiGame -> {
+                true
+            }
+            userList[i].multiGame==userList[i+1].multiGame -> {
+                userList[i].multiNoOfGames<userList[i+1].multiNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+
+    }
+
+    private fun totalSort(i: Int): Boolean {
+        return when {
+            userList[i].totalScore<userList[i+1].totalScore -> {
+                true
+            }
+            userList[i].totalScore==userList[i+1].totalScore -> {
+                userList[i].multiNoOfGames+userList[i].hardNoOfGames+userList[i].normalNoOfGames+userList[i].easyNoOfGames<userList[i+1].multiNoOfGames+userList[i+1].hardNoOfGames+userList[i+1].normalNoOfGames+userList[i+1].easyNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+
+    }
+
     private fun initRecyclerView() {
-        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenUnit,loggedInStatus.userid)
+        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenUnit,loggedInStatus.userid,sortType)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -155,20 +250,33 @@ class RankingFragment : FragmentCoroutine() {
 
     private fun buttonsClickListeners() {
         rootView.fragment_ranking_total_button.setOnClickListener {
+            sortType = Static.TOTAL_SORTING
             displayPressedButton(rootView.fragment_ranking_total_button)
+            sortAndDisplay()
         }
 
         rootView.fragment_ranking_multi_button.setOnClickListener {
+            sortType = Static.MULTI_SORTING
             displayPressedButton(rootView.fragment_ranking_multi_button)
+            sortAndDisplay()
         }
+
         rootView.fragment_ranking_hard_button.setOnClickListener {
+            sortType = Static.HARD_SORTING
             displayPressedButton(rootView.fragment_ranking_hard_button)
+            sortAndDisplay()
         }
+
         rootView.fragment_ranking_normal_button.setOnClickListener {
+            sortType = Static.NORMAL_SORTING
             displayPressedButton(rootView.fragment_ranking_normal_button)
+            sortAndDisplay()
         }
+
         rootView.fragment_ranking_easy_button.setOnClickListener {
+            sortType = Static.EASY_SORTING
             displayPressedButton(rootView.fragment_ranking_easy_button)
+            sortAndDisplay()
         }
     }
 

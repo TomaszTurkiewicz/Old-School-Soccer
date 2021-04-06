@@ -22,9 +22,9 @@ class Static {
         const val NORMAL = 1
         const val HARD = 2
 
-        const val NULL = 0
-        const val FALSE = 1
-        const val TRUE = 2
+//        const val NULL = 0
+//        const val FALSE = 1
+//        const val TRUE = 2
 
         const val MOVE_FORBIDDEN = 0
         const val MOVE_AVAILABLE = 1
@@ -35,6 +35,12 @@ class Static {
 
         const val BACKGROUND_COLORS_MAX_VALUE = 3
         const val OTHER_COLORS_MAX_VALUE = 13
+
+        const val TOTAL_SORTING = 0
+        const val MULTI_SORTING = 1
+        const val HARD_SORTING = 2
+        const val NORMAL_SORTING = 3
+        const val EASY_SORTING = 4
 
     }
 }

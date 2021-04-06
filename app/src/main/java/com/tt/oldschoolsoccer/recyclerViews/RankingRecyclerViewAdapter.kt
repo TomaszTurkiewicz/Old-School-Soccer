@@ -11,11 +11,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.oldschoolsoccer.R
+import com.tt.oldschoolsoccer.classes.Static
 import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
 import kotlinx.android.synthetic.main.ranking_row_layout.view.*
 
-class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, private val userId:String) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
+class RankingRecyclerViewAdapter(val context: Context, private val userList: List<UserRanking>, val screenUnit:Int, private val userId:String, private val sortType:Int) : RecyclerView.Adapter<RankingRecyclerViewAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,12 +39,48 @@ class RankingRecyclerViewAdapter(val context: Context, private val userList: Lis
 
 
         holder.position.text = (position+1).toString()
+        holder.userIcon.setImageDrawable(UserIconDrawable(context, (2*screenUnit).toDouble(),userList[position].icon))
         holder.userName.text = userList[position].userName
+
+        when(sortType){
+            Static.TOTAL_SORTING -> totalDisplay(holder,position)
+            Static.MULTI_SORTING -> multiDisplay(holder,position)
+            Static.HARD_SORTING -> hardDisplay(holder,position)
+            Static.NORMAL_SORTING -> normalDisplay(holder,position)
+            Static.EASY_SORTING -> easyDisplay(holder,position)
+        }
+
+
+    }
+
+    private fun easyDisplay(holder: ViewHolder, position: Int) {
+        holder.totalScore.text = userList[position].easyGame.toString()
+        holder.games.text = userList[position].easyNoOfGames.toString()
+
+    }
+
+    private fun normalDisplay(holder: ViewHolder, position: Int) {
+        holder.totalScore.text = userList[position].normalGame.toString()
+        holder.games.text = userList[position].normalNoOfGames.toString()
+
+    }
+
+    private fun hardDisplay(holder: ViewHolder, position: Int) {
+        holder.totalScore.text = userList[position].hardGame.toString()
+        holder.games.text = userList[position].hardNoOfGames.toString()
+
+    }
+
+    private fun multiDisplay(holder: ViewHolder, position: Int) {
+        holder.totalScore.text = userList[position].multiGame.toString()
+        holder.games.text = userList[position].multiNoOfGames.toString()
+
+    }
+
+    private fun totalDisplay(holder: ViewHolder, position: Int) {
         holder.totalScore.text = userList[position].totalScore.toString()
         val numberOfGames = userList[position].easyNoOfGames+userList[position].normalNoOfGames+userList[position].hardNoOfGames+userList[position].multiNoOfGames
-
         holder.games.text = numberOfGames.toString()
-        holder.userIcon.setImageDrawable(UserIconDrawable(context, (2*screenUnit).toDouble(),userList[position].icon))
     }
 
     override fun getItemCount(): Int {
