@@ -275,6 +275,21 @@ class MainFragment : FragmentCoroutine() {
                 // do nothing
             }
         })
+
+        val dbRefInvitation = Firebase.database.getReference("Invitations").child(userDB.id)
+        dbRefInvitation.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()){
+                    val invitation = Invitation()
+                    dbRefInvitation.setValue(invitation)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     /**

@@ -42,5 +42,9 @@ class Static {
         const val NORMAL_SORTING = 3
         const val EASY_SORTING = 4
 
+        const val ORIENTATION_NOT_SET_UP = 0
+        const val ORIENTATION_NORMAL = 1
+        const val ORIENTATION_UP_SIDE_DOWN = 2
+
     }
 }
