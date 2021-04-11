@@ -46,5 +46,11 @@ class Static {
         const val ORIENTATION_NORMAL = 1
         const val ORIENTATION_UP_SIDE_DOWN = 2
 
+        const val MULTI_GAME_NOT_SET_UP = 0
+        const val MULTI_GAME_SENT_INVITATION = 1
+        const val MULTI_GAME_RECEIVED_INVITATION = 2
+        const val MULTI_GAME_MATCH_READY = 3
+
+
     }
 }
