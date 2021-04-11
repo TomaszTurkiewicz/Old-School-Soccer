@@ -11,8 +11,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
@@ -27,10 +33,12 @@ class MultiPlayerListFragment : Fragment() {
     private var iconSize = 0
     private var buttonHeight = 0
     private var buttonWidth = 0
+    private lateinit var allUserList: MutableList<UserRanking>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screenUnit = Functions.readScreenUnit(requireContext())
+        allUserList = mutableListOf()
 
     }
 
@@ -50,7 +58,7 @@ class MultiPlayerListFragment : Fragment() {
         setSizes()
         setButtonsUI()
         makeConstraintLayout()
-        prepareRecyclerView()
+        prepareLists()
         setOnClickListeners()
     }
 
@@ -58,8 +66,62 @@ class MultiPlayerListFragment : Fragment() {
        //todo
     }
 
-    private fun prepareRecyclerView() {
-        //todo
+    private fun prepareLists() {
+        val dbRankingRef = Firebase.database.getReference("Ranking")
+        dbRankingRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    for(user in snapshot.children){
+                        val tUser = user.getValue(UserRanking::class.java)
+                        allUserList.add(tUser!!)
+                    }
+
+                    allUserList = allUserList.filter { element ->
+                        element.playWithPeople
+                    } as MutableList<UserRanking>
+
+                    var sorted = false
+
+                    while (!sorted) {
+                        sorted = true
+                        for (i in 0 until allUserList.size - 1) {
+                            if (hasToBeSorted(i)) {
+                                val userTmp = allUserList[i]
+                                allUserList[i] = allUserList[i + 1]
+                                allUserList[i + 1] = userTmp
+                                sorted = false
+                            }
+                        }
+                    }
+
+                    val a = 100
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //do nothing
+            }
+        })
+
+        //todo prepare history list
+
+
+    }
+
+    private fun hasToBeSorted(i: Int): Boolean {
+        return when {
+            allUserList[i].totalScore<allUserList[i+1].totalScore -> {
+                true
+            }
+            allUserList[i].totalScore==allUserList[i+1].totalScore -> {
+                allUserList[i].multiNoOfGames+allUserList[i].hardNoOfGames+allUserList[i].normalNoOfGames+allUserList[i].easyNoOfGames<allUserList[i+1].multiNoOfGames+allUserList[i+1].hardNoOfGames+allUserList[i+1].normalNoOfGames+allUserList[i+1].easyNoOfGames
+            }
+            else -> {
+                false
+            }
+        }
+
     }
 
     private fun makeConstraintLayout() {
