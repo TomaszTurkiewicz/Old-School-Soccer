@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -22,6 +23,7 @@ import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonGreyDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.fragments.multiPlayer.MultiPlayerListFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
@@ -224,6 +226,15 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
                         multiGameButtonOptions()
 
+                        rootView.fragment_choose_game_type_multi_play_pause_btn.setOnClickListener {
+                            when(multiGameState){
+                                Static.MULTI_GAME_MATCH_READY -> playMultiPlayer()
+                                Static.MULTI_GAME_RECEIVED_INVITATION -> acceptOrNotInvitation()
+                                Static.MULTI_GAME_SENT_INVITATION -> waitForAcceptationFromOpponent()
+                                Static.MULTI_GAME_NOT_SET_UP -> chooseOpponent()
+                            }
+                        }
+
 
                     }else{
                         rootView.fragment_choose_game_type_multi_btn.background = ButtonGreyDrawable(requireContext(),(tableWidthNormal).toDouble(), (buttonsHeight).toDouble(), screenUnit.toDouble())
@@ -300,6 +311,28 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         }
 
     }
+
+    private fun chooseOpponent() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MultiPlayerListFragment()).commit()
+
+    }
+
+    private fun waitForAcceptationFromOpponent() {
+        // todo alert dialog z informacja ze jeszcze nie zaakceptowane przez przeciwnika wiec czekac czy rezygnowac?
+
+    }
+
+    private fun acceptOrNotInvitation() {
+        // todo alert dialog z zaakceptuj lub odrzuc zaproszenie - najlepiej ze statystykami przeciwnika
+
+    }
+
+    private fun playMultiPlayer() {
+        // todo go to multi player match fragment
+
+    }
+
+
 
     private fun multiGameButtonOptions() {
         multiGame().run()

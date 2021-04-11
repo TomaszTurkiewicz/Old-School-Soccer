@@ -28,4 +28,6 @@
     <string name="ranking">RANKING</string>
     <string name="total_score">TOTAL SCORE</string>
     <string name="total">TOTAL</string>
+    <string name="history">HISTORY</string>
+    <string name="all">ALL</string>
 </resources>
