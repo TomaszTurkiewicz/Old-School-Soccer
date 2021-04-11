@@ -224,14 +224,19 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                         setStatistic(rootView.fragment_choose_game_type_multi_score_default,tableWidthNormal,buttonsHeight,true,null)
                         setStatistic(rootView.fragment_choose_game_type_multi_score_user,tableWidthNormal,buttonsHeight,true,getScore(user.multiGame))
 
-                        multiGameButtonOptions()
+                        multiGameButtonOptions(userDB.playWithPeople)
 
                         rootView.fragment_choose_game_type_multi_play_pause_btn.setOnClickListener {
-                            when(multiGameState){
-                                Static.MULTI_GAME_MATCH_READY -> playMultiPlayer()
-                                Static.MULTI_GAME_RECEIVED_INVITATION -> acceptOrNotInvitation()
-                                Static.MULTI_GAME_SENT_INVITATION -> waitForAcceptationFromOpponent()
-                                Static.MULTI_GAME_NOT_SET_UP -> chooseOpponent()
+                            if (userDB.playWithPeople) {
+                                when (multiGameState) {
+                                    Static.MULTI_GAME_MATCH_READY -> playMultiPlayer()
+                                    Static.MULTI_GAME_RECEIVED_INVITATION -> acceptOrNotInvitation()
+                                    Static.MULTI_GAME_SENT_INVITATION -> waitForAcceptationFromOpponent()
+                                    Static.MULTI_GAME_NOT_SET_UP -> chooseOpponent()
+                                }
+                            }
+                            else{
+                                alertDialogEnablePlayWithPeople()
                             }
                         }
 
@@ -312,6 +317,11 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
     }
 
+    private fun alertDialogEnablePlayWithPeople() {
+        // todo alert dialog
+
+    }
+
     private fun chooseOpponent() {
         activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MultiPlayerListFragment()).commit()
 
@@ -334,8 +344,13 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
 
 
-    private fun multiGameButtonOptions() {
-        multiGame().run()
+    private fun multiGameButtonOptions(playWithPeople:Boolean) {
+        if(playWithPeople){
+            multiGame().run()
+        }
+        else{
+            rootView.fragment_choose_game_type_multi_play_pause_btn.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.play_grey))
+        }
 
     }
 
