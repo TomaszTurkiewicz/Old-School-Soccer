@@ -346,17 +346,16 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         mView.alert_dialog_play_with_people_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
         mView.alert_dialog_play_with_people_title.text = "PLAY WITH PEOPLE?"
 
-        mView.alert_dialog_play_with_people_message.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_play_with_people_message.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
         mView.alert_dialog_play_with_people_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_play_with_people_message.setLineSpacing(screenUnit.toFloat(),0.85f)
         mView.alert_dialog_play_with_people_message.text = "If You want to play with other people you have to enable this function. As soon as You do it other people can also invite You to play"
 
         mView.alert_dialog_play_with_people_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
         mView.alert_dialog_play_with_people_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
-        if(userDB.playWithPeople){
-            mView.alert_dialog_play_with_people_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
-        }else{
-            mView.alert_dialog_play_with_people_check_box.setImageDrawable(null)
-        }
+
+        displayCheckBox(userDB,mView)
+
 
         mView.alert_dialog_play_with_people_string.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
         mView.alert_dialog_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
@@ -374,8 +373,8 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         set.connect(mView.alert_dialog_play_with_people_message.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_title.id,ConstraintSet.BOTTOM,0)
         set.connect(mView.alert_dialog_play_with_people_message.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_title.id,ConstraintSet.LEFT,0)
 
-        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_message.id,ConstraintSet.BOTTOM,0)
-        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_message.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.TOP,12 * screenUnit)
+        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.LEFT,screenUnit)
 
         set.connect(mView.alert_dialog_play_with_people_string.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.TOP,0)
         set.connect(mView.alert_dialog_play_with_people_string.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.RIGHT,screenUnit)
@@ -389,10 +388,36 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
         set.applyTo(mView.alert_dialog_play_with_people_layout)
 
+
+        mView.alert_dialog_play_with_people_check_box.setOnClickListener {
+            userDB.playWithPeople = !userDB.playWithPeople
+            launch {
+                requireContext().let {
+                    UserDBDatabase(it).getUserDBDao().updateUserInDB(userDB)
+                }
+            }
+            displayCheckBox(userDB,mView)
+        }
+
+        mView.alert_dialog_play_with_people_ok_button.setOnClickListener {
+            multiGameButtonOptions(userDB.playWithPeople)
+            dialog.dismiss()
+        }
+
+
         dialog.show()
 
-        //todo on click listener for play with people and ok button
-        // todo make this alert more user friendly UI
+
+
+
+    }
+
+    private fun displayCheckBox(userDB: UserDB, mView: View) {
+        if(userDB.playWithPeople){
+            mView.alert_dialog_play_with_people_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        }else{
+            mView.alert_dialog_play_with_people_check_box.setImageDrawable(null)
+        }
 
     }
 
