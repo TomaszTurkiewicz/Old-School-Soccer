@@ -1,5 +1,6 @@
 package com.tt.oldschoolsoccer.fragments
 
+import android.app.AlertDialog
 import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +8,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,15 +21,20 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
+import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonGreyDrawable
+import com.tt.oldschoolsoccer.drawable.CheckBoxDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.fragments.multiPlayer.MultiPlayerListFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
+import kotlinx.android.synthetic.main.alert_dialog_play_with_people.view.*
+import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
+import kotlinx.android.synthetic.main.fragment_settings.view.*
 import kotlinx.coroutines.launch
 
 
@@ -236,7 +243,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                                 }
                             }
                             else{
-                                alertDialogEnablePlayWithPeople()
+                                alertDialogEnablePlayWithPeople(userDB)
                             }
                         }
 
@@ -317,8 +324,75 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
     }
 
-    private fun alertDialogEnablePlayWithPeople() {
-        // todo alert dialog
+    private fun alertDialogEnablePlayWithPeople(userDB: UserDB) {
+        val mBuilder = AlertDialog.Builder(requireContext())
+        val mView = layoutInflater.inflate(R.layout.alert_dialog_play_with_people,null)
+        mBuilder.setView(mView)
+        val dialog = mBuilder.create()
+        val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        dialog.window!!.decorView.systemUiVisibility = flags
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
+                Shader.TileMode.REPEAT,screenUnit)
+
+        mView.alert_dialog_play_with_people_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_play_with_people_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_play_with_people_title.text = "PLAY WITH PEOPLE?"
+
+        mView.alert_dialog_play_with_people_message.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
+        mView.alert_dialog_play_with_people_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_play_with_people_message.text = "If You want to play with other people you have to enable this function. As soon as You do it other people can also invite You to play"
+
+        mView.alert_dialog_play_with_people_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
+        mView.alert_dialog_play_with_people_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
+        if(userDB.playWithPeople){
+            mView.alert_dialog_play_with_people_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        }else{
+            mView.alert_dialog_play_with_people_check_box.setImageDrawable(null)
+        }
+
+        mView.alert_dialog_play_with_people_string.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+        mView.alert_dialog_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+
+        mView.alert_dialog_play_with_people_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
+        mView.alert_dialog_play_with_people_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        mView.alert_dialog_play_with_people_ok_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+
+        val set = ConstraintSet()
+        set.clone(mView.alert_dialog_play_with_people_layout)
+
+        set.connect(mView.alert_dialog_play_with_people_title.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_play_with_people_title.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_play_with_people_message.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_play_with_people_message.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_title.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_message.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_message.id,ConstraintSet.LEFT,screenUnit)
+
+        set.connect(mView.alert_dialog_play_with_people_string.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_play_with_people_string.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_check_box.id,ConstraintSet.RIGHT,screenUnit)
+
+        set.connect(mView.alert_dialog_play_with_people_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_string.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(mView.alert_dialog_play_with_people_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.RIGHT,screenUnit)
+
+
+        set.connect(mView.alert_dialog_play_with_people_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_play_with_people_ok_button.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_play_with_people_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_play_with_people_layout.id,ConstraintSet.LEFT,0)
+
+        set.applyTo(mView.alert_dialog_play_with_people_layout)
+
+        dialog.show()
+
+        //todo on click listener for play with people and ok button
+        // todo make this alert more user friendly UI
 
     }
 

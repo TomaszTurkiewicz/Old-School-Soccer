@@ -22,6 +22,8 @@ import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.fragments.ChooseGameTypeFragment
+import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.fragment_multi_player_list.view.*
 import kotlinx.android.synthetic.main.fragment_ranking.view.*
 
@@ -63,7 +65,9 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun setOnClickListeners() {
-       //todo
+       rootView.fragment_multi_player_list_back_button.setOnClickListener {
+           activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ChooseGameTypeFragment()).commit()
+       }
     }
 
     private fun prepareLists() {
