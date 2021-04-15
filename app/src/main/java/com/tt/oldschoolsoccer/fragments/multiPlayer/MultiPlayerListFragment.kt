@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -18,12 +20,14 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
+import com.tt.oldschoolsoccer.classes.LoggedInStatus
 import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.fragments.ChooseGameTypeFragment
 import com.tt.oldschoolsoccer.fragments.MainFragment
+import com.tt.oldschoolsoccer.recyclerViews.MultiPlayerAllUserRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_multi_player_list.view.*
 import kotlinx.android.synthetic.main.fragment_ranking.view.*
 
@@ -36,11 +40,14 @@ class MultiPlayerListFragment : Fragment() {
     private var buttonHeight = 0
     private var buttonWidth = 0
     private lateinit var allUserList: MutableList<UserRanking>
+    private lateinit var recyclerView: RecyclerView
+    private var loggedInStatus = LoggedInStatus()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screenUnit = Functions.readScreenUnit(requireContext())
         allUserList = mutableListOf()
+        loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
 
     }
 
@@ -50,6 +57,7 @@ class MultiPlayerListFragment : Fragment() {
 
         makeUI()
 
+        recyclerView = rootView.fragment_multi_player_list_recycler_view
 
         return rootView
     }
@@ -81,7 +89,7 @@ class MultiPlayerListFragment : Fragment() {
                     }
 
                     allUserList = allUserList.filter { element ->
-                        element.playWithPeople
+                        element.playWithPeople && element.id != loggedInStatus.userid
                     } as MutableList<UserRanking>
 
                     var sorted = false
@@ -98,7 +106,9 @@ class MultiPlayerListFragment : Fragment() {
                         }
                     }
 
-                    val a = 100
+                    initRecyclerViewForAllUsers()
+
+
 
                 }
             }
@@ -110,6 +120,13 @@ class MultiPlayerListFragment : Fragment() {
 
         //todo prepare history list
 
+
+    }
+
+    private fun initRecyclerViewForAllUsers() {
+        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),allUserList,screenUnit)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
     }
 
