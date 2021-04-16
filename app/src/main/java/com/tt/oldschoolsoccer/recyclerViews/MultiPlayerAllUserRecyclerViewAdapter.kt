@@ -1,6 +1,7 @@
 package com.tt.oldschoolsoccer.recyclerViews
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +27,11 @@ class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val al
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.icon.setImageDrawable(UserIconDrawable(context, (3*screenUnit).toDouble(),allUserList[position].icon))
         holder.userName.text = allUserList[position].userName
-        holder.score.text=allUserList[position].totalScore.toString()
+        val score = allUserList[position].totalScore.toString()+"% / "
+        holder.score.text=score
         val numberOfGames = allUserList[position].easyNoOfGames+allUserList[position].normalNoOfGames+allUserList[position].hardNoOfGames+allUserList[position].multiNoOfGames
         holder.numberOfGames.text = numberOfGames.toString()
-        holder.inviteButton.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.invite_icon))
+        holder.inviteButton.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.play))
     }
 
     override fun getItemCount(): Int {
@@ -50,6 +52,23 @@ class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val al
             val iconParams = LinearLayout.LayoutParams(3*screenUnit,3*screenUnit)
             iconParams.setMargins(screenUnit,screenUnit,screenUnit,screenUnit)
             icon.layoutParams = iconParams
+            val inviteParams = LinearLayout.LayoutParams(3*screenUnit,3*screenUnit)
+            inviteParams.setMargins((screenUnit).toInt(),(screenUnit).toInt(),0,(screenUnit).toInt())
+            inviteButton.layoutParams = inviteParams
+            val userNameParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+            userNameParams.setMargins(0,screenUnit,0,screenUnit)
+            userName.layoutParams = userNameParams
+            userName.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+            val scoreParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+            scoreParams.setMargins(0,0,0,screenUnit)
+            score.layoutParams = scoreParams
+            score.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+            val numberOfGamesParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
+            numberOfGamesParams.setMargins(0,0,0,screenUnit)
+            numberOfGames.layoutParams = numberOfGamesParams
+            numberOfGames.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
         }
 
     }
