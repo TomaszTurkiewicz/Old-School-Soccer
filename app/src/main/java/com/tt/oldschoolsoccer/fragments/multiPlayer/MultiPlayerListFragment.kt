@@ -132,11 +132,11 @@ class MultiPlayerListFragment : Fragment() {
 
     private fun hasToBeSorted(i: Int): Boolean {
         return when {
-            allUserList[i].totalScore<allUserList[i+1].totalScore -> {
+            allUserList[i].multiGame<allUserList[i+1].multiGame -> {
                 true
             }
-            allUserList[i].totalScore==allUserList[i+1].totalScore -> {
-                allUserList[i].multiNoOfGames+allUserList[i].hardNoOfGames+allUserList[i].normalNoOfGames+allUserList[i].easyNoOfGames<allUserList[i+1].multiNoOfGames+allUserList[i+1].hardNoOfGames+allUserList[i+1].normalNoOfGames+allUserList[i+1].easyNoOfGames
+            allUserList[i].multiGame==allUserList[i+1].multiGame -> {
+                allUserList[i].multiNoOfGames<allUserList[i+1].multiNoOfGames
             }
             else -> {
                 false

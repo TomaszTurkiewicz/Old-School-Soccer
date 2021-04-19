@@ -1,66 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/multi_player_invite_list_row_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
+
+<!-- todo change it to constraint layout !!! -->
 
     <ImageView
         android:id="@+id/multi_player_invite_list_row_invite_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/multi_player_invite_list_row_user_icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-
-    <LinearLayout
-        android:id="@+id/multi_player_invite_list_row_text_views_linear_layout"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
         <TextView
             android:id="@+id/multi_player_invite_list_row_user_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/icon_yellow_medium"
             android:includeFontPadding="false"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <LinearLayout
-            android:id="@+id/multi_player_invite_list_row_statistics_linear_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/multi_player_invite_list_row_statistics_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/multi_player_invite_list_row_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/icon_red_light"
                 android:includeFontPadding="false"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
             <TextView
                 android:id="@+id/multi_player_invite_list_row_number_of_games"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/icon_green_light"
                 android:includeFontPadding="false"
-                android:textColor="@color/black"/>
-
-
-
-        </LinearLayout>
-
+                android:textColor="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
     </LinearLayout>
 
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

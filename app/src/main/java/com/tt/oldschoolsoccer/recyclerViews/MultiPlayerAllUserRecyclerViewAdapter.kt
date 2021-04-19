@@ -1,6 +1,7 @@
 package com.tt.oldschoolsoccer.recyclerViews
 
 import android.content.Context
+import android.graphics.Shader
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.UserRanking
+import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.drawable.UserIconDrawable
+import kotlinx.android.synthetic.main.fragment_multi_player_list.view.*
 import kotlinx.android.synthetic.main.multi_player_invite_list_row_layout.view.*
 import org.w3c.dom.Text
 
@@ -21,16 +27,14 @@ class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val al
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.multi_player_invite_list_row_layout,parent,false)
-        return ViewHolder(view,screenUnit)
+        return ViewHolder(context,view,screenUnit)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.icon.setImageDrawable(UserIconDrawable(context, (3*screenUnit).toDouble(),allUserList[position].icon))
         holder.userName.text = allUserList[position].userName
-        val score = allUserList[position].totalScore.toString()+"% / "
-        holder.score.text=score
-        val numberOfGames = allUserList[position].easyNoOfGames+allUserList[position].normalNoOfGames+allUserList[position].hardNoOfGames+allUserList[position].multiNoOfGames
-        holder.numberOfGames.text = numberOfGames.toString()
+        holder.score.text = allUserList[position].multiGame.toString()+"% / "
+        holder.numberOfGames.text = allUserList[position].multiNoOfGames.toString()
         holder.inviteButton.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.play))
     }
 
@@ -38,37 +42,52 @@ class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val al
         return allUserList.size
     }
 
-    class ViewHolder(itemView: View, screenUnit: Int) : RecyclerView.ViewHolder(itemView){
-        val layout : LinearLayout = itemView.multi_player_invite_list_row_layout
+    class ViewHolder(context: Context,itemView: View, screenUnit: Int) : RecyclerView.ViewHolder(itemView){
+        val layout : ConstraintLayout = itemView.multi_player_invite_list_row_layout
         val icon : ImageView = itemView.multi_player_invite_list_row_user_icon
         val userName: TextView = itemView.multi_player_invite_list_row_user_name_tv
         val numberOfGames: TextView = itemView.multi_player_invite_list_row_number_of_games
         val score: TextView = itemView.multi_player_invite_list_row_score
         val inviteButton: ImageView = itemView.multi_player_invite_list_row_invite_button
+        private val statisticsLinearLayout: LinearLayout = itemView.multi_player_invite_list_row_statistics_linear_layout
 
         init {
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5*screenUnit)
-            layout.layoutParams = layoutParams
-            val iconParams = LinearLayout.LayoutParams(3*screenUnit,3*screenUnit)
-            iconParams.setMargins(screenUnit,screenUnit,screenUnit,screenUnit)
-            icon.layoutParams = iconParams
-            val inviteParams = LinearLayout.LayoutParams(3*screenUnit,3*screenUnit)
-            inviteParams.setMargins((screenUnit).toInt(),(screenUnit).toInt(),0,(screenUnit).toInt())
-            inviteButton.layoutParams = inviteParams
-            val userNameParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-            userNameParams.setMargins(0,screenUnit,0,screenUnit)
-            userName.layoutParams = userNameParams
+
+            layout.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,5*screenUnit)
+            icon.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+            inviteButton.layoutParams = ConstraintLayout.LayoutParams(3*screenUnit,3*screenUnit)
+            userName.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
             userName.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
-            val scoreParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-            scoreParams.setMargins(0,0,0,screenUnit)
-            score.layoutParams = scoreParams
+            score.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
             score.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
 
-            val numberOfGamesParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
-            numberOfGamesParams.setMargins(0,0,0,screenUnit)
-            numberOfGames.layoutParams = numberOfGamesParams
+            numberOfGames.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,screenUnit)
             numberOfGames.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+
+            statisticsLinearLayout.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+
+            layout.background = TileDrawable((ContextCompat.getDrawable(context,R.drawable.background)!!),
+                    Shader.TileMode.REPEAT,screenUnit)
+
+            val set = ConstraintSet()
+            set.clone(itemView.multi_player_invite_list_row_layout)
+
+            set.connect(itemView.multi_player_invite_list_row_invite_button.id,ConstraintSet.TOP,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.TOP,screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_invite_button.id,ConstraintSet.LEFT,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.LEFT,screenUnit)
+
+            set.connect(itemView.multi_player_invite_list_row_user_icon.id,ConstraintSet.TOP,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.TOP,screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_user_icon.id,ConstraintSet.LEFT,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.LEFT,5*screenUnit)
+
+            set.connect(itemView.multi_player_invite_list_row_user_name_tv.id,ConstraintSet.TOP,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.TOP,screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_user_name_tv.id,ConstraintSet.RIGHT,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.RIGHT,screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_user_name_tv.id,ConstraintSet.LEFT,itemView.multi_player_invite_list_row_user_icon.id,ConstraintSet.RIGHT,screenUnit)
+
+            set.connect(itemView.multi_player_invite_list_row_statistics_linear_layout.id,ConstraintSet.TOP,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.TOP,3*screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_statistics_linear_layout.id,ConstraintSet.RIGHT,itemView.multi_player_invite_list_row_layout.id,ConstraintSet.RIGHT,screenUnit)
+            set.connect(itemView.multi_player_invite_list_row_statistics_linear_layout.id,ConstraintSet.LEFT,itemView.multi_player_invite_list_row_user_icon.id,ConstraintSet.RIGHT,screenUnit)
+
+            set.applyTo(itemView.multi_player_invite_list_row_layout)
         }
 
     }
