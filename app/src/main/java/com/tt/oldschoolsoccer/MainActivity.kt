@@ -2,6 +2,7 @@ package com.tt.oldschoolsoccer
 
 
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
     private var screenHeight=0
     private var screenWidth=0
     private var screenUnit=0
+    private var verticalOffSet = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,14 +60,19 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
     }
 
     private fun getScreenSizeAndSaveToSharedPreferences(){
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        screenHeight = displayMetrics.heightPixels
-        screenWidth = displayMetrics.widthPixels
-        val unitWidth = screenWidth/20
+        val size = Point()
+        windowManager.defaultDisplay.getRealSize(size)
+        screenHeight = size.y
+        screenWidth = size.x
         val unitHeight = screenHeight/30
+        val unitWidth = screenWidth/20
         screenUnit=if(unitWidth>unitHeight)unitHeight else unitWidth
+
+        verticalOffSet=screenHeight%screenUnit
+
+
         Functions.saveScreenUnit(this,screenUnit)
+        Functions.saveVerticalOffset(this,verticalOffSet)
     }
 
     override fun onUpdateNeeded(updateUrl: String) {

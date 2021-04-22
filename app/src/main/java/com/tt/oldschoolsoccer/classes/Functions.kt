@@ -18,6 +18,17 @@ class Functions {
             }
         }
 
+        /**
+         * saves verticalOffset to shared preferences for making UI in different activities
+         */
+        fun saveVerticalOffset(context: Context?,verticalOffset:Int){
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("VerticalOffset",Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putInt("VerticalOffset",verticalOffset)
+                editor.apply()
+            }
+        }
 
 
 
@@ -30,6 +41,17 @@ class Functions {
                 return sharedPreferences.getInt("ScreenUnit",-1)
             }
         return -1
+        }
+
+        /**
+         * reads verticalOffset from shared preferences
+         */
+        fun readVerticalOffset(context: Context?):Int{
+            if(context!=null){
+                val sharedPreferences = context.getSharedPreferences("VerticalOffset",Context.MODE_PRIVATE)
+                return sharedPreferences.getInt("VerticalOffset",-1)
+            }
+            return -1
         }
 
 

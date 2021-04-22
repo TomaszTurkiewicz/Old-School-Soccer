@@ -42,13 +42,14 @@ class MultiPlayerListFragment : Fragment() {
     private lateinit var allUserList: MutableList<UserRanking>
     private lateinit var recyclerView: RecyclerView
     private var loggedInStatus = LoggedInStatus()
+    private var verticalOffset = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         screenUnit = Functions.readScreenUnit(requireContext())
         allUserList = mutableListOf()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
-
+        verticalOffset = Functions.readVerticalOffset(requireContext())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -158,13 +159,13 @@ class MultiPlayerListFragment : Fragment() {
         set.connect(rootView.fragment_multi_player_list_history_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.TOP,0)
         set.connect(rootView.fragment_multi_player_list_history_button.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_layout.id,ConstraintSet.BOTTOM,0)
+        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_layout.id,ConstraintSet.BOTTOM,verticalOffset+screenUnit)
         set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,screenUnit)
 
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.BOTTOM,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.RIGHT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.RIGHT,0)
-        set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_search_icon.id, ConstraintSet.TOP,0)
+        set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_search_icon.id, ConstraintSet.TOP,screenUnit)
 
         set.applyTo(rootView.fragment_multi_player_list_layout)
     }
