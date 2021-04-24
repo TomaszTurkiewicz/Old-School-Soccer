@@ -18,6 +18,8 @@ class Functions {
                 editor.putInt("VerticalOffSet",screenSize.verticalOffset)
                 editor.putInt("HorizontalCount",screenSize.horizontalCount)
                 editor.putInt("HorizontalOffset",screenSize.horizontalOffset)
+                editor.putInt("VerticalLength",screenSize.verticalLength)
+                editor.putInt("HorizontalLength",screenSize.horizontalLength)
                 editor.apply()
             }
         }
@@ -35,6 +37,8 @@ class Functions {
                 screenSize.verticalOffset = sharedPreferences.getInt("VerticalOffSet",0)
                 screenSize.horizontalCount = sharedPreferences.getInt("HorizontalCount",0)
                 screenSize.horizontalOffset = sharedPreferences.getInt("HorizontalOffset",0)
+                screenSize.horizontalLength = sharedPreferences.getInt("HorizontalLength",0)
+                screenSize.verticalLength = sharedPreferences.getInt("VerticalLength",0)
             }
         return screenSize
         }

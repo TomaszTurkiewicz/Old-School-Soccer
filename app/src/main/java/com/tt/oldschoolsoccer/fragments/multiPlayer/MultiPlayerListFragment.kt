@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -193,6 +194,12 @@ class MultiPlayerListFragment : Fragment() {
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.RIGHT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.RIGHT,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_search_icon.id, ConstraintSet.TOP,screenSize.screenUnit)
 
+        set.connect(rootView.fragment_multi_player_list_lower_frame.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,0)
+        set.connect(rootView.fragment_multi_player_list_lower_frame.id,ConstraintSet.TOP,rootView.fragment_multi_player_list_recycler_view.id,ConstraintSet.BOTTOM,0)
+
+        set.connect(rootView.fragment_multi_player_list_upper_frame.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_recycler_view.id,ConstraintSet.TOP,0)
+        set.connect(rootView.fragment_multi_player_list_upper_frame.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,2*buttonWidth)
+
         set.applyTo(rootView.fragment_multi_player_list_layout)
     }
 
@@ -210,6 +217,9 @@ class MultiPlayerListFragment : Fragment() {
         rootView.fragment_multi_player_list_search_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.search))
 
         rootView.fragment_multi_player_list_search_input_text.layoutParams = ConstraintLayout.LayoutParams(screenSize.horizontalCount*screenSize.screenUnit-iconSize-2*screenSize.screenUnit,iconSize)
+
+        rootView.fragment_multi_player_list_lower_frame.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,screenSize.screenUnit/10)
+        rootView.fragment_multi_player_list_upper_frame.layoutParams = ConstraintLayout.LayoutParams(screenSize.horizontalLength-2*buttonWidth,screenSize.screenUnit/10)
 
         displayPressedButton(rootView.fragment_multi_player_list_all_button)
     }

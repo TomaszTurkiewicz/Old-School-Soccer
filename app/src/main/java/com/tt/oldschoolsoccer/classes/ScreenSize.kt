@@ -6,4 +6,6 @@ class ScreenSize (){
         var horizontalOffset: Int = 0
         var verticalCount: Int = 0
         var horizontalCount: Int = 0
+        var verticalLength: Int = 0
+        var horizontalLength: Int = 0
 }

@@ -9,6 +9,22 @@
     tools:context=".fragments.multiPlayer.MultiPlayerListFragment">
 
     <TextView
+        android:id="@+id/fragment_multi_player_list_upper_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/black"/>
+
+    <TextView
+        android:id="@+id/fragment_multi_player_list_lower_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/black"/>
+
+    <TextView
         android:id="@+id/fragment_multi_player_list_all_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

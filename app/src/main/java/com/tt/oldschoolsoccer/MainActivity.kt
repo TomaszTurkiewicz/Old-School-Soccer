@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
         screenSize.verticalCount = screenHeight/screenSize.screenUnit
         screenSize.verticalOffset=screenHeight%screenSize.screenUnit
         screenSize.horizontalOffset=screenWidth%screenSize.screenUnit
+        screenSize.horizontalLength=screenWidth
+        screenSize.verticalLength=screenHeight
 
 
         Functions.saveScreenSize(this,screenSize)
