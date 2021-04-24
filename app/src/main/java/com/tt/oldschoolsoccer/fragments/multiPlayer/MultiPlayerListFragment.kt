@@ -2,6 +2,7 @@ package com.tt.oldschoolsoccer.fragments.multiPlayer
 
 import android.graphics.Shader
 import android.os.Bundle
+import android.text.Editable
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -41,6 +43,7 @@ class MultiPlayerListFragment : Fragment() {
     private var buttonHeight = 0
     private var buttonWidth = 0
     private lateinit var allUserList: MutableList<UserRanking>
+    private lateinit var tmpUserList: MutableList<UserRanking>
     private lateinit var recyclerView: RecyclerView
     private var loggedInStatus = LoggedInStatus()
 
@@ -49,6 +52,7 @@ class MultiPlayerListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         screenSize = Functions.readScreenSize(requireContext())
         allUserList = mutableListOf()
+        tmpUserList = mutableListOf()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
     }
 
@@ -60,7 +64,26 @@ class MultiPlayerListFragment : Fragment() {
 
         recyclerView = rootView.fragment_multi_player_list_recycler_view
 
+        rootView.fragment_multi_player_list_search_input_text.addTextChangedListener {
+            checkListWithCriteria(it)
+        }
+
         return rootView
+    }
+
+    private fun checkListWithCriteria(it: Editable?) {
+        tmpUserList.clear()
+        it?.let {
+            val user = it.toString()
+            for(i in allUserList.indices){
+                if(allUserList[i].userName.contains(user)){
+                    tmpUserList.add(allUserList[i])
+                }
+            }
+            initRecyclerViewForAllUsers(tmpUserList)
+        }
+
+
     }
 
     private fun makeUI() {
@@ -107,7 +130,7 @@ class MultiPlayerListFragment : Fragment() {
                         }
                     }
 
-                    initRecyclerViewForAllUsers()
+                    initRecyclerViewForAllUsers(allUserList)
 
 
 
@@ -124,8 +147,8 @@ class MultiPlayerListFragment : Fragment() {
 
     }
 
-    private fun initRecyclerViewForAllUsers() {
-        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),allUserList,screenSize.screenUnit)
+    private fun initRecyclerViewForAllUsers(userList:MutableList<UserRanking>) {
+        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),userList,screenSize.screenUnit)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -162,6 +185,9 @@ class MultiPlayerListFragment : Fragment() {
         set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_layout.id,ConstraintSet.BOTTOM,screenSize.verticalOffset+screenSize.screenUnit)
         set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
+        set.connect(rootView.fragment_multi_player_list_search_input_text.id,ConstraintSet.TOP,rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.TOP,0)
+        set.connect(rootView.fragment_multi_player_list_search_input_text.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.RIGHT,0)
+
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.BOTTOM,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.RIGHT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.RIGHT,0)
@@ -182,6 +208,8 @@ class MultiPlayerListFragment : Fragment() {
 
         rootView.fragment_multi_player_list_search_icon.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_multi_player_list_search_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.search))
+
+        rootView.fragment_multi_player_list_search_input_text.layoutParams = ConstraintLayout.LayoutParams(screenSize.horizontalCount*screenSize.screenUnit-iconSize-2*screenSize.screenUnit,iconSize)
 
         displayPressedButton(rootView.fragment_multi_player_list_all_button)
     }
