@@ -16,8 +16,7 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 
     private var screenHeight=0
     private var screenWidth=0
-    private var screenUnit=0
-    private var verticalOffSet = 0
+    private val screenSize = ScreenSize()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +65,14 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
         screenWidth = size.x
         val unitHeight = screenHeight/30
         val unitWidth = screenWidth/20
-        screenUnit=if(unitWidth>unitHeight)unitHeight else unitWidth
+        screenSize.screenUnit=if(unitWidth>unitHeight)unitHeight else unitWidth
+        screenSize.horizontalCount = screenWidth/screenSize.screenUnit
+        screenSize.verticalCount = screenHeight/screenSize.screenUnit
+        screenSize.verticalOffset=screenHeight%screenSize.screenUnit
+        screenSize.horizontalOffset=screenWidth%screenSize.screenUnit
 
-        verticalOffSet=screenHeight%screenUnit
 
-
-        Functions.saveScreenUnit(this,screenUnit)
-        Functions.saveVerticalOffset(this,verticalOffSet)
+        Functions.saveScreenSize(this,screenSize)
     }
 
     override fun onUpdateNeeded(updateUrl: String) {

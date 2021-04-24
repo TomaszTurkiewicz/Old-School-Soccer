@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 class RankingFragment : FragmentCoroutine() {
 
-    private var screenUnit = 0
+    private var screenSize = ScreenSize()
     private var loggedInStatus = LoggedInStatus()
     private lateinit var rootView: View
     private var iconSize = 0
@@ -46,7 +46,7 @@ class RankingFragment : FragmentCoroutine() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        screenUnit = Functions.readScreenUnit(requireContext())
+        screenSize = Functions.readScreenSize(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
         userList = mutableListOf()
 
@@ -233,7 +233,7 @@ class RankingFragment : FragmentCoroutine() {
     }
 
     private fun initRecyclerView() {
-        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenUnit,loggedInStatus.userid,sortType)
+        val adapter = RankingRecyclerViewAdapter(requireContext(),userList,screenSize.screenUnit,loggedInStatus.userid,sortType)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -289,10 +289,10 @@ class RankingFragment : FragmentCoroutine() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_ranking_layout)
 
-        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.TOP,rootView.fragment_ranking_layout.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.LEFT,rootView.fragment_ranking_layout.id,ConstraintSet.LEFT,16*screenUnit)
+        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.TOP,rootView.fragment_ranking_layout.id,ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_ranking_back_button.id,ConstraintSet.LEFT,rootView.fragment_ranking_layout.id,ConstraintSet.LEFT,16*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_ranking_total_button.id,ConstraintSet.TOP,rootView.fragment_ranking_layout.id,ConstraintSet.TOP,3*screenUnit)
+        set.connect(rootView.fragment_ranking_total_button.id,ConstraintSet.TOP,rootView.fragment_ranking_layout.id,ConstraintSet.TOP,3*screenSize.screenUnit)
         set.connect(rootView.fragment_ranking_total_button.id,ConstraintSet.LEFT,rootView.fragment_ranking_layout.id,ConstraintSet.LEFT,0)
 
         set.connect(rootView.fragment_ranking_multi_button.id,ConstraintSet.TOP,rootView.fragment_ranking_total_button.id,ConstraintSet.TOP,0)
@@ -325,11 +325,11 @@ class RankingFragment : FragmentCoroutine() {
         rootView.fragment_ranking_hard_button.layoutParams = ConstraintLayout.LayoutParams(buttonWidth,buttonHeight)
         rootView.fragment_ranking_normal_button.layoutParams = ConstraintLayout.LayoutParams(buttonWidth,buttonHeight)
         rootView.fragment_ranking_easy_button.layoutParams = ConstraintLayout.LayoutParams(buttonWidth,buttonHeight)
-        rootView.fragment_ranking_total_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
-        rootView.fragment_ranking_multi_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
-        rootView.fragment_ranking_hard_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
-        rootView.fragment_ranking_normal_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
-        rootView.fragment_ranking_easy_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
+        rootView.fragment_ranking_total_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
+        rootView.fragment_ranking_multi_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
+        rootView.fragment_ranking_hard_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
+        rootView.fragment_ranking_normal_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
+        rootView.fragment_ranking_easy_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
 
 
 
@@ -339,14 +339,14 @@ class RankingFragment : FragmentCoroutine() {
     }
 
     private fun setSizes() {
-        iconSize = 2*screenUnit
-        buttonHeight = 2*screenUnit
-        buttonWidth = 4*screenUnit
+        iconSize = 2*screenSize.screenUnit
+        buttonHeight = 2*screenSize.screenUnit
+        buttonWidth = 4*screenSize.screenUnit
     }
 
     private fun setBackgroundGrid() {
         rootView.fragment_ranking_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
-                Shader.TileMode.REPEAT,screenUnit)
+                Shader.TileMode.REPEAT,screenSize.screenUnit)
     }
 
     private fun displayPressedButton(view:View){
@@ -361,43 +361,43 @@ class RankingFragment : FragmentCoroutine() {
     }
 
     private fun easyPressed() {
-        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_easy_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_easy_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun normalPressed() {
-        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_normal_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_normal_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun hardPressed() {
-        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_hard_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_hard_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun multiPressed() {
-        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_multi_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_ranking_total_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_multi_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun totalPressed() {
-        rootView.fragment_ranking_total_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_ranking_total_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_multi_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_hard_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_normal_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_ranking_easy_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
 }

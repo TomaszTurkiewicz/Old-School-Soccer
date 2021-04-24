@@ -9,51 +9,35 @@ class Functions {
         /**
          * saves ScreenUnit to shared preferences for making UI in different activities
          */
-        fun saveScreenUnit(context: Context?,screenUnit:Int){
+        fun saveScreenSize(context: Context?,screenSize: ScreenSize){
             if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("ScreenUnit",Context.MODE_PRIVATE)
+                val sharedPreferences = context.getSharedPreferences("ScreenSize",Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
-                editor.putInt("ScreenUnit",screenUnit)
+                editor.putInt("ScreenUnit",screenSize.screenUnit)
+                editor.putInt("VerticalCount",screenSize.verticalCount)
+                editor.putInt("VerticalOffSet",screenSize.verticalOffset)
+                editor.putInt("HorizontalCount",screenSize.horizontalCount)
+                editor.putInt("HorizontalOffset",screenSize.horizontalOffset)
                 editor.apply()
             }
         }
-
-        /**
-         * saves verticalOffset to shared preferences for making UI in different activities
-         */
-        fun saveVerticalOffset(context: Context?,verticalOffset:Int){
-            if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("VerticalOffset",Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putInt("VerticalOffset",verticalOffset)
-                editor.apply()
-            }
-        }
-
 
 
         /**
          * reads screenUnit from shared preferences
          */
-        fun readScreenUnit(context: Context?):Int{
-            if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("ScreenUnit",Context.MODE_PRIVATE)
-                return sharedPreferences.getInt("ScreenUnit",-1)
+        fun readScreenSize(context: Context?):ScreenSize{
+            val screenSize = ScreenSize()
+            context?.let {
+                val sharedPreferences = context.getSharedPreferences("ScreenSize",Context.MODE_PRIVATE)
+                screenSize.screenUnit = sharedPreferences.getInt("ScreenUnit",0)
+                screenSize.verticalCount = sharedPreferences.getInt("VerticalCount",0)
+                screenSize.verticalOffset = sharedPreferences.getInt("VerticalOffSet",0)
+                screenSize.horizontalCount = sharedPreferences.getInt("HorizontalCount",0)
+                screenSize.horizontalOffset = sharedPreferences.getInt("HorizontalOffset",0)
             }
-        return -1
+        return screenSize
         }
-
-        /**
-         * reads verticalOffset from shared preferences
-         */
-        fun readVerticalOffset(context: Context?):Int{
-            if(context!=null){
-                val sharedPreferences = context.getSharedPreferences("VerticalOffset",Context.MODE_PRIVATE)
-                return sharedPreferences.getInt("VerticalOffset",-1)
-            }
-            return -1
-        }
-
 
         /**
          * saves info of last logged in user

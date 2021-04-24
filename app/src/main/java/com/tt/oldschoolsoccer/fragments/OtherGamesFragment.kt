@@ -26,6 +26,7 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.FragmentCoroutine
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.OtherGamesObject
+import com.tt.oldschoolsoccer.classes.ScreenSize
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 
 class OtherGamesFragment : FragmentCoroutine() {
 
-    private var screenUnit:Int=0
+    private var screenSize = ScreenSize()
     private var buttonSendHeight=0
     private var buttonSendWidth=0
     private var tvSendHeight=0
@@ -60,7 +61,7 @@ class OtherGamesFragment : FragmentCoroutine() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        screenUnit = Functions.readScreenUnit(requireContext())
+        screenSize = Functions.readScreenSize(requireContext())
 
         gameList = mutableListOf()
 
@@ -244,46 +245,46 @@ class OtherGamesFragment : FragmentCoroutine() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_other_games_layout)
 
-        set.connect(rootView.fragment_other_games_send_game_linear_layout.id, ConstraintSet.TOP,rootView.fragment_other_games_layout.id, ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_other_games_send_game_linear_layout.id, ConstraintSet.LEFT,rootView.fragment_other_games_layout.id, ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_other_games_send_game_linear_layout.id, ConstraintSet.TOP,rootView.fragment_other_games_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_send_game_linear_layout.id, ConstraintSet.LEFT,rootView.fragment_other_games_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_image_view_first.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,6*screenUnit)
-        set.connect(rootView.fragment_other_games_image_view_first.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_other_games_image_view_first.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,6*screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_image_view_first.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_text_view_first.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_first.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_other_games_text_view_first.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_first.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_other_games_text_view_first.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_first.id,ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_text_view_first.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_first.id,ConstraintSet.RIGHT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_button_first.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_first.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_other_games_button_first.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_first.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
         set.connect(rootView.fragment_other_games_button_first.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_first.id,ConstraintSet.LEFT,0)
 
 
-        set.connect(rootView.fragment_other_games_image_view_second.id,ConstraintSet.TOP,rootView.fragment_other_games_button_first.id,ConstraintSet.BOTTOM,4*screenUnit)
-        set.connect(rootView.fragment_other_games_image_view_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_other_games_image_view_second.id,ConstraintSet.TOP,rootView.fragment_other_games_button_first.id,ConstraintSet.BOTTOM,4*screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_image_view_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_text_view_second.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_second.id,ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_other_games_text_view_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_second.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_other_games_text_view_second.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_second.id,ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_text_view_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_second.id,ConstraintSet.RIGHT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_button_second.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_second.id,ConstraintSet.BOTTOM,screenUnit)
+        set.connect(rootView.fragment_other_games_button_second.id,ConstraintSet.TOP,rootView.fragment_other_games_image_view_second.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
         set.connect(rootView.fragment_other_games_button_second.id,ConstraintSet.LEFT,rootView.fragment_other_games_image_view_second.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
-        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,30*screenUnit)
+        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_left_arrow.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,30*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_other_games_page_counter.id,ConstraintSet.LEFT,rootView.fragment_other_games_left_arrow.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_other_games_page_counter.id,ConstraintSet.LEFT,rootView.fragment_other_games_left_arrow.id,ConstraintSet.RIGHT,screenSize.screenUnit)
         set.connect(rootView.fragment_other_games_page_counter.id,ConstraintSet.BOTTOM,rootView.fragment_other_games_left_arrow.id,ConstraintSet.BOTTOM,0)
 
-        set.connect(rootView.fragment_other_games_right_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_page_counter.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_other_games_right_arrow.id,ConstraintSet.LEFT,rootView.fragment_other_games_page_counter.id,ConstraintSet.RIGHT,screenSize.screenUnit)
         set.connect(rootView.fragment_other_games_right_arrow.id,ConstraintSet.BOTTOM,rootView.fragment_other_games_page_counter.id,ConstraintSet.BOTTOM,0)
 
-        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenUnit)
-        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,35*screenUnit)
+        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.LEFT,rootView.fragment_other_games_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+        set.connect(rootView.fragment_other_games_back_button.id,ConstraintSet.TOP,rootView.fragment_other_games_layout.id,ConstraintSet.TOP,35*screenSize.screenUnit)
 
         set.applyTo(rootView.fragment_other_games_layout)
     }
 
     private fun setButtonUI() {
         rootView.fragment_other_games_send_game_to_a_friend_tv.layoutParams = LinearLayout.LayoutParams(tvSendWidth,tvSendHeight)
-        rootView.fragment_other_games_send_game_to_a_friend_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_other_games_send_game_to_a_friend_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
 
         rootView.fragment_other_games_image_view_first.layoutParams = ConstraintLayout.LayoutParams(pictureSize,pictureSize)
         rootView.fragment_other_games_image_view_second.layoutParams = ConstraintLayout.LayoutParams(pictureSize,pictureSize)
@@ -291,17 +292,17 @@ class OtherGamesFragment : FragmentCoroutine() {
         rootView.fragment_other_games_text_view_first.layoutParams = ConstraintLayout.LayoutParams(gameNameTVWidth,gameNameTVHeight)
         rootView.fragment_other_games_text_view_second.layoutParams = ConstraintLayout.LayoutParams(gameNameTVWidth,gameNameTVHeight)
 
-        rootView.fragment_other_games_text_view_first.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        rootView.fragment_other_games_text_view_second.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_other_games_text_view_first.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+        rootView.fragment_other_games_text_view_second.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
 
         rootView.fragment_other_games_button_first.layoutParams = ConstraintLayout.LayoutParams(tvSendWidth,tvSendHeight)
         rootView.fragment_other_games_button_second.layoutParams = ConstraintLayout.LayoutParams(tvSendWidth,tvSendHeight)
 
-        rootView.fragment_other_games_button_first.background = ButtonDrawable(requireContext(),tvSendWidth.toDouble(),tvSendHeight.toDouble(),screenUnit.toDouble())
-        rootView.fragment_other_games_button_second.background = ButtonDrawable(requireContext(),tvSendWidth.toDouble(),tvSendHeight.toDouble(),screenUnit.toDouble())
+        rootView.fragment_other_games_button_first.background = ButtonDrawable(requireContext(),tvSendWidth.toDouble(),tvSendHeight.toDouble(),screenSize.screenUnit.toDouble())
+        rootView.fragment_other_games_button_second.background = ButtonDrawable(requireContext(),tvSendWidth.toDouble(),tvSendHeight.toDouble(),screenSize.screenUnit.toDouble())
 
-        rootView.fragment_other_games_button_first.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        rootView.fragment_other_games_button_second.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_other_games_button_first.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+        rootView.fragment_other_games_button_second.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
 
         rootView.fragment_other_games_left_arrow.layoutParams = ConstraintLayout.LayoutParams(arrowSize,arrowSize)
         rootView.fragment_other_games_right_arrow.layoutParams = ConstraintLayout.LayoutParams(arrowSize,arrowSize)
@@ -310,37 +311,37 @@ class OtherGamesFragment : FragmentCoroutine() {
         rootView.fragment_other_games_right_arrow.background = ContextCompat.getDrawable(requireContext(),R.drawable.right)
 
         rootView.fragment_other_games_page_counter.layoutParams = ConstraintLayout.LayoutParams(pageCounterWidth,arrowSize)
-        rootView.fragment_other_games_page_counter.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_other_games_page_counter.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
 
         rootView.fragment_other_games_back_button.layoutParams = ConstraintLayout.LayoutParams(backButtonWidth,backButtonHeight)
-        rootView.fragment_other_games_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-        rootView.fragment_other_games_back_button.background = ButtonDrawable(requireContext(),backButtonWidth.toDouble(),backButtonHeight.toDouble(),screenUnit.toDouble())
+        rootView.fragment_other_games_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+        rootView.fragment_other_games_back_button.background = ButtonDrawable(requireContext(),backButtonWidth.toDouble(),backButtonHeight.toDouble(),screenSize.screenUnit.toDouble())
 
         val lp:LinearLayout.LayoutParams = LinearLayout.LayoutParams(buttonSendWidth,buttonSendHeight)
-        lp.setMargins(screenUnit,0,0,0)
+        lp.setMargins(screenSize.screenUnit,0,0,0)
         rootView.fragment_other_games_send_game_button.layoutParams = lp
-        rootView.fragment_other_games_send_game_linear_layout.background = ButtonDrawable(requireContext(),(buttonSendWidth+tvSendWidth+screenUnit).toDouble(), (buttonSendHeight).toDouble(), screenUnit.toDouble())
+        rootView.fragment_other_games_send_game_linear_layout.background = ButtonDrawable(requireContext(),(buttonSendWidth+tvSendWidth+screenSize.screenUnit).toDouble(), (buttonSendHeight).toDouble(), screenSize.screenUnit.toDouble())
         rootView.fragment_other_games_send_game_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.send))
     }
 
     private fun setSizes() {
-        buttonSendHeight=3*screenUnit
-        buttonSendWidth=3*screenUnit
-        tvSendHeight = 3*screenUnit
-        tvSendWidth = 14*screenUnit
-        pictureSize = 5*screenUnit
-        gameNameTVHeight = 3*screenUnit
-        gameNameTVWidth = 12*screenUnit
-        arrowSize = 3*screenUnit
-        pageCounterWidth = 10*screenUnit
-        backButtonHeight = 2*screenUnit
-        backButtonWidth = 4*screenUnit
+        buttonSendHeight=3*screenSize.screenUnit
+        buttonSendWidth=3*screenSize.screenUnit
+        tvSendHeight = 3*screenSize.screenUnit
+        tvSendWidth = 14*screenSize.screenUnit
+        pictureSize = 5*screenSize.screenUnit
+        gameNameTVHeight = 3*screenSize.screenUnit
+        gameNameTVWidth = 12*screenSize.screenUnit
+        arrowSize = 3*screenSize.screenUnit
+        pageCounterWidth = 10*screenSize.screenUnit
+        backButtonHeight = 2*screenSize.screenUnit
+        backButtonWidth = 4*screenSize.screenUnit
 
     }
 
     private fun setBackgroundGrid() {
         rootView.fragment_other_games_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
-                Shader.TileMode.REPEAT,screenUnit)
+                Shader.TileMode.REPEAT,screenSize.screenUnit)
     }
 
 

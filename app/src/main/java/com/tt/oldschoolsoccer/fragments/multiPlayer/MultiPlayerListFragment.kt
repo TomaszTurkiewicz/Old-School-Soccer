@@ -21,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.Functions
 import com.tt.oldschoolsoccer.classes.LoggedInStatus
+import com.tt.oldschoolsoccer.classes.ScreenSize
 import com.tt.oldschoolsoccer.classes.UserRanking
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
@@ -35,21 +36,20 @@ import kotlinx.android.synthetic.main.fragment_ranking.view.*
 class MultiPlayerListFragment : Fragment() {
 
     private lateinit var rootView: View
-    private var screenUnit = 0
+    private var screenSize = ScreenSize()
     private var iconSize = 0
     private var buttonHeight = 0
     private var buttonWidth = 0
     private lateinit var allUserList: MutableList<UserRanking>
     private lateinit var recyclerView: RecyclerView
     private var loggedInStatus = LoggedInStatus()
-    private var verticalOffset = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        screenUnit = Functions.readScreenUnit(requireContext())
+        screenSize = Functions.readScreenSize(requireContext())
         allUserList = mutableListOf()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
-        verticalOffset = Functions.readVerticalOffset(requireContext())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -125,7 +125,7 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun initRecyclerViewForAllUsers() {
-        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),allUserList,screenUnit)
+        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),allUserList,screenSize.screenUnit)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -150,22 +150,22 @@ class MultiPlayerListFragment : Fragment() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_multi_player_list_layout)
 
-        set.connect(rootView.fragment_multi_player_list_back_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_layout.id, ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_multi_player_list_back_button.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,16*screenUnit)
+        set.connect(rootView.fragment_multi_player_list_back_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_multi_player_list_back_button.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,16*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_multi_player_list_all_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_layout.id, ConstraintSet.TOP,3*screenUnit)
+        set.connect(rootView.fragment_multi_player_list_all_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_layout.id, ConstraintSet.TOP,3*screenSize.screenUnit)
         set.connect(rootView.fragment_multi_player_list_all_button.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,0)
 
         set.connect(rootView.fragment_multi_player_list_history_button.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.TOP,0)
         set.connect(rootView.fragment_multi_player_list_history_button.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_layout.id,ConstraintSet.BOTTOM,verticalOffset+screenUnit)
-        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_layout.id,ConstraintSet.BOTTOM,screenSize.verticalOffset+screenSize.screenUnit)
+        set.connect(rootView.fragment_multi_player_list_search_icon.id,ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.TOP,rootView.fragment_multi_player_list_all_button.id, ConstraintSet.BOTTOM,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.LEFT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.LEFT,0)
         set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.RIGHT,rootView.fragment_multi_player_list_layout.id, ConstraintSet.RIGHT,0)
-        set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_search_icon.id, ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_multi_player_list_recycler_view.id, ConstraintSet.BOTTOM,rootView.fragment_multi_player_list_search_icon.id, ConstraintSet.TOP,screenSize.screenUnit)
 
         set.applyTo(rootView.fragment_multi_player_list_layout)
     }
@@ -177,8 +177,8 @@ class MultiPlayerListFragment : Fragment() {
         rootView.fragment_multi_player_list_all_button.layoutParams = ConstraintLayout.LayoutParams(buttonWidth,buttonHeight)
         rootView.fragment_multi_player_list_history_button.layoutParams = ConstraintLayout.LayoutParams(buttonWidth,buttonHeight)
 
-        rootView.fragment_multi_player_list_all_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
-        rootView.fragment_multi_player_list_history_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenUnit).toFloat())
+        rootView.fragment_multi_player_list_all_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
+        rootView.fragment_multi_player_list_history_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,(0.9*screenSize.screenUnit).toFloat())
 
         rootView.fragment_multi_player_list_search_icon.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_multi_player_list_search_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.search))
@@ -195,24 +195,24 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun historyPressed() {
-        rootView.fragment_multi_player_list_history_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_multi_player_list_all_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_multi_player_list_history_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_multi_player_list_all_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun allPressed() {
-        rootView.fragment_multi_player_list_history_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
-        rootView.fragment_multi_player_list_all_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenUnit.toDouble())
+        rootView.fragment_multi_player_list_history_button.background = ButtonDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_multi_player_list_all_button.background = ButtonPressedDrawable(requireContext(), buttonWidth.toDouble(), buttonHeight.toDouble(), screenSize.screenUnit.toDouble())
     }
 
     private fun setSizes() {
-        iconSize = 2*screenUnit
-        buttonHeight = 2*screenUnit
-        buttonWidth = 4*screenUnit
+        iconSize = 2*screenSize.screenUnit
+        buttonHeight = 2*screenSize.screenUnit
+        buttonWidth = 4*screenSize.screenUnit
     }
 
     private fun setBackgroundGrid() {
         rootView.fragment_multi_player_list_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
-                Shader.TileMode.REPEAT,screenUnit)
+                Shader.TileMode.REPEAT,screenSize.screenUnit)
     }
 
 

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ChangeIconFragment : FragmentCoroutine() {
 
     private lateinit var rootView:View
-    private var screenUnit = 0
+    private var screenSize = ScreenSize()
     private var loggedInStatus = LoggedInStatus()
     private var imageSize = 0
     private lateinit var user:User
@@ -31,7 +31,7 @@ class ChangeIconFragment : FragmentCoroutine() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        screenUnit = Functions.readScreenUnit(requireContext())
+        screenSize = Functions.readScreenSize(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
 
 
@@ -212,12 +212,12 @@ class ChangeIconFragment : FragmentCoroutine() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_change_icon_layout)
 
-        set.connect(rootView.fragment_change_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_change_icon_layout.id,ConstraintSet.TOP,screenUnit)
+        set.connect(rootView.fragment_change_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_change_icon_layout.id,ConstraintSet.TOP,screenSize.screenUnit)
         set.connect(rootView.fragment_change_icon_image_view.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,0)
         set.connect(rootView.fragment_change_icon_image_view.id,ConstraintSet.RIGHT,rootView.fragment_change_icon_layout.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.TOP,rootView.fragment_change_icon_image_view.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.TOP,rootView.fragment_change_icon_image_view.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_background_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_background_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.RIGHT,0)
@@ -225,8 +225,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_background.id,ConstraintSet.TOP,rootView.fragment_change_icon_background_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_background.id,ConstraintSet.LEFT,rootView.fragment_change_icon_background_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_background.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_over_arms_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_over_arms_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.RIGHT,0)
@@ -234,8 +234,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_over_arms.id,ConstraintSet.TOP,rootView.fragment_change_icon_over_arms_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_over_arms.id,ConstraintSet.LEFT,rootView.fragment_change_icon_over_arms_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_over_arms.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_left_sleeve_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_left_sleeve_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.RIGHT,0)
@@ -243,8 +243,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_left_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_sleeve_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_left_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_sleeve_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_sleeve.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_right_sleeve_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_sleeve_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.RIGHT,0)
@@ -252,8 +252,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_right_sleeve.id,ConstraintSet.TOP,rootView.fragment_change_icon_right_sleeve_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_right_sleeve.id,ConstraintSet.LEFT,rootView.fragment_change_icon_right_sleeve_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_sleeve.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_left_shirt_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_left_shirt_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.RIGHT,0)
@@ -261,8 +261,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_left_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_shirt_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_left_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_shirt_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_left_shirt.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_right_shirt_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_shirt_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.RIGHT,0)
@@ -270,8 +270,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_right_shirt.id,ConstraintSet.TOP,rootView.fragment_change_icon_right_shirt_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_right_shirt.id,ConstraintSet.LEFT,rootView.fragment_change_icon_right_shirt_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_right_shirt.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_trousers_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_trousers_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.RIGHT,0)
@@ -279,8 +279,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_trousers.id,ConstraintSet.TOP,rootView.fragment_change_icon_trousers_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_trousers.id,ConstraintSet.LEFT,rootView.fragment_change_icon_trousers_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_trousers_external_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_trousers_external_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.RIGHT,0)
@@ -288,8 +288,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_external.id,ConstraintSet.TOP,rootView.fragment_change_icon_trousers_external_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_external.id,ConstraintSet.LEFT,rootView.fragment_change_icon_trousers_external_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.BOTTOM,screenUnit)
-        set.connect(rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers_external.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.TOP,rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.LEFT,rootView.fragment_change_icon_left_arrow_trousers_internal.id,ConstraintSet.RIGHT,0)
@@ -297,8 +297,8 @@ class ChangeIconFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_internal.id,ConstraintSet.TOP,rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.TOP,0)
         set.connect(rootView.fragment_change_icon_right_arrow_trousers_internal.id,ConstraintSet.LEFT,rootView.fragment_change_icon_trousers_internal_id.id,ConstraintSet.RIGHT,0)
 
-        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.TOP,rootView.fragment_change_icon_layout.id,ConstraintSet.TOP,2*screenUnit)
-        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,14*screenUnit)
+        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.TOP,rootView.fragment_change_icon_layout.id,ConstraintSet.TOP,2*screenSize.screenUnit)
+        set.connect(rootView.fragment_change_icon_back_button.id,ConstraintSet.LEFT,rootView.fragment_change_icon_layout.id,ConstraintSet.LEFT,14*screenSize.screenUnit)
 
 
 
@@ -348,54 +348,54 @@ class ChangeIconFragment : FragmentCoroutine() {
     }
 
     private fun setSizes() {
-        imageSize = 6*screenUnit
+        imageSize = 6*screenSize.screenUnit
 
-        rootView.fragment_change_icon_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_back_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (2*screenUnit).toDouble(), screenUnit.toDouble())
-        rootView.fragment_change_icon_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+        rootView.fragment_change_icon_back_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_back_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (2*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
+        rootView.fragment_change_icon_back_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
 
         rootView.fragment_change_icon_image_view.layoutParams = ConstraintLayout.LayoutParams(imageSize,imageSize)
 
-        rootView.fragment_change_icon_left_arrow_background.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_background_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_background.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_background.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_background_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_background.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_over_arms.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_over_arms_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_over_arms.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_over_arms.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_over_arms_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_over_arms.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_left_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_left_sleeve_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_left_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_left_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_left_sleeve_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_left_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_right_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_sleeve_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_right_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_right_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_sleeve_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_right_sleeve.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_left_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_left_shirt_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_left_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_left_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_left_shirt_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_left_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_right_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_shirt_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_right_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_right_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_shirt_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_right_shirt.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_trousers.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_trousers_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_trousers.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_trousers.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_trousers_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_trousers.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_trousers_external.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_trousers_external_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_trousers_external.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_trousers_external.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_trousers_external_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_trousers_external.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
 
-        rootView.fragment_change_icon_left_arrow_trousers_internal.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_trousers_internal_id.layoutParams = ConstraintLayout.LayoutParams(14*screenUnit,2*screenUnit)
-        rootView.fragment_change_icon_right_arrow_trousers_internal.layoutParams = ConstraintLayout.LayoutParams(2*screenUnit,2*screenUnit)
+        rootView.fragment_change_icon_left_arrow_trousers_internal.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_trousers_internal_id.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,2*screenSize.screenUnit)
+        rootView.fragment_change_icon_right_arrow_trousers_internal.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
     }
 
     private fun setBackgroundGrid() {
         rootView.fragment_change_icon_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
-                Shader.TileMode.REPEAT,screenUnit)
+                Shader.TileMode.REPEAT,screenSize.screenUnit)
     }
 
 

@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class SettingsFragment : FragmentCoroutine() {
 
-    private var screenUnit = 0
+    private var screenSize = ScreenSize()
     private var loggedInStatus = LoggedInStatus()
     private lateinit var rootView: View
     private var iconSize = 0
@@ -34,7 +34,7 @@ class SettingsFragment : FragmentCoroutine() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        screenUnit = Functions.readScreenUnit(requireContext())
+        screenSize = Functions.readScreenSize(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
 
     }
@@ -71,45 +71,45 @@ class SettingsFragment : FragmentCoroutine() {
         val set = ConstraintSet()
         set.clone(rootView.fragment_settings_layout)
 
-        set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.TOP,rootView.fragment_settings_layout.id, ConstraintSet.TOP,screenUnit)
-        set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.LEFT,rootView.fragment_settings_layout.id, ConstraintSet.LEFT,16*screenUnit)
+        set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.TOP,rootView.fragment_settings_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_back_button.id, ConstraintSet.LEFT,rootView.fragment_settings_layout.id, ConstraintSet.LEFT,16*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,4*screenUnit)
-        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,4*screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_change_user_name_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_your_name_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,3*screenUnit)
-        set.connect(rootView.fragment_settings_your_name_string.id,ConstraintSet.LEFT,rootView.fragment_settings_change_user_name_button.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_your_name_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,3*screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_your_name_string.id,ConstraintSet.LEFT,rootView.fragment_settings_change_user_name_button.id,ConstraintSet.RIGHT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_user_name.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,5*screenUnit)
+        set.connect(rootView.fragment_settings_user_name.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,5*screenSize.screenUnit)
         set.connect(rootView.fragment_settings_user_name.id,ConstraintSet.LEFT,rootView.fragment_settings_your_name_string.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenUnit)
-        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
+        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,8*screenUnit)
-        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,8*screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,rootView.fragment_settings_change_user_icon_button.id,ConstraintSet.RIGHT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenUnit)
+        set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,10*screenSize.screenUnit)
         set.connect(rootView.fragment_settings_icon_image_view.id,ConstraintSet.LEFT,rootView.fragment_settings_your_icon_string.id,ConstraintSet.LEFT,0)
 
-        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
-        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,15*screenUnit)
+        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,15*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.LEFT,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.LEFT,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.RIGHT,screenSize.screenUnit)
         set.connect(rootView.fragment_settings_play_with_people_string.id,ConstraintSet.TOP,rootView.fragment_settings_multi_player_check_box.id,ConstraintSet.TOP,0)
 
 
-        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenUnit)
-        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,18*screenUnit)
+        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.LEFT,rootView.fragment_settings_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+        set.connect(rootView.fragment_settings_sound_check_box.id,ConstraintSet.TOP,rootView.fragment_settings_layout.id,ConstraintSet.TOP,18*screenSize.screenUnit)
 
-        set.connect(rootView.fragment_settings_sound_string.id,ConstraintSet.LEFT,rootView.fragment_settings_sound_check_box.id,ConstraintSet.RIGHT,screenUnit)
+        set.connect(rootView.fragment_settings_sound_string.id,ConstraintSet.LEFT,rootView.fragment_settings_sound_check_box.id,ConstraintSet.RIGHT,screenSize.screenUnit)
         set.connect(rootView.fragment_settings_sound_string.id,ConstraintSet.TOP,rootView.fragment_settings_sound_check_box.id,ConstraintSet.TOP,0)
 
         set.applyTo(rootView.fragment_settings_layout)
     }
 
     private fun setViewForLoggedInNotLoggedIn() {
-        rootView.fragment_settings_sound_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
+        rootView.fragment_settings_sound_check_box.background = CheckBoxDrawable(requireContext(),screenSize.screenUnit.toDouble(),screenSize.screenUnit.toDouble(),true)
         rootView.fragment_settings_sound_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
         displaySoundCheckBox()
         rootView.fragment_settings_sound_check_box.setOnClickListener {
@@ -146,7 +146,7 @@ class SettingsFragment : FragmentCoroutine() {
                     rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(),userIconColors))
                     rootView.fragment_settings_user_name.text = user.name
                     if(user.hardGameNumberOfGame>=10){
-                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),true)
+                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenSize.screenUnit.toDouble(),screenSize.screenUnit.toDouble(),true)
                         rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.black))
                         if(user.playWithPeople){
                             rootView.fragment_settings_multi_player_check_box.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
@@ -164,7 +164,7 @@ class SettingsFragment : FragmentCoroutine() {
 
 
                     }else{
-                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenUnit.toDouble(),screenUnit.toDouble(),false)
+                        rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(),screenSize.screenUnit.toDouble(),screenSize.screenUnit.toDouble(),false)
                         rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
                     }
                 }
@@ -178,7 +178,7 @@ class SettingsFragment : FragmentCoroutine() {
             rootView.fragment_settings_your_icon_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
             rootView.fragment_settings_change_user_icon_button.visibility = View.GONE
             rootView.fragment_settings_icon_image_view.setImageDrawable(UserIconDrawable(requireContext(), userIconSize.toDouble(), UserIconColors().notLoggedIn()))
-            rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(), screenUnit.toDouble(), screenUnit.toDouble(),false)
+            rootView.fragment_settings_multi_player_check_box.background = CheckBoxDrawable(requireContext(), screenSize.screenUnit.toDouble(), screenSize.screenUnit.toDouble(),false)
             rootView.fragment_settings_play_with_people_string.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_grey_medium))
         }
 
@@ -233,22 +233,22 @@ class SettingsFragment : FragmentCoroutine() {
                 dialog.setCanceledOnTouchOutside(false)
 
                 mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!),
-                        Shader.TileMode.REPEAT,screenUnit)
+                        Shader.TileMode.REPEAT,screenSize.screenUnit)
 
-                mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
-                mView.alert_dialog_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                mView.alert_dialog_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenSize.screenUnit)
+                mView.alert_dialog_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
                 mView.alert_dialog_title.text = "SET NEW USER NAME"
-                mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenUnit)
-                mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
+                mView.alert_dialog_input_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,3*screenSize.screenUnit)
+                mView.alert_dialog_input_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
                 mView.alert_dialog_input_user_name.setText(user.name)
 
-                mView.alert_dialog_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
-                mView.alert_dialog_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-                mView.alert_dialog_cancel_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+                mView.alert_dialog_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                mView.alert_dialog_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                mView.alert_dialog_cancel_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
 
-                mView.alert_dialog_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenUnit,3*screenUnit)
-                mView.alert_dialog_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenUnit.toFloat())
-                mView.alert_dialog_ok_button.background = ButtonDrawable(requireContext(), (4*screenUnit).toDouble(), (3*screenUnit).toDouble(), screenUnit.toDouble())
+                mView.alert_dialog_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                mView.alert_dialog_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                mView.alert_dialog_ok_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
 
                 val set = ConstraintSet()
                 set.clone(mView.alert_dialog_user_name)
@@ -259,11 +259,11 @@ class SettingsFragment : FragmentCoroutine() {
                 set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.TOP,mView.alert_dialog_title.id,ConstraintSet.BOTTOM,0)
                 set.connect(mView.alert_dialog_input_user_name.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
 
-                set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenUnit)
-                set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_user_name.id,ConstraintSet.RIGHT,screenUnit)
+                set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                set.connect(mView.alert_dialog_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_user_name.id,ConstraintSet.RIGHT,screenSize.screenUnit)
 
-                set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenUnit)
-                set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,screenUnit)
+                set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.TOP,mView.alert_dialog_input_user_name.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                set.connect(mView.alert_dialog_cancel_button.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,screenSize.screenUnit)
 
                 set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_ok_button.id,ConstraintSet.BOTTOM,0)
                 set.connect(mView.alert_dialog_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_user_name.id,ConstraintSet.LEFT,0)
@@ -295,35 +295,35 @@ class SettingsFragment : FragmentCoroutine() {
         rootView.fragment_settings_back_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_back_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.close))
 
-        rootView.fragment_settings_your_name_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
-        rootView.fragment_settings_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_settings_your_name_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
+        rootView.fragment_settings_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
 
         rootView.fragment_settings_change_user_name_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_change_user_name_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.settings))
 
-        rootView.fragment_settings_your_icon_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_settings_your_icon_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
         rootView.fragment_settings_icon_image_view.layoutParams = ConstraintLayout.LayoutParams(userIconSize,userIconSize)
 
         rootView.fragment_settings_change_user_icon_button.layoutParams = ConstraintLayout.LayoutParams(iconSize,iconSize)
         rootView.fragment_settings_change_user_icon_button.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.settings))
 
-        rootView.fragment_settings_multi_player_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
+        rootView.fragment_settings_multi_player_check_box.layoutParams = ConstraintLayout.LayoutParams(screenSize.screenUnit,screenSize.screenUnit)
 
-        rootView.fragment_settings_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_settings_play_with_people_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
 
-        rootView.fragment_settings_sound_check_box.layoutParams = ConstraintLayout.LayoutParams(screenUnit,screenUnit)
-        rootView.fragment_settings_sound_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenUnit.toFloat())
+        rootView.fragment_settings_sound_check_box.layoutParams = ConstraintLayout.LayoutParams(screenSize.screenUnit,screenSize.screenUnit)
+        rootView.fragment_settings_sound_string.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
 
     }
 
     private fun setSizes() {
-        iconSize=2*screenUnit
-        userIconSize = 3*screenUnit
+        iconSize=2*screenSize.screenUnit
+        userIconSize = 3*screenSize.screenUnit
     }
 
     private fun setBackgroundGrid() {
         rootView.fragment_settings_layout.background = TileDrawable((ContextCompat.getDrawable(requireContext(),R.drawable.background)!!),
-                Shader.TileMode.REPEAT,screenUnit)
+                Shader.TileMode.REPEAT,screenSize.screenUnit)
     }
 
 
