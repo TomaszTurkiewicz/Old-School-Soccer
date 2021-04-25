@@ -179,9 +179,9 @@ class MultiPlayerListFragment : Fragment() {
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
-                    val me = snapshot.getValue(Invitation::class.java)
+                    val meInvitations = snapshot.getValue(Invitation::class.java)
                     // checking if I have been invited already
-                    if(me!!.opponentAccept){
+                    if(meInvitations!!.opponentAccept){
                         //todo alert dialog about someone invite me
 
                         Toast.makeText(requireContext(),"Someone invite me",Toast.LENGTH_LONG).show()
@@ -202,6 +202,19 @@ class MultiPlayerListFragment : Fragment() {
                                                 if(snapshot2.exists()){
                                                     val opponentInvitations = snapshot2.getValue(Invitation::class.java)
                                                     if(!opponentInvitations!!.opponentAccept && !opponentInvitations.myAccept){
+                                                    meInvitations.myAccept = true
+                                                    meInvitations.opponent = opponentInvitations.player
+                                                    meInvitations.orientation = Static.ORIENTATION_NORMAL
+                                                    opponentInvitations.opponentAccept = true
+                                                    opponentInvitations.opponent = meInvitations.player
+                                                    opponentInvitations.orientation = Static.ORIENTATION_UP_SIDE_DOWN
+
+                                                    opponentInvitationsRef.setValue(opponentInvitations)
+                                                        myRef.setValue(meInvitations)
+
+                                                        backToChooseGameType()
+
+
                                                         val message = "Play with "+ userRanking.userName
                                                         Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
                                                     }
@@ -239,6 +252,11 @@ class MultiPlayerListFragment : Fragment() {
         })
 
 
+
+    }
+
+    private fun backToChooseGameType() {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ChooseGameTypeFragment()).commit()
 
     }
 
