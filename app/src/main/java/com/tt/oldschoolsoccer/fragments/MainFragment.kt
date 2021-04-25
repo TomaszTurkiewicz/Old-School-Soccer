@@ -276,20 +276,7 @@ class MainFragment : FragmentCoroutine() {
             }
         })
 
-        val dbRefInvitation = Firebase.database.getReference("Invitations").child(userDB.id)
-        dbRefInvitation.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(!snapshot.exists()){
-                    val invitation = Invitation()
-                    dbRefInvitation.setValue(invitation)
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
     }
 
     /**
@@ -454,11 +441,25 @@ class MainFragment : FragmentCoroutine() {
                 userTemp.hardGame.numberOfGames
         if(gameCount>=30){
             val userRanking = UserRanking().createUserRanking(userTemp)
-
-
-
             val dbRefRanking = Firebase.database.getReference("Ranking").child(userRanking.id)
             dbRefRanking.setValue(userRanking)
+
+
+            val dbRefInvitation = Firebase.database.getReference("Invitations").child(userTemp.id)
+            dbRefInvitation.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(!snapshot.exists()){
+                        val invitation = Invitation()
+                        invitation.player = userTemp.id
+                        dbRefInvitation.setValue(invitation)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
         }
 
     }

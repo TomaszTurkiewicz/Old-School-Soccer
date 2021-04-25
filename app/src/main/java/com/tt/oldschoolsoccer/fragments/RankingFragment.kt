@@ -122,8 +122,8 @@ class RankingFragment : FragmentCoroutine() {
     }
 
     private fun findUserInList(userList: MutableList<UserRanking>): Boolean {
-        for(i in 0 until userList.size-1){
-            if(userList[i].id == loggedInStatus.userid)
+        for(i in userList.indices){
+            if(userList[i].id.equals(loggedInStatus.userid))
             return true
         }
         return false

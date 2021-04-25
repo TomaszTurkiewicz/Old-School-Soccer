@@ -1,6 +1,7 @@
 package com.tt.oldschoolsoccer.classes
 
 class Invitation (
+        var player: String = "",
         var opponent:String = "",
         var myAccept:Boolean = false,
         var opponentAccept:Boolean = false,
