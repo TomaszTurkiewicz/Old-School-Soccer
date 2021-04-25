@@ -175,9 +175,70 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun invite(view: View, userRanking: UserRanking) {
-        val message = "You inviting "+ userRanking.userName
+        val myRef = Firebase.database.getReference("Invitations").child(loggedInStatus.userid)
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val me = snapshot.getValue(Invitation::class.java)
+                    // checking if I have been invited already
+                    if(me!!.opponentAccept){
+                        //todo alert dialog about someone invite me
 
-        Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(),"Someone invite me",Toast.LENGTH_LONG).show()
+                    }else{
+
+                        //check if opponent still play with people
+                        val opponentUserPlayWithPeopleRef = Firebase.database.getReference("Ranking").child(userRanking.id)
+                        opponentUserPlayWithPeopleRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                            override fun onDataChange(snapshot1: DataSnapshot) {
+                                if(snapshot1.exists()){
+                                    val opponentUserPlayWithPeople = snapshot1.getValue(UserRanking::class.java)
+                                    if(opponentUserPlayWithPeople!!.playWithPeople){
+
+                                        // check if opponent isn't involved in other games
+                                        val opponentInvitationsRef = Firebase.database.getReference("Invitations").child(userRanking.id)
+                                        opponentInvitationsRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                                            override fun onDataChange(snapshot2: DataSnapshot) {
+                                                if(snapshot2.exists()){
+                                                    val opponentInvitations = snapshot2.getValue(Invitation::class.java)
+                                                    if(!opponentInvitations!!.opponentAccept && !opponentInvitations.myAccept){
+                                                        val message = "Play with "+ userRanking.userName
+                                                        Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
+                                                    }
+                                                    else{
+                                                        // todo alert dialog opponent ask someone else to play
+                                                        Toast.makeText(requireContext(),"Someone else want to play with him",Toast.LENGTH_LONG).show()
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onCancelled(error2: DatabaseError) {
+
+                                            }
+
+                                        })
+                                    }
+                                    else{
+                                        Toast.makeText(requireContext(),"Doesn't want to play with people",Toast.LENGTH_LONG).show()
+                                        // todo alert dialog opponent doesnt want to play with people anymore
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error1: DatabaseError) {
+                            }
+
+                        })
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError){
+            }
+
+        })
+
+
 
     }
 
