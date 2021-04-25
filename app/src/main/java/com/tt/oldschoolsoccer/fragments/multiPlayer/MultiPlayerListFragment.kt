@@ -22,10 +22,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
-import com.tt.oldschoolsoccer.classes.Functions
-import com.tt.oldschoolsoccer.classes.LoggedInStatus
-import com.tt.oldschoolsoccer.classes.ScreenSize
-import com.tt.oldschoolsoccer.classes.UserRanking
+import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.drawable.ButtonDrawable
 import com.tt.oldschoolsoccer.drawable.ButtonPressedDrawable
 import com.tt.oldschoolsoccer.drawable.TileDrawable
@@ -45,6 +42,8 @@ class MultiPlayerListFragment : Fragment() {
     private var buttonWidth = 0
     private lateinit var allUserList: MutableList<UserRanking>
     private lateinit var tmpUserList: MutableList<UserRanking>
+    private lateinit var invitationList: MutableList<Invitation>
+    private lateinit var finalUserList: MutableList<UserRanking>
     private lateinit var recyclerView: RecyclerView
     private var loggedInStatus = LoggedInStatus()
 
@@ -54,6 +53,8 @@ class MultiPlayerListFragment : Fragment() {
         screenSize = Functions.readScreenSize(requireContext())
         allUserList = mutableListOf()
         tmpUserList = mutableListOf()
+        invitationList = mutableListOf()
+        finalUserList = mutableListOf()
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
     }
 
@@ -76,9 +77,9 @@ class MultiPlayerListFragment : Fragment() {
         tmpUserList.clear()
         it?.let {
             val user = it.toString()
-            for(i in allUserList.indices){
-                if(allUserList[i].userName.contains(user)){
-                    tmpUserList.add(allUserList[i])
+            for(i in finalUserList.indices){
+                if(finalUserList[i].userName.contains(user)){
+                    tmpUserList.add(finalUserList[i])
                 }
             }
             initRecyclerViewForAllUsers(tmpUserList)
@@ -104,44 +105,61 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun prepareLists() {
-        val dbRankingRef = Firebase.database.getReference("Ranking")
-        dbRankingRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        val invRef = Firebase.database.getReference("Invitations")
+        invRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()){
-                    for(user in snapshot.children){
-                        val tUser = user.getValue(UserRanking::class.java)
-                        allUserList.add(tUser!!)
+                if (snapshot.exists()) {
+                    for (invitation in snapshot.children) {
+                        val tInv = invitation.getValue(Invitation::class.java)
+                        if(!tInv!!.opponentAccept && !tInv.myAccept && !tInv.player.equals(loggedInStatus.userid))
+                        invitationList.add(tInv)
                     }
-
-                    allUserList = allUserList.filter { element ->
-                        element.playWithPeople && element.id != loggedInStatus.userid
-                    } as MutableList<UserRanking>
-
-                    var sorted = false
-
-                    while (!sorted) {
-                        sorted = true
-                        for (i in 0 until allUserList.size - 1) {
-                            if (hasToBeSorted(i)) {
-                                val userTmp = allUserList[i]
-                                allUserList[i] = allUserList[i + 1]
-                                allUserList[i + 1] = userTmp
-                                sorted = false
+                }
+                val userRef = Firebase.database.getReference("Ranking")
+                userRef.addListenerForSingleValueEvent(object:ValueEventListener{
+                    override fun onDataChange(snapshot1: DataSnapshot) {
+                        if(snapshot1.exists()){
+                            for(user in snapshot1.children){
+                                val tUser = user.getValue(UserRanking::class.java)
+                                if(tUser!!.playWithPeople){
+                                    allUserList.add(tUser)
+                                }
                             }
                         }
+                        for(i in invitationList.indices){
+                            val id = invitationList[i].player
+                            for(j in allUserList.indices){
+                                val tmpId = allUserList[j].id
+                                if(tmpId == id){
+                                    finalUserList.add(allUserList[j])
+                                }
+                            }
+                        }
+                        var sorted = false
+                        while (!sorted) {
+                            sorted = true
+                            for (i in 0 until finalUserList.size - 1) {
+                                if (hasToBeSorted(i)) {
+                                    val userTmp = finalUserList[i]
+                                    finalUserList[i] = finalUserList[i + 1]
+                                    finalUserList[i + 1] = userTmp
+                                    sorted = false
+                                }
+                            }
+                        }
+                        initRecyclerViewForAllUsers(finalUserList)
                     }
-
-                    initRecyclerViewForAllUsers(allUserList)
-
-
-
-                }
+                    override fun onCancelled(error1: DatabaseError) {
+                    }
+                })
             }
-
             override fun onCancelled(error: DatabaseError) {
-                //do nothing
+
             }
         })
+
+
+
 
         //todo prepare history list
 
@@ -157,11 +175,11 @@ class MultiPlayerListFragment : Fragment() {
 
     private fun hasToBeSorted(i: Int): Boolean {
         return when {
-            allUserList[i].multiGame<allUserList[i+1].multiGame -> {
+            finalUserList[i].multiGame<finalUserList[i+1].multiGame -> {
                 true
             }
-            allUserList[i].multiGame==allUserList[i+1].multiGame -> {
-                allUserList[i].multiNoOfGames<allUserList[i+1].multiNoOfGames
+            finalUserList[i].multiGame==finalUserList[i+1].multiGame -> {
+                finalUserList[i].multiNoOfGames<finalUserList[i+1].multiNoOfGames
             }
             else -> {
                 false

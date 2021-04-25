@@ -8,4 +8,7 @@ class Invitation (
         var battleName:String = "",
         var orientation:Int = Static.ORIENTATION_NOT_SET_UP
         ) {
+        fun canPlay():Boolean{
+                return !(this.myAccept||this.opponentAccept)
+        }
 }

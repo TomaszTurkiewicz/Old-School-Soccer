@@ -454,7 +454,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
     }
 
     private fun multiGame():Runnable = Runnable {
-        val dbRef = Firebase.database.getReference("Invitation").child(loggedInStatus.userid)
+        val dbRef = Firebase.database.getReference("Invitations").child(loggedInStatus.userid)
         dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!snapshot.exists()){
