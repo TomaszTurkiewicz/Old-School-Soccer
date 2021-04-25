@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_multi_player_list.view.*
 import kotlinx.android.synthetic.main.multi_player_invite_list_row_layout.view.*
 import org.w3c.dom.Text
 
-class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val allUserList: List<UserRanking>, val screenUnit:Int) : RecyclerView.Adapter<MultiPlayerAllUserRecyclerViewAdapter.ViewHolder>(){
+class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val allUserList: List<UserRanking>, val screenUnit:Int, private val onClickListener:(View,UserRanking)->Unit) : RecyclerView.Adapter<MultiPlayerAllUserRecyclerViewAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,11 +31,15 @@ class MultiPlayerAllUserRecyclerViewAdapter(val context: Context, private val al
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val userRanking = allUserList[position]
         holder.icon.setImageDrawable(UserIconDrawable(context, (3*screenUnit).toDouble(),allUserList[position].icon))
-        holder.userName.text = allUserList[position].userName
-        holder.score.text = allUserList[position].multiGame.toString()+"% / "
-        holder.numberOfGames.text = allUserList[position].multiNoOfGames.toString()
+        holder.userName.text = userRanking.userName
+        holder.score.text = userRanking.multiGame.toString()+"% / "
+        holder.numberOfGames.text = userRanking.multiNoOfGames.toString()
         holder.inviteButton.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.play))
+        holder.inviteButton.setOnClickListener { v ->
+            onClickListener.invoke(v,userRanking)
+        }
     }
 
     override fun getItemCount(): Int {

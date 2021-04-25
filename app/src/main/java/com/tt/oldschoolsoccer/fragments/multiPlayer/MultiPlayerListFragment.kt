@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -126,12 +127,12 @@ class MultiPlayerListFragment : Fragment() {
                                 }
                             }
                         }
-                        for(i in invitationList.indices){
-                            val id = invitationList[i].player
-                            for(j in allUserList.indices){
-                                val tmpId = allUserList[j].id
+                        for(i in allUserList.indices){
+                            val id = allUserList[i].id
+                            for(j in invitationList.indices){
+                                val tmpId = invitationList[j].player
                                 if(tmpId == id){
-                                    finalUserList.add(allUserList[j])
+                                    finalUserList.add(allUserList[i])
                                 }
                             }
                         }
@@ -167,9 +168,16 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun initRecyclerViewForAllUsers(userList:MutableList<UserRanking>) {
-        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),userList,screenSize.screenUnit)
+        val adapter = MultiPlayerAllUserRecyclerViewAdapter(requireContext(),userList,screenSize.screenUnit) { view, userRanking -> invite(view, userRanking) }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+    }
+
+    private fun invite(view: View, userRanking: UserRanking) {
+        val message = "You inviting "+ userRanking.userName
+
+        Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
 
     }
 
