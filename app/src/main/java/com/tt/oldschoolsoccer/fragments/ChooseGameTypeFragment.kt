@@ -396,6 +396,20 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                     UserDBDatabase(it).getUserDBDao().updateUserInDB(userDB)
                 }
             }
+
+            val user = User().userFromDB(userDB)
+            val dbRef = Firebase.database.getReference("User").child(user.id)
+            dbRef.setValue(user)
+
+            val gameCount = user.easyGame.numberOfGames+
+                    user.normalGame.numberOfGames+
+                    user.hardGame.numberOfGames
+            if(gameCount>=30) {
+                val userRanking = UserRanking().createUserRanking(user)
+                val dbRefRanking = Firebase.database.getReference("Ranking").child(userRanking.id)
+                dbRefRanking.setValue(userRanking)
+            }
+
             displayCheckBox(userDB,mView)
         }
 
