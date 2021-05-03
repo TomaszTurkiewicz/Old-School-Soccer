@@ -30,4 +30,5 @@
     <string name="total">TOTAL</string>
     <string name="history">HISTORY</string>
     <string name="all">ALL</string>
+    <string name="vs">VS</string>
 </resources>

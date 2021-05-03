@@ -24,16 +24,14 @@ import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
-import com.tt.oldschoolsoccer.drawable.ButtonDrawable
-import com.tt.oldschoolsoccer.drawable.ButtonGreyDrawable
-import com.tt.oldschoolsoccer.drawable.CheckBoxDrawable
-import com.tt.oldschoolsoccer.drawable.TileDrawable
+import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.multiPlayer.MultiPlayerListFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
 import kotlinx.android.synthetic.main.alert_dialog_play_with_people.view.*
 import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
+import kotlinx.android.synthetic.main.alert_dialog_with_user_icon_and_two_buttons.view.*
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
 import kotlinx.android.synthetic.main.fragment_settings.view.*
 import kotlinx.coroutines.launch
@@ -238,8 +236,8 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                             if (userDB.playWithPeople) {
                                 when (multiGameState) {
                                     Static.MULTI_GAME_MATCH_READY -> playMultiPlayer()
-                                    Static.MULTI_GAME_RECEIVED_INVITATION -> acceptOrNotInvitation()
-                                    Static.MULTI_GAME_SENT_INVITATION -> waitForAcceptationFromOpponent()
+                                    Static.MULTI_GAME_RECEIVED_INVITATION -> acceptOrNotInvitation(userDB)
+                                    Static.MULTI_GAME_SENT_INVITATION -> waitForAcceptationFromOpponent(userDB)
                                     Static.MULTI_GAME_NOT_SET_UP -> chooseOpponent()
                                 }
                             }
@@ -441,12 +439,329 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
 
     }
 
-    private fun waitForAcceptationFromOpponent() {
-        // todo alert dialog z informacja ze jeszcze nie zaakceptowane przez przeciwnika wiec czekac czy rezygnowac?
+    private fun waitForAcceptationFromOpponent(userDB: UserDB) {
+        val dbRef = Firebase.database.getReference("Invitations").child(loggedInStatus.userid)
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val invitation = snapshot.getValue(Invitation::class.java)
+                    val dbOpponentRef = Firebase.database.getReference("Invitations").child(invitation!!.opponent)
+                    dbOpponentRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot2: DataSnapshot) {
+                            if(snapshot2.exists()){
+                                val opponentInvitation = snapshot2.getValue(Invitation::class.java)
+                                val dbOpponentRankingRef = Firebase.database.getReference("Ranking").child(invitation!!.opponent)
+                                dbOpponentRankingRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                                    override fun onDataChange(snapshot3: DataSnapshot) {
+                                        if(snapshot3.exists()){
+                                            val opponent = snapshot3.getValue(UserRanking::class.java)
+
+                                            //alertDialog for accepting invitation
+                                            val mBuilder = AlertDialog.Builder(requireContext())
+                                            val mView = layoutInflater.inflate(R.layout.alert_dialog_with_user_icon_and_two_buttons,null)
+                                            mBuilder.setView(mView)
+                                            val dialog = mBuilder.create()
+                                            val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                                                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                                                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            dialog.window!!.decorView.systemUiVisibility = flags
+                                            dialog.setCancelable(false)
+                                            dialog.setCanceledOnTouchOutside(false)
+                                            mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!), Shader.TileMode.REPEAT,screenSize.screenUnit)
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.text = "INVITATION SENT"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenSize.screenUnit).toDouble(),opponent!!.icon))
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.text = opponent.userName
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.text = ""+opponent.multiGame+"%/"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.text = opponent.multiNoOfGames.toString()
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenSize.screenUnit).toDouble(),User().userFromDB(userDB).icon))
+
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.text = userDB.name
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.text = ""+UserRanking().createUserRankingFromDB(userDB).multiGame+"%/"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.text = userDB.multiGameNumberOfGame.toString()
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.text = "WAIT"
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.text = "DISMISS"
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
+
+
+                                            val set = ConstraintSet()
+                                            set.clone(mView.alert_dialog_with_user_icon_and_two_buttons_layout)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.BOTTOM,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,2*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.TOP,9*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,2*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.BOTTOM,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+
+                                            set.applyTo(mView.alert_dialog_with_user_icon_and_two_buttons_layout)
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.setOnClickListener {
+                                                val newInvitation = Invitation()
+                                                newInvitation.player = loggedInStatus.userid
+                                                dbRef.setValue(newInvitation)
+                                                dialog.dismiss()
+                                            }
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.setOnClickListener {
+                                                dialog.dismiss()
+                                            }
+                                            dialog.show()
+                                        }
+                                    }
+                                    override fun onCancelled(error3: DatabaseError) {
+                                    }
+                                })
+                            }
+                        }
+                        override fun onCancelled(error2: DatabaseError) {
+                        }
+                    })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
 
     }
 
-    private fun acceptOrNotInvitation() {
+    private fun acceptOrNotInvitation(userDB: UserDB) {
+        val dbRef = Firebase.database.getReference("Invitations").child(loggedInStatus.userid)
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val invitation = snapshot.getValue(Invitation::class.java)
+                    val dbOpponentRef = Firebase.database.getReference("Invitations").child(invitation!!.opponent)
+                    dbOpponentRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(snapshot2: DataSnapshot) {
+                            if(snapshot2.exists()){
+                                val opponentInvitation = snapshot2.getValue(Invitation::class.java)
+                                val dbOpponentRankingRef = Firebase.database.getReference("Ranking").child(invitation!!.opponent)
+                                dbOpponentRankingRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                                    override fun onDataChange(snapshot3: DataSnapshot) {
+                                        if(snapshot3.exists()){
+                                            val opponent = snapshot3.getValue(UserRanking::class.java)
+
+                                            //alertDialog for accepting invitation
+                                            val mBuilder = AlertDialog.Builder(requireContext())
+                                            val mView = layoutInflater.inflate(R.layout.alert_dialog_with_user_icon_and_two_buttons,null)
+                                            mBuilder.setView(mView)
+                                            val dialog = mBuilder.create()
+                                            val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                                                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                                                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                                                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            dialog.window!!.decorView.systemUiVisibility = flags
+                                            dialog.setCancelable(false)
+                                            dialog.setCanceledOnTouchOutside(false)
+                                            mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background)!!), Shader.TileMode.REPEAT,screenSize.screenUnit)
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_title.text = "INVITATION RECEIVED"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenSize.screenUnit).toDouble(),opponent!!.icon))
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.text = opponent.userName
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_opponent.text = ""+opponent.multiGame+"%/"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.text = opponent.multiNoOfGames.toString()
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_opponent.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.layoutParams = ConstraintLayout.LayoutParams(3*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.setImageDrawable(UserIconDrawable(requireContext(), (3*screenSize.screenUnit).toDouble(),User().userFromDB(userDB).icon))
+
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.layoutParams = ConstraintLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_user_name.text = userDB.name
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_score_user.text = ""+UserRanking().createUserRankingFromDB(userDB).multiGame+"%/"
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.text = userDB.multiGameNumberOfGame.toString()
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_no_of_games_user.setTextSize(TypedValue.COMPLEX_UNIT_PX,screenSize.screenUnit.toFloat())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.text = "ACCEPT"
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.layoutParams = ConstraintLayout.LayoutParams(4*screenSize.screenUnit,3*screenSize.screenUnit)
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.setTextSize(TypedValue.COMPLEX_UNIT_PX, screenSize.screenUnit.toFloat())
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.text = "REJECT"
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.background = ButtonDrawable(requireContext(), (4*screenSize.screenUnit).toDouble(), (3*screenSize.screenUnit).toDouble(), screenSize.screenUnit.toDouble())
+
+
+                                            val set = ConstraintSet()
+                                            set.clone(mView.alert_dialog_with_user_icon_and_two_buttons_layout)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_title.id,ConstraintSet.BOTTOM,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_name.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.TOP,2*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_opponent_ll.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_opponent_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_vs_tv.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.TOP,9*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_name.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.TOP,2*screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.RIGHT,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_user_ll.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,0)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.id,ConstraintSet.RIGHT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.RIGHT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_user_icon.id,ConstraintSet.BOTTOM,screenSize.screenUnit)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.id,ConstraintSet.BOTTOM,0)
+                                            set.connect(mView.alert_dialog_with_user_icon_and_two_buttons_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_with_user_icon_and_two_buttons_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
+
+
+                                            set.applyTo(mView.alert_dialog_with_user_icon_and_two_buttons_layout)
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_cancel_button.setOnClickListener {
+                                                val newInvitation = Invitation()
+                                                newInvitation.player = loggedInStatus.userid
+                                                dbRef.setValue(newInvitation)
+                                                dialog.dismiss()
+                                            }
+
+                                            mView.alert_dialog_with_user_icon_and_two_buttons_ok_button.setOnClickListener {
+                                                invitation.myAccept = true
+                                                opponentInvitation!!.opponentAccept = true
+                                                val gameName = opponent.id+loggedInStatus.userid
+                                                invitation.battleName = gameName
+                                                opponentInvitation.battleName = gameName
+                                                dbRef.setValue(invitation)
+                                                dbOpponentRef.setValue(opponentInvitation)
+                                                dialog.dismiss()
+                                            }
+                                            dialog.show()
+                                        }
+                                    }
+                                    override fun onCancelled(error3: DatabaseError) {
+                                    }
+                                })
+                            }
+                        }
+                        override fun onCancelled(error2: DatabaseError) {
+                        }
+                    })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
         // todo alert dialog z zaakceptuj lub odrzuc zaproszenie - najlepiej ze statystykami przeciwnika
 
     }
@@ -479,7 +794,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                 }else{
                     val invitation = snapshot.getValue(Invitation::class.java)
 
-                    multiGameState = checkMultiGameState(invitation!!,dbRef)
+                    checkMultiGameState(invitation!!,dbRef)
 
                     if (isAdded) {
                         when (multiGameState) {
@@ -505,11 +820,11 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         })
     }
 
-    private fun checkMultiGameState(invitation: Invitation,dbRef: DatabaseReference): Int {
-        var state = 0
+    private fun checkMultiGameState(invitation: Invitation,dbRef: DatabaseReference) {
+
 
         if(!invitation.myAccept&&!invitation.opponentAccept&&invitation.opponent==""){
-            state = Static.MULTI_GAME_NOT_SET_UP
+            multiGameState= Static.MULTI_GAME_NOT_SET_UP
         }
         else if(!invitation.myAccept&&invitation.opponentAccept&&invitation.opponent!=""){
             val opponentDbRef = Firebase.database.getReference("Invitations").child(invitation.opponent)
@@ -520,7 +835,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                         if(invitation.player == opponentInvitation!!.opponent &&
                                 invitation.opponent == opponentInvitation!!.player &&
                                 invitation.opponentAccept == opponentInvitation.myAccept){
-                            state = Static.MULTI_GAME_RECEIVED_INVITATION
+                            multiGameState = Static.MULTI_GAME_RECEIVED_INVITATION
                         }else{
                             val newInvitation = Invitation()
                             newInvitation.player = loggedInStatus.userid
@@ -550,7 +865,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                         if(invitation.player == opponentInvitation!!.opponent &&
                                 invitation.opponent == opponentInvitation!!.player &&
                                 invitation.myAccept == opponentInvitation.opponentAccept){
-                            state = Static.MULTI_GAME_SENT_INVITATION
+                            multiGameState = Static.MULTI_GAME_SENT_INVITATION
                         }else{
                             val newInvitation = Invitation()
                             newInvitation.player = loggedInStatus.userid
@@ -594,7 +909,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                                             dbRef.setValue(newInvitation)
                                         }
                                         else{
-                                            state = Static.MULTI_GAME_SENT_INVITATION
+                                            multiGameState = Static.MULTI_GAME_SENT_INVITATION
                                         }
                                     }
                         }else{
@@ -618,20 +933,11 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
             })
         }
 
-        else{
+        else {
             val newInvitation = Invitation()
             newInvitation.player = loggedInStatus.userid
             dbRef.setValue(newInvitation)
         }
-
-
-
-
-
-
-
-
-        return  state
     }
 
     private fun calculateTotalScore(user: User): CharSequence {
