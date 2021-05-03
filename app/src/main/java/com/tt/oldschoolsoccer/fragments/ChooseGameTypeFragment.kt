@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -477,7 +478,8 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                     multiGameHandler.postDelayed(multiGame(),1000)
                 }else{
                     val invitation = snapshot.getValue(Invitation::class.java)
-                    multiGameState = checkMultiGameState(invitation!!)
+
+                    multiGameState = checkMultiGameState(invitation!!,dbRef)
 
                     if (isAdded) {
                         when (multiGameState) {
@@ -503,22 +505,131 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
         })
     }
 
-    private fun checkMultiGameState(invitation: Invitation): Int {
+    private fun checkMultiGameState(invitation: Invitation,dbRef: DatabaseReference): Int {
         var state = 0
-        state = when {
-            !invitation.myAccept and (!invitation.opponentAccept) -> {
-                Static.MULTI_GAME_NOT_SET_UP
-            }
-            invitation.myAccept and (!invitation.opponentAccept) -> {
-                Static.MULTI_GAME_SENT_INVITATION
-            }
-            !invitation.myAccept and (invitation.opponentAccept) -> {
-                Static.MULTI_GAME_RECEIVED_INVITATION
-            }
-            else -> {
-                Static.MULTI_GAME_MATCH_READY
-            }
+
+        if(!invitation.myAccept&&!invitation.opponentAccept&&invitation.opponent==""){
+            state = Static.MULTI_GAME_NOT_SET_UP
         }
+        else if(!invitation.myAccept&&invitation.opponentAccept&&invitation.opponent!=""){
+            val opponentDbRef = Firebase.database.getReference("Invitations").child(invitation.opponent)
+            opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val opponentInvitation = snapshot.getValue(Invitation::class.java)
+                        if(invitation.player == opponentInvitation!!.opponent &&
+                                invitation.opponent == opponentInvitation!!.player &&
+                                invitation.opponentAccept == opponentInvitation.myAccept){
+                            state = Static.MULTI_GAME_RECEIVED_INVITATION
+                        }else{
+                            val newInvitation = Invitation()
+                            newInvitation.player = loggedInStatus.userid
+                            dbRef.setValue(newInvitation)
+                        }
+
+                    }
+                    else{
+                        val newInvitation = Invitation()
+                        newInvitation.player = loggedInStatus.userid
+                        dbRef.setValue(newInvitation)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+        else if(invitation.myAccept&&!invitation.opponentAccept&&invitation.opponent!=""){
+            val opponentDbRef = Firebase.database.getReference("Invitations").child(invitation.opponent)
+            opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val opponentInvitation = snapshot.getValue(Invitation::class.java)
+                        if(invitation.player == opponentInvitation!!.opponent &&
+                                invitation.opponent == opponentInvitation!!.player &&
+                                invitation.myAccept == opponentInvitation.opponentAccept){
+                            state = Static.MULTI_GAME_SENT_INVITATION
+                        }else{
+                            val newInvitation = Invitation()
+                            newInvitation.player = loggedInStatus.userid
+                            dbRef.setValue(newInvitation)
+                        }
+
+                    }
+                    else{
+                        val newInvitation = Invitation()
+                        newInvitation.player = loggedInStatus.userid
+                        dbRef.setValue(newInvitation)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+
+        else if(invitation.myAccept&&invitation.opponentAccept&&invitation.opponent!=""){
+            val opponentDbRef = Firebase.database.getReference("Invitations").child(invitation.opponent)
+            opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val opponentInvitation = snapshot.getValue(Invitation::class.java)
+                        if(invitation.player == opponentInvitation!!.opponent &&
+                                invitation.opponent == opponentInvitation!!.player &&
+                                invitation.myAccept == opponentInvitation.opponentAccept &&
+                                invitation.opponentAccept == opponentInvitation.myAccept){
+                                    if(invitation.battleName == ""){
+                                        val newInvitation = Invitation()
+                                        newInvitation.player = loggedInStatus.userid
+                                        dbRef.setValue(newInvitation)
+                                    }
+                                    else{
+                                        if(invitation.battleName != opponentInvitation.battleName){
+                                            val newInvitation = Invitation()
+                                            newInvitation.player = loggedInStatus.userid
+                                            dbRef.setValue(newInvitation)
+                                        }
+                                        else{
+                                            state = Static.MULTI_GAME_SENT_INVITATION
+                                        }
+                                    }
+                        }else{
+                            val newInvitation = Invitation()
+                            newInvitation.player = loggedInStatus.userid
+                            dbRef.setValue(newInvitation)
+                        }
+
+                    }
+                    else{
+                        val newInvitation = Invitation()
+                        newInvitation.player = loggedInStatus.userid
+                        dbRef.setValue(newInvitation)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+        }
+
+        else{
+            val newInvitation = Invitation()
+            newInvitation.player = loggedInStatus.userid
+            dbRef.setValue(newInvitation)
+        }
+
+
+
+
+
+
+
 
         return  state
     }
