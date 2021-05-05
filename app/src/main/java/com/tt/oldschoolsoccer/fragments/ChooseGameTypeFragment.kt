@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -26,14 +25,13 @@ import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.multiPlayer.MultiPlayerListFragment
+import com.tt.oldschoolsoccer.fragments.multiPlayer.MultiPlayerMatchFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerEasyGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerHardGameFragment
 import com.tt.oldschoolsoccer.fragments.singlePlayer.SinglePlayerNormalGameFragment
 import kotlinx.android.synthetic.main.alert_dialog_play_with_people.view.*
-import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.alert_dialog_with_user_icon_and_two_buttons.view.*
 import kotlinx.android.synthetic.main.fragment_choose_game_type.view.*
-import kotlinx.android.synthetic.main.fragment_settings.view.*
 import kotlinx.coroutines.launch
 
 
@@ -767,7 +765,9 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
     }
 
     private fun playMultiPlayer() {
-        // todo go to multi player match fragment
+
+
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MultiPlayerMatchFragment()).commit()
 
     }
 
@@ -909,7 +909,7 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                                             dbRef.setValue(newInvitation)
                                         }
                                         else{
-                                            multiGameState = Static.MULTI_GAME_SENT_INVITATION
+                                            multiGameState = Static.MULTI_GAME_MATCH_READY
                                         }
                                     }
                         }else{
