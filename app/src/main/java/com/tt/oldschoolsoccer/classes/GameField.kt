@@ -15,7 +15,7 @@ class GameField {
      * HARD is bigger
      */
     fun generate(gameLevel: Int) {
-        if (gameLevel != Static.HARD) {
+        if (gameLevel == Static.EASY || gameLevel == Static.NORMAL) {
             field = Array(9) { Array(13) { PointOnField() } }
             for (i in 0..8) {
                 for (j in 0..12) {

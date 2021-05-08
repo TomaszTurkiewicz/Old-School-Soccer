@@ -21,6 +21,7 @@ class Static {
         const val EASY = 0
         const val NORMAL = 1
         const val HARD = 2
+        const val MULTI = 3
 
 //        const val NULL = 0
 //        const val FALSE = 1
