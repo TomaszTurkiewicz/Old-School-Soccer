@@ -230,49 +230,85 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     }
 
+    private fun normalPress(move:PointsAfterMove, direction:Int){
+        val points = move
+        displayField()
+        disableButtons()
+        val endGame = checkWin()
+        if(endGame){
+            //todo
+        }else{
+            checkNextMove(direction)
+        }
+        updateMultiplayerInFirebase(points.beforeMovePoint,direction)
+
+
+
+
+
+    }
+
+    private fun checkNextMove(direction: Int) {
+        val nextMove = field.checkIfStuckAndNextMove(direction)
+        if(nextMove.stuck){
+            //todo lost
+        }
+
+        if(nextMove.nextMove){
+            updateButtons()
+        }else{
+            multiPlayerMatch.turn = opponentTurn()
+        }
+
+    }
+
+    private fun opponentTurn(): Int {
+        return if (invitation.orientation==Static.ORIENTATION_NORMAL){
+            Static.ORIENTATION_UP_SIDE_DOWN
+        }else{
+            Static.ORIENTATION_NORMAL
+        }
+    }
+
+    private fun checkWin(): Boolean {
+        //todo
+        return false
+    }
+
 
     private fun setOnClickListeners() {
         //todo for orientation normal and up side down
 
         rootView.fragment_multi_player_match_move_up_btn.setOnClickListener {
-            val points = field.moveUp(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP)
-            displayField()
+            normalPress(field.moveUp(true),Static.UP)
         }
         rootView.fragment_multi_player_match_move_up_right_btn.setOnClickListener {
-            val points = field.moveUpRight(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP_RIGHT)
-            displayField()
+            normalPress(field.moveUpRight(true),Static.UP_RIGHT)
+
         }
         rootView.fragment_multi_player_match_move_right_btn.setOnClickListener {
-            val points = field.moveRight(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.RIGHT)
-            displayField()
+            normalPress(field.moveRight(true),Static.RIGHT)
+
         }
         rootView.fragment_multi_player_match_move_down_right_btn.setOnClickListener {
-            val points = field.moveDownRight(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN_RIGHT)
-            displayField()
+            normalPress(field.moveDownRight(true),Static.DOWN_RIGHT)
+
         }
         rootView.fragment_multi_player_match_move_down_btn.setOnClickListener {
-            val points = field.moveDown(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN)
-            displayField()
+            normalPress(field.moveDown(true),Static.DOWN)
+
         }
         rootView.fragment_multi_player_match_move_down_left_btn.setOnClickListener {
-            val points = field.moveDownLeft(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN_LEFT)
-            displayField()
+            normalPress(field.moveDownLeft(true),Static.DOWN_LEFT)
+
         }
         rootView.fragment_multi_player_match_move_left_btn.setOnClickListener {
-            val points = field.moveLeft(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.LEFT)
-            displayField()
+            normalPress(field.moveLeft(true),Static.LEFT)
+
         }
         rootView.fragment_multi_player_match_move_up_left_btn.setOnClickListener {
-            val points = field.moveUpLeft(true)
-            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP_LEFT)
-            displayField()
+            normalPress(field.moveUpLeft(true),Static.UP_LEFT)
+
         }
 
         rootView.fragment_multi_player_match_back_button.setOnClickListener {
