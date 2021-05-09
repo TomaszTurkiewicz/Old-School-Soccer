@@ -1,5 +1,6 @@
 package com.tt.oldschoolsoccer.fragments.multiPlayer
 
+import android.graphics.Point
 import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
@@ -19,10 +20,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
+import com.tt.oldschoolsoccer.database.PointOnField
 import com.tt.oldschoolsoccer.database.UserDBDatabase
-import com.tt.oldschoolsoccer.drawable.FieldHardDrawable
-import com.tt.oldschoolsoccer.drawable.TileDrawable
-import com.tt.oldschoolsoccer.drawable.UserIconDrawable
+import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.fragment_multi_player_match.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
@@ -39,6 +39,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private var invitation = Invitation()
     private var invitationReady = false
     private val prepareMatchHandler = Handler()
+    private val playMatchHandler = Handler()
     private var multiPlayerMatch = MultiPlayerMatch()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +76,10 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
                 }
                 else{
-                    //check moves
+                    // todo check which moves were already done and show only new one
+
+
+                    playMatchHandler.postDelayed(play(),1000)
                 }
 
             }
@@ -118,16 +122,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         if(availableMoves.down){
             rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
         }
-
-
-
-
-
-
-
-
-
-
 
     }
 
@@ -241,36 +235,44 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         //todo for orientation normal and up side down
 
         rootView.fragment_multi_player_match_move_up_btn.setOnClickListener {
-            field.moveUp(true)
-            updateMultiplayerInFirebase(Static.UP)
+            val points = field.moveUp(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_up_right_btn.setOnClickListener {
-            field.moveUpRight(true)
-            updateMultiplayerInFirebase(Static.UP_RIGHT)
+            val points = field.moveUpRight(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP_RIGHT)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_right_btn.setOnClickListener {
-            field.moveRight(true)
-            updateMultiplayerInFirebase(Static.RIGHT)
+            val points = field.moveRight(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.RIGHT)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_down_right_btn.setOnClickListener {
-            field.moveDownRight(true)
-            updateMultiplayerInFirebase(Static.DOWN_RIGHT)
+            val points = field.moveDownRight(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN_RIGHT)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_down_btn.setOnClickListener {
-            field.moveDown(true)
-            updateMultiplayerInFirebase(Static.DOWN)
+            val points = field.moveDown(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_down_left_btn.setOnClickListener {
-            field.moveDownLeft(true)
-            updateMultiplayerInFirebase(Static.DOWN_LEFT)
+            val points = field.moveDownLeft(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.DOWN_LEFT)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_left_btn.setOnClickListener {
-            field.moveLeft(true)
-            updateMultiplayerInFirebase(Static.LEFT)
+            val points = field.moveLeft(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.LEFT)
+            displayField()
         }
         rootView.fragment_multi_player_match_move_up_left_btn.setOnClickListener {
-            field.moveUpLeft(true)
-            updateMultiplayerInFirebase(Static.UP_LEFT)
+            val points = field.moveUpLeft(true)
+            updateMultiplayerInFirebase(points.beforeMovePoint,Static.UP_LEFT)
+            displayField()
         }
 
         rootView.fragment_multi_player_match_back_button.setOnClickListener {
@@ -279,10 +281,33 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     }
 
-    private fun updateMultiplayerInFirebase(direction: Int) {
-        val move = MultiPlayerMove()
-        move.move = direction
-        move.user = invitation.orientation
+    private fun displayField() {
+        updateMoves()
+        displayBall()
+
+    }
+
+    private fun displayBall() {
+        view?.let {
+            val ball = field.findBall()
+            rootView.fragment_multi_player_match_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenSize.screenUnit.toDouble()))
+        }
+
+    }
+
+    private fun updateMoves() {
+        view?.let {
+            rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field,screenSize.screenUnit.toDouble()))
+        }
+    }
+
+    private fun updateMultiplayerInFirebase(beforeMovePoint: PointOnField, direction: Int) {
+        val ball = Point()
+        ball.x = beforeMovePoint.x
+        ball.y = beforeMovePoint.y
+
+
+        val move = MultiPlayerMove(ball,direction,invitation.orientation)
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
         multiPlayerMatch.moveList.add(move)
 
