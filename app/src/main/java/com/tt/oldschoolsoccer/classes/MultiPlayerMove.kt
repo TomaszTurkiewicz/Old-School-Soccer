@@ -2,6 +2,13 @@ package com.tt.oldschoolsoccer.classes
 
 import android.graphics.Point
 
-class MultiPlayerMove(val ball:Point,val direction:Int,val user:Int) {
-    var new:Boolean = true
+class MultiPlayerMove(){
+
+    var ball:Point = Point(0,0)
+    var direction:Int = 100
+    var user:Int = 3
+    var new = true
+
+
+
 }

@@ -5,11 +5,9 @@ import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -25,9 +23,9 @@ import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.fragment_multi_player_match.view.*
-import kotlinx.android.synthetic.main.fragment_single_player_hard_game.view.*
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 
 class MultiPlayerMatchFragment : FragmentCoroutine() {
@@ -66,67 +64,50 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun play(): Runnable = Runnable {
-        val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
-        matchRef.addListenerForSingleValueEvent(object  : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
-                if(multiPlayerMatch.turn == invitation.orientation){
-                    // make move
-                    updateButtons()
+        if(multiPlayerMatch.turn==invitation.orientation){
 
-                }
-                else{
-                    // todo check which moves were already done and show only new one
+            // my turn
+            enableButtons()
 
 
+        }else{
+            // not my turn
+            val multiRef = Firebase.database.getReference("Match").child(invitation.battleName)
+            multiRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
                     playMatchHandler.postDelayed(play(),1000)
+
                 }
 
-            }
+                override fun onCancelled(error: DatabaseError) {
 
-            override fun onCancelled(error: DatabaseError) {
-            }
+                }
 
-        })
+            })
+
+
+        }
+
+
 
     }
 
-    private fun updateButtons() {
-        // todo dla orientacji normalnej i odwróconej
-
-        disableButtons()
-        val ball = field.findBall()
-        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-
-        if(availableMoves.up){
-            rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.upRight){
-            rootView.fragment_multi_player_match_move_up_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.upLeft){
-            rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.right){
-            rootView.fragment_multi_player_match_move_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.left){
-            rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.downRight){
-            rootView.fragment_multi_player_match_move_down_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.downLeft){
-            rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.down){
-            rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
-        }
+    private fun enableButtons() {
+        rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_up_right_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_right_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_down_right_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
+        rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
 
     }
 
     private fun prepareMatch(): Runnable = Runnable {
         if(invitationReady){
+            prepareMatchHandler.removeCallbacksAndMessages(null)
             val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
             matchRef.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -231,49 +212,28 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun normalPress(move:PointsAfterMove, direction:Int){
-        val points = move
-        displayField()
+//        val points = move
+//        displayField()
+//        disableButtons()
+
+        multiPlayerMatch.turn = setOpponentTurn()
+
         disableButtons()
-        val endGame = checkWin()
-        if(endGame){
-            //todo
-        }else{
-            checkNextMove(direction)
-        }
-        updateMultiplayerInFirebase(points.beforeMovePoint,direction)
 
+        val multiRef = Firebase.database.getReference("Match").child(invitation.battleName)
+        multiRef.setValue(multiPlayerMatch)
 
-
-
+        playMatchHandler.postDelayed(play(),1000)
 
     }
 
-    private fun checkNextMove(direction: Int) {
-        val nextMove = field.checkIfStuckAndNextMove(direction)
-        if(nextMove.stuck){
-            //todo lost
-        }
-
-        if(nextMove.nextMove){
-            updateButtons()
-        }else{
-            multiPlayerMatch.turn = opponentTurn()
-        }
-
+    private fun setOpponentTurn():Int{
+        return if (invitation.orientation==Static.ORIENTATION_NORMAL) Static.ORIENTATION_UP_SIDE_DOWN else Static.ORIENTATION_NORMAL
     }
 
-    private fun opponentTurn(): Int {
-        return if (invitation.orientation==Static.ORIENTATION_NORMAL){
-            Static.ORIENTATION_UP_SIDE_DOWN
-        }else{
-            Static.ORIENTATION_NORMAL
-        }
-    }
 
-    private fun checkWin(): Boolean {
-        //todo
-        return false
-    }
+
+
 
 
     private fun setOnClickListeners() {
@@ -337,21 +297,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         }
     }
 
-    private fun updateMultiplayerInFirebase(beforeMovePoint: PointOnField, direction: Int) {
-        val ball = Point()
-        ball.x = beforeMovePoint.x
-        ball.y = beforeMovePoint.y
-
-
-        val move = MultiPlayerMove(ball,direction,invitation.orientation)
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
-        multiPlayerMatch.moveList.add(move)
-
-        multiPlayerMatch.time = calendar.timeInMillis
-
-        val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
-        matchRef.setValue(multiPlayerMatch)
-    }
 
     private fun goToMainMenu() {
         activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
