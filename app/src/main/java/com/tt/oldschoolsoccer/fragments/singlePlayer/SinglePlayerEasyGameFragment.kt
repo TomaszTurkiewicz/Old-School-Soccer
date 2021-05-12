@@ -16,12 +16,10 @@ import androidx.core.content.ContextCompat
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
 import com.tt.oldschoolsoccer.database.PointOnFieldEasyDatabase
-import com.tt.oldschoolsoccer.database.UserDB
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.alert_dialog_end_game.view.*
-import kotlinx.android.synthetic.main.alert_dialog_user_name.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -36,7 +34,7 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
     private val gameLoopHandler = Handler()
     private var nextMovePhone:Boolean=false
     private val startGameHandler = Handler()
-    private val score = Point(4,12)
+    private val score = Point(5,13)
     private val endGameWinHandler = Handler()
     private val endGameLoseHandler = Handler()
     private val endGameTieHandler = Handler()
@@ -507,12 +505,12 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
      */
     private fun checkWin(): Boolean {
         val ball = field.findBall()
-        val lost1 = Point(3,12)
-        val lost2 = Point(4,12)
-        val lost3 = Point(5,12)
-        val win1 = Point(3,0)
-        val win2 = Point(4,0)
-        val win3 = Point(5,0)
+        val lost1 = Point(4,13)
+        val lost2 = Point(5,13)
+        val lost3 = Point(6,13)
+        val win1 = Point(4,1)
+        val win2 = Point(5,1)
+        val win3 = Point(6,1)
         when(ball){
             lost1,lost2,lost3 -> {
 

@@ -25,7 +25,7 @@ import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.fragment_multi_player_match.view.*
 import kotlinx.coroutines.launch
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 
 class MultiPlayerMatchFragment : FragmentCoroutine() {
@@ -39,6 +39,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private val prepareMatchHandler = Handler()
     private val playMatchHandler = Handler()
     private var multiPlayerMatch = MultiPlayerMatch()
+    private var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +67,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private fun play(): Runnable = Runnable {
         if(multiPlayerMatch.turn==invitation.orientation){
 
+            readMovesFromFirebase(true)
             // my turn
             enableButtons()
 
@@ -76,6 +78,11 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
             multiRef.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
+
+                    // todo read and display move
+                    readMovesFromFirebase(false)
+
+
                     playMatchHandler.postDelayed(play(),1000)
 
                 }
@@ -92,6 +99,42 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
 
     }
+
+    private fun readMovesFromFirebase(reset:Boolean) {
+        val moves = multiPlayerMatch.moveList
+        val tmpMoveList = ArrayList<MultiPlayerMove>()
+        for(i in moves.iterator()){
+            if(i.new && i.user!=invitation.orientation){
+                tmpMoveList.add(i)
+            }
+        }
+
+        counter = 0
+        displayOpponentMoves(tmpMoveList).run()
+
+
+    }
+
+    private fun displayOpponentMoves(tmpMoveList:ArrayList<MultiPlayerMove>):Runnable = Runnable {
+        if(counter == tmpMoveList.size){
+
+            playMatchHandler.postDelayed(play(),1000)
+        }else{
+            val ball = tmpMoveList[counter].ball
+            val ballFind = field.findBall()
+            val direction = tmpMoveList[counter].direction
+
+            if(field.checkIfMoveInDirectionAvailable(direction,ball)){
+                field.makeOpponentMoveInDirection(direction)
+                displayField()
+                counter+=1
+                val mHandler = Handler()
+                mHandler.postDelayed(displayOpponentMoves(tmpMoveList),1000)
+
+            }
+        }
+    }
+
 
     private fun enableButtons() {
         rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
@@ -212,11 +255,16 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun normalPress(move:PointsAfterMove, direction:Int){
-//        val points = move
-//        displayField()
-//        disableButtons()
+        val points = move
+        displayField()
+
+        val multiPlayerMove = MultiPlayerMove()
+        multiPlayerMove.user = invitation.orientation
+        multiPlayerMove.direction = direction
+        multiPlayerMove.ball = Point(points.beforeMovePoint.x,points.beforeMovePoint.y)
 
         multiPlayerMatch.turn = setOpponentTurn()
+        multiPlayerMatch.moveList.add(multiPlayerMove)
 
         disableButtons()
 
