@@ -81,8 +81,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
                     requireContext().let {
                         val list = PointOnFieldHardDatabase(it).getPointOnFieldDao().getAllPointsOnField()
                         for (item in list) {
-                            val i = item.position % 13
-                            val j = item.position / 13
+                            val i = item.position % 15
+                            val j = item.position / 15
                             field.field[i][j] = item
                         }
 
@@ -99,8 +99,8 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
 
                 launch {
-                    for (i in 0..12) {
-                        for (j in 0..20) {
+                    for (i in 0..14) {
+                        for (j in 0..22) {
                             val item = field.getPoint(i, j)
                             requireContext().let {
                                 PointOnFieldHardDatabase(it).getPointOnFieldDao().updatePointOnField(item)
@@ -785,16 +785,16 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
     private fun checkWin(): Boolean {
         val ball = field.findBall()
-        val lost1 = Point(4,20)
-        val lost2 = Point(5,20)
-        val lost3 = Point(6,20)
-        val lost4 = Point(7,20)
-        val lost5 = Point(8,20)
-        val win1 = Point(4,0)
-        val win2 = Point(5,0)
-        val win3 = Point(6,0)
-        val win4 = Point(7,0)
-        val win5 = Point(8,0)
+        val lost1 = Point(5,21)
+        val lost2 = Point(6,21)
+        val lost3 = Point(7,21)
+        val lost4 = Point(8,21)
+        val lost5 = Point(9,21)
+        val win1 = Point(5,1)
+        val win2 = Point(6,1)
+        val win3 = Point(7,1)
+        val win4 = Point(8,1)
+        val win5 = Point(9,1)
         when(ball){
             lost1,lost2,lost3,lost4,lost5 -> {
 

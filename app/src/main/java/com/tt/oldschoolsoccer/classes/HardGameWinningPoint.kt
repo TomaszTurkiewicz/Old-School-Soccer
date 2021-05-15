@@ -4,10 +4,10 @@ import android.graphics.Point
 import java.lang.Math.abs
 
 class HardGameWinningPoint {
-    private val xOne = 5
-    private val xTwo = 6
-    private val xThree = 7
-    private val y = 20
+    private val xOne = 6
+    private val xTwo = 7
+    private val xThree = 8
+    private val y = 21
 
 
     fun checkDistance(currentX:Int, currentY:Int): Point {

@@ -295,8 +295,8 @@ class MainFragment : FragmentCoroutine() {
     private suspend fun createUserHardField(it: Context) {
         val field = GameField()
         field.generate(Static.HARD)
-        for(i in 0..12){
-            for(j in 0..20){
+        for(i in 0..14){
+            for(j in 0..22){
                 val item = field.getPoint(i,j)
                 PointOnFieldHardDatabase(it).getPointOnFieldDao().addPointOnField(item)
             }
@@ -307,8 +307,8 @@ class MainFragment : FragmentCoroutine() {
     private suspend fun createUserNormalField(it: Context) {
         val field = GameField()
         field.generate(Static.NORMAL)
-        for(i in 0..8){
-            for(j in 0..12){
+        for(i in 0..10){
+            for(j in 0..14){
                 val item = field.getPoint(i,j)
                 PointOnFieldNormalDatabase(it).getPointOnFieldDao().addPointOnField(item)
             }
@@ -321,8 +321,8 @@ class MainFragment : FragmentCoroutine() {
     private suspend fun createUserEasyField(it: Context) {
         val field = GameField()
         field.generate(Static.EASY)
-        for(i in 0..8){
-            for(j in 0..12){
+        for(i in 0..10){
+            for(j in 0..14){
                 val item = field.getPoint(i,j)
                 PointOnFieldEasyDatabase(it).getPointOnFieldDao().addPointOnField(item)
             }

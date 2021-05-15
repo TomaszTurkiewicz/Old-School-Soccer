@@ -138,8 +138,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                     requireContext().let {
                         val list = PointOnFieldEasyDatabase(it).getPointOnFieldDao().getAllPointsOnField()
                         for (item in list) {
-                            val i = item.position % 9
-                            val j = item.position / 9
+                            val i = item.position % 11
+                            val j = item.position / 11
                             field.field[i][j] = item
                         }
                         field.myMove = Functions.readMyMoveEasyGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
@@ -155,8 +155,8 @@ class SinglePlayerEasyGameFragment : FragmentCoroutine() {
                 Functions.saveEasyGameToSharedPreferences(requireContext(), true, loggedInStatus.userid)
                 updateUserCounters(1,0,0,0)
                 launch {
-                    for (i in 0..8) {
-                        for (j in 0..12) {
+                    for (i in 0..10) {
+                        for (j in 0..14) {
                             val item = field.getPoint(i, j)
                             requireContext().let {
                                 PointOnFieldEasyDatabase(it).getPointOnFieldDao().updatePointOnField(item)

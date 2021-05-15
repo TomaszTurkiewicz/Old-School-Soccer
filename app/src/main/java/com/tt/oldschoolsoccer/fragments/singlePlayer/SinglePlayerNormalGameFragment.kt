@@ -468,8 +468,8 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
                     requireContext().let {
                         val list = PointOnFieldNormalDatabase(it).getPointOnFieldDao().getAllPointsOnField()
                         for (item in list) {
-                            val i = item.position % 9
-                            val j = item.position / 9
+                            val i = item.position % 11
+                            val j = item.position / 11
                             field.field[i][j] = item
                         }
                         field.myMove = Functions.readMyMoveNormalGameFromSharedPreferences(requireContext(),loggedInStatus.userid)
@@ -487,8 +487,8 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
 
                 launch {
-                    for (i in 0..8) {
-                        for (j in 0..12) {
+                    for (i in 0..10) {
+                        for (j in 0..14) {
                             val item = field.getPoint(i, j)
                             requireContext().let {
                                 PointOnFieldNormalDatabase(it).getPointOnFieldDao().updatePointOnField(item)
