@@ -28,15 +28,15 @@ class GameField {
             setAvailableMoves()
 
         } else {
-            field = Array(13) { Array(21) { PointOnField() } }
-            for (i in 0..12) {
-                for (j in 0..20) {
+            field = Array(15) { Array(23) { PointOnField() } }
+            for (i in 0..14) {
+                for (j in 0..22) {
                     field[i][j].x = i
                     field[i][j].y = j
                     field[i][j].position = 13 * j + i
                 }
             }
-            field[6][10].ball = true
+            field[7][11].ball = true
             setAvailableMovesHard()
         }
         level = gameLevel
@@ -48,91 +48,179 @@ class GameField {
      */
     private fun setAvailableMovesHard() {
         field[0][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][5].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][6].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][7].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][8].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[0][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[1][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][5].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][6].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[1][7].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[1][8].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[1][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = false, upLeft = false)
+        field[1][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[1][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[2][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[2][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[2][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][5].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = true, upLeft = true)
+        field[2][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
+        field[2][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = false, upLeft = false)
+        field[2][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[3][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[4][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[5][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[6][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[7][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[8][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = false, upLeft = false)
+        field[3][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[3][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[3][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[4][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[4][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[4][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[4][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[5][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[5][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[5][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[5][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[6][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[6][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[6][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[6][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[7][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[7][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[7][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[7][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[8][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[8][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[8][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[8][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[9][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[9][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[9][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[9][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[10][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[10][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[10][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[10][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[11][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[11][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[11][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[11][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
         field[12][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-
-        field[0][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[1][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[2][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[3][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[4][1].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[8][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = true, upLeft = true)
-        field[9][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[10][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[11][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = true, down = true, downLeft = true, left = false, upLeft = false)
-        field[12][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = false, upLeft = false)
-
-        field[0][2].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][3].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][4].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][5].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][6].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][7].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][8].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][9].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][10].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][11].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][12].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][13].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][14].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][15].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][16].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][17].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-        field[0][18].setAvailableMoves(false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
-
-
-        field[12][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][5].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][6].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][7].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][8].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[12][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
         field[12][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][15].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][16].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][17].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[12][18].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[12][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
 
-        field[0][19].setAvailableMoves(false, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[1][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[2][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[3][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[4][19].setAvailableMoves(up = true, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = true)
-        field[8][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
-        field[9][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[10][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[11][19].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[12][19].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[13][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[13][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[13][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[13][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
 
-        field[0][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[1][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[2][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[3][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[4][20].setAvailableMoves(false, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[5][20].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[6][20].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[7][20].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[8][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
-        field[9][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[10][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[11][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
-        field[12][20].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[14][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[14][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[14][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[14][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[15][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[15][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[15][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[15][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[16][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[16][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[16][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[16][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[17][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[17][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[17][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[17][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[18][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[18][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[18][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[18][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[19][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[19][1].setAvailableMoves(up = false, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = false)
+        field[19][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[19][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[20][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[20][1].setAvailableMoves(up = false, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[20][2].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][3].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][4].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][5].setAvailableMoves(up = true, upRight = true, right = true, downRight = true, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][9].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = true, left = true, upLeft = true)
+        field[20][10].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][11].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][12].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[20][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[21][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][5].setAvailableMoves(up = false, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][6].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[21][7].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[21][8].setAvailableMoves(up = true, upRight = true, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[21][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = true)
+        field[21][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[21][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+
+        field[22][0].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][1].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][2].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][3].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][4].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][5].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][6].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][7].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][8].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][9].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][10].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][11].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][12].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][13].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
+        field[22][14].setAvailableMoves(up = false, upRight = false, right = false, downRight = false, down = false, downLeft = false, left = false, upLeft = false)
 
     }
 
@@ -569,7 +657,7 @@ class GameField {
      */
     fun findBall(): Point {
         val ball = Point()
-        if (level != Static.HARD) {
+        if (level == Static.EASY || level == Static.NORMAL){
             for (i in 0..10) {
                 for (j in 0..14) {
                     if (field[i][j].ball) {
@@ -580,8 +668,8 @@ class GameField {
                 }
             }
         } else {
-            for (i in 0..12) {
-                for (j in 0..20) {
+            for (i in 0..14) {
+                for (j in 0..22) {
                     if (field[i][j].ball) {
                         ball.x=i
                         ball.y=j
@@ -712,7 +800,7 @@ class GameField {
     }
 
     fun clearTestMoves() {
-        if (level != Static.HARD) {
+        if (level == Static.EASY || level == Static.NORMAL) {
             for (i in 0..10) {
                 for (j in 0..14) {
                     if (field[i][j].moveUp == Static.MOVE_CHECKING || field[i][j].moveUp == Static.MOVE_BEST) {
@@ -744,8 +832,8 @@ class GameField {
             }
 
         } else {
-            for (i in 0..12) {
-                for (j in 0..20) {
+            for (i in 0..14) {
+                for (j in 0..22) {
                     if (field[i][j].moveUp == Static.MOVE_CHECKING || field[i][j].moveUp == Static.MOVE_BEST) {
                         field[i][j].moveUp = Static.MOVE_AVAILABLE
                     }
