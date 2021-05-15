@@ -36,7 +36,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     private val startGameHandler = Handler()
     private val gameLoopHandler = Handler()
     private val phoneMoveHandler = Handler()
-    private val score = Point(4,12)
+    private val score = Point(5,13)
     private var firstMove = true
 
     private val endGameWinHandler = Handler()
@@ -164,6 +164,7 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
         val listSize = bestMoves.size
         val counter = 0
+
 
         phoneMoveRunnable(listSize,counter,bestMoves).run()
 
@@ -719,12 +720,12 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
      */
     private fun checkWin(): Boolean {
         val ball = field.findBall()
-        val lost1 = Point(3,12)
-        val lost2 = Point(4,12)
-        val lost3 = Point(5,12)
-        val win1 = Point(3,0)
-        val win2 = Point(4,0)
-        val win3 = Point(5,0)
+        val lost1 = Point(4,13)
+        val lost2 = Point(5,13)
+        val lost3 = Point(6,13)
+        val win1 = Point(4,1)
+        val win2 = Point(5,1)
+        val win3 = Point(6,1)
         when(ball){
             lost1,lost2,lost3 -> {
 

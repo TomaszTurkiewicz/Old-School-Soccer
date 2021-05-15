@@ -713,8 +713,8 @@ class GameField {
 
     fun clearTestMoves() {
         if (level != Static.HARD) {
-            for (i in 0..8) {
-                for (j in 0..12) {
+            for (i in 0..10) {
+                for (j in 0..14) {
                     if (field[i][j].moveUp == Static.MOVE_CHECKING || field[i][j].moveUp == Static.MOVE_BEST) {
                         field[i][j].moveUp = Static.MOVE_AVAILABLE
                     }
