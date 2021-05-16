@@ -73,17 +73,12 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                     multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
                     if(multiPlayerMatch.turn==invitation.orientation){
                         // my move
-                        // todo check opponent last moves (and display them)
-                        // todo enable buttons
+
                         readMovesFromFirebase(true)
-
-
-
 
                     }else{
                         // opponent move
-                        // todo check opponent moves (and display them)
-                        // todo postDelayed
+
                         readMovesFromFirebase(false)
                         playMatchHandler.postDelayed(play(),1000)
                     }
@@ -102,14 +97,34 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun enableButtons() {
-        rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_up_right_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_right_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_down_right_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
-        rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
+        disableButtons()
+        val ball = field.findBall()
+        val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
+        if(availableMoves.up){
+            rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.upRight){
+            rootView.fragment_multi_player_match_move_up_right_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.right){
+            rootView.fragment_multi_player_match_move_right_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.downRight){
+            rootView.fragment_multi_player_match_move_down_right_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.down){
+            rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.downLeft){
+            rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.left){
+            rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
+        }
+        if(availableMoves.upLeft){
+            rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
+        }
+
     }
 
     private fun readMovesFromFirebase(reset: Boolean) {
@@ -130,7 +145,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         }
 
 
-        //todo make moves from list and display
+
 
 
         counter = 0
@@ -343,21 +358,15 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun displayField() {
         updateMoves()
-        displayBall()
 
     }
 
-    private fun displayBall() {
-        view?.let {
-            val ball = field.findBall()
-            rootView.fragment_multi_player_match_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenSize.screenUnit.toDouble()))
-        }
 
-    }
 
     private fun updateMoves() {
         view?.let {
-            rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field,screenSize.screenUnit.toDouble()))
+            val ball = field.findBall()
+            rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field,screenSize.screenUnit.toDouble(),ball))
         }
     }
 
@@ -373,9 +382,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
         set.connect(rootView.fragment_multi_player_match_game_field.id, ConstraintSet.TOP,rootView.fragment_multi_player_match_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
         set.connect(rootView.fragment_multi_player_match_game_field.id, ConstraintSet.LEFT,rootView.fragment_multi_player_match_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
-
-        set.connect(rootView.fragment_multi_player_match_game_ball.id, ConstraintSet.TOP,rootView.fragment_multi_player_match_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
-        set.connect(rootView.fragment_multi_player_match_game_ball.id, ConstraintSet.LEFT,rootView.fragment_multi_player_match_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
 
         set.connect(rootView.fragment_multi_player_match_game_middle.id, ConstraintSet.TOP,rootView.fragment_multi_player_match_layout.id, ConstraintSet.TOP,26*screenSize.screenUnit)
         set.connect(rootView.fragment_multi_player_match_game_middle.id, ConstraintSet.LEFT,rootView.fragment_multi_player_match_layout.id, ConstraintSet.LEFT,9*screenSize.screenUnit)
@@ -453,7 +459,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun setViewSizes() {
         rootView.fragment_multi_player_match_game_field.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,22*screenSize.screenUnit)
-        rootView.fragment_multi_player_match_game_ball.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,22*screenSize.screenUnit)
         rootView.fragment_multi_player_match_move_up_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_multi_player_match_move_up_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_multi_player_match_move_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)

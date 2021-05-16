@@ -622,21 +622,15 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
     private fun updateField() {
         updateMoves()
-        displayBall()
     }
 
     private fun updateMoves() {
         view?.let {
-            rootView.fragment_single_player_hard_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field, screenSize.screenUnit.toDouble()))
+            val ball = field.findBall()
+            rootView.fragment_single_player_hard_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field, screenSize.screenUnit.toDouble(),ball))
         }
     }
 
-    private fun displayBall() {
-        view?.let {
-            val ball = field.findBall()
-            rootView.fragment_single_player_hard_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenSize.screenUnit.toDouble()))
-        }
-    }
 
     private fun updateUserCounters(numbersOfGames:Int,win:Int,tie:Int,lose:Int) {
         launch {
@@ -1108,9 +1102,6 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_hard_game_field.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
         set.connect(rootView.fragment_single_player_hard_game_field.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_single_player_hard_game_ball.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
-        set.connect(rootView.fragment_single_player_hard_game_ball.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
-
         set.connect(rootView.fragment_single_player_hard_game_middle.id, ConstraintSet.TOP,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.TOP,26*screenSize.screenUnit)
         set.connect(rootView.fragment_single_player_hard_game_middle.id, ConstraintSet.LEFT,rootView.fragment_single_player_hard_game_layout.id, ConstraintSet.LEFT,9*screenSize.screenUnit)
 
@@ -1160,7 +1151,6 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
 
     private fun setViewSizes() {
         rootView.fragment_single_player_hard_game_field.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,22*screenSize.screenUnit)
-        rootView.fragment_single_player_hard_game_ball.layoutParams = ConstraintLayout.LayoutParams(14*screenSize.screenUnit,22*screenSize.screenUnit)
         rootView.fragment_single_player_hard_game_move_up_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_single_player_hard_game_move_up_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_single_player_hard_game_move_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)

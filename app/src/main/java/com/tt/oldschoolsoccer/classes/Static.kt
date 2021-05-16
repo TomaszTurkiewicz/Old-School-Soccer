@@ -52,6 +52,9 @@ class Static {
         const val MULTI_GAME_RECEIVED_INVITATION = 2
         const val MULTI_GAME_MATCH_READY = 3
 
+        const val HARD_SIZE_WIDTH_INDEX = 14
+        const val HARD_SIZE_HEIGHT_INDEX = 22
+
 
     }
 }
