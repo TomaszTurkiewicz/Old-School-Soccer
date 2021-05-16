@@ -19,7 +19,6 @@ import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import kotlinx.android.synthetic.main.alert_dialog_end_game.view.*
-import kotlinx.android.synthetic.main.fragment_single_player_easy_game.view.*
 import kotlinx.android.synthetic.main.fragment_single_player_normal_game.view.*
 import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
@@ -433,20 +432,13 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
     }
 
     private fun updateField() {
-        displayBall()
         updateMoves()
     }
 
     private fun updateMoves() {
         view?.let {
-        rootView.fragment_single_player_normal_game_field.setImageDrawable(MovesEasyDrawable(requireContext(),field, screenSize.screenUnit.toDouble()))
-        }
-    }
-
-    private fun displayBall() {
-        view?.let {
-        val ball = field.findBall()
-        rootView.fragment_single_player_normal_game_ball.setImageDrawable(BallDrawable(requireContext(),field.field[ball.x][ball.y], screenSize.screenUnit.toDouble()))
+            val ball = field.findBall()
+        rootView.fragment_single_player_normal_game_field.setImageDrawable(MovesEasyDrawable(requireContext(),field, screenSize.screenUnit.toDouble(),ball))
         }
     }
 
@@ -991,9 +983,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
         set.connect(rootView.fragment_single_player_normal_game_field.id, ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
         set.connect(rootView.fragment_single_player_normal_game_field.id, ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
 
-        set.connect(rootView.fragment_single_player_normal_game_ball.id, ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.TOP,screenSize.screenUnit)
-        set.connect(rootView.fragment_single_player_normal_game_ball.id, ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.LEFT,screenSize.screenUnit)
-
         set.connect(rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.TOP,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.TOP,26*screenSize.screenUnit)
         set.connect(rootView.fragment_single_player_normal_game_middle.id, ConstraintSet.LEFT,rootView.fragment_single_player_normal_game_layout.id, ConstraintSet.LEFT,9*screenSize.screenUnit)
 
@@ -1039,7 +1028,6 @@ class SinglePlayerNormalGameFragment : FragmentCoroutine() {
 
     private fun setViewSizes() {
         rootView.fragment_single_player_normal_game_field.layoutParams = ConstraintLayout.LayoutParams(10*screenSize.screenUnit,14*screenSize.screenUnit)
-        rootView.fragment_single_player_normal_game_ball.layoutParams = ConstraintLayout.LayoutParams(10*screenSize.screenUnit,14*screenSize.screenUnit)
         rootView.fragment_single_player_normal_game_move_up_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_single_player_normal_game_move_up_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)
         rootView.fragment_single_player_normal_game_move_right_btn.layoutParams = ConstraintLayout.LayoutParams(2*screenSize.screenUnit,2*screenSize.screenUnit)

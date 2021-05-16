@@ -55,6 +55,9 @@ class Static {
         const val HARD_SIZE_WIDTH_INDEX = 14
         const val HARD_SIZE_HEIGHT_INDEX = 22
 
+        const val EASY_SIZE_WIDTH_INDEX = 10
+        const val EASY_SIZE_HEIGHT_INDEX = 14
+
 
     }
 }
