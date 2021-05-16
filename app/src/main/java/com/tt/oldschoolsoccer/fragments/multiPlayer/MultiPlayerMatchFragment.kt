@@ -65,76 +65,41 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun play(): Runnable = Runnable {
-        if(multiPlayerMatch.turn==invitation.orientation){
-
-            readMovesFromFirebase(true)
-            // my turn
-            enableButtons()
-
-
-        }else{
-            // not my turn
-            val multiRef = Firebase.database.getReference("Match").child(invitation.battleName)
-            multiRef.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
+        playMatchHandler.removeCallbacksAndMessages(null)
+        val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
                     multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
+                    if(multiPlayerMatch.turn==invitation.orientation){
+                        // my move
+                        // todo check opponent last moves (and display them)
+                        // todo enable buttons
+                        readMovesFromFirebase(true)
+                        enableButtons()
 
-                    // todo read and display move
-                    readMovesFromFirebase(false)
 
 
-                    playMatchHandler.postDelayed(play(),1000)
-
+                    }else{
+                        // opponent move
+                        // todo check opponent moves (and display them)
+                        // todo postDelayed
+                        readMovesFromFirebase(false)
+                        playMatchHandler.postDelayed(play(),1000)
+                    }
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-
-        }
-
-
-
-    }
-
-    private fun readMovesFromFirebase(reset:Boolean) {
-        val moves = multiPlayerMatch.moveList
-        val tmpMoveList = ArrayList<MultiPlayerMove>()
-        for(i in moves.iterator()){
-            if(i.new && i.user!=invitation.orientation){
-                tmpMoveList.add(i)
             }
-        }
 
-        counter = 0
-        displayOpponentMoves(tmpMoveList).run()
-
-
-    }
-
-    private fun displayOpponentMoves(tmpMoveList:ArrayList<MultiPlayerMove>):Runnable = Runnable {
-        if(counter == tmpMoveList.size){
-
-            playMatchHandler.postDelayed(play(),1000)
-        }else{
-            val ball = tmpMoveList[counter].ball
-            val ballFind = field.findBall()
-            val direction = tmpMoveList[counter].direction
-
-            if(field.checkIfMoveInDirectionAvailable(direction,ball)){
-                field.makeOpponentMoveInDirection(direction)
-                displayField()
-                counter+=1
-                val mHandler = Handler()
-                mHandler.postDelayed(displayOpponentMoves(tmpMoveList),1000)
+            override fun onCancelled(error: DatabaseError) {
 
             }
-        }
-    }
 
+        })
+
+
+
+
+    }
 
     private fun enableButtons() {
         rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
@@ -145,8 +110,55 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
         rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
         rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
+    }
+
+    private fun readMovesFromFirebase(reset: Boolean) {
+        val moves = multiPlayerMatch.moveList
+        val tmpMoveList = ArrayList<MultiPlayerMove>()
+        for(i in moves.iterator()){
+            if(i.new && i.user!=invitation.orientation){
+                tmpMoveList.add(i)
+            }
+        }
+
+        if(reset){
+            for(i in 0 until multiPlayerMatch.moveList.size){
+                multiPlayerMatch.moveList[i].new = false
+            }
+            val dbRef = Firebase.database.getReference("Match").child(invitation.battleName).child("moveList")
+            dbRef.setValue(multiPlayerMatch.moveList)
+        }
+
+
+        //todo make moves from list and display
+
+
+        counter = 0
+        displayOpponentMoves(tmpMoveList).run()
+    }
+
+    private fun displayOpponentMoves(tmpMoveList:ArrayList<MultiPlayerMove>): Runnable = Runnable {
+        if(counter >= tmpMoveList.size){
+
+            playMatchHandler.postDelayed(play(),1000)
+        }else{
+            val ball = tmpMoveList[counter].ball
+            val direction = tmpMoveList[counter].direction
+
+            if(field.checkIfMoveInDirectionAvailable(direction,ball)){
+                field.makeOpponentMoveInDirection(direction)
+                displayField()
+            }
+
+                counter+=1
+                val mHandler = Handler()
+                mHandler.postDelayed(displayOpponentMoves(tmpMoveList),1000)
+
+
+        }
 
     }
+
 
     private fun prepareMatch(): Runnable = Runnable {
         if(invitationReady){
@@ -159,7 +171,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         //todo compare with field and display
 
 
-
+                        prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
 
 
@@ -169,6 +181,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
                         multiPlayerMatch.time = calendar.timeInMillis
                         matchRef.setValue(multiPlayerMatch)
+                        prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }
                 }

@@ -33,7 +33,7 @@ class GameField {
                 for (j in 0..22) {
                     field[i][j].x = i
                     field[i][j].y = j
-                    field[i][j].position = 13 * j + i
+                    field[i][j].position = 15 * j + i
                 }
             }
             field[7][11].ball = true
