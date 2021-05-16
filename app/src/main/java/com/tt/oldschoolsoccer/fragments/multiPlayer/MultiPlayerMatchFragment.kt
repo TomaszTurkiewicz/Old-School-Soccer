@@ -76,7 +76,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         // todo check opponent last moves (and display them)
                         // todo enable buttons
                         readMovesFromFirebase(true)
-                        enableButtons()
+
 
 
 
@@ -134,13 +134,16 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
 
         counter = 0
-        displayOpponentMoves(tmpMoveList).run()
+        displayOpponentMoves(tmpMoveList, reset).run()
     }
 
-    private fun displayOpponentMoves(tmpMoveList:ArrayList<MultiPlayerMove>): Runnable = Runnable {
+    private fun displayOpponentMoves(tmpMoveList:ArrayList<MultiPlayerMove>, reset:Boolean): Runnable = Runnable {
         if(counter >= tmpMoveList.size){
-
+            if (reset){
+                enableButtons()
+            }
             playMatchHandler.postDelayed(play(),1000)
+
         }else{
             val ball = tmpMoveList[counter].ball
             val direction = tmpMoveList[counter].direction
@@ -152,7 +155,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
                 counter+=1
                 val mHandler = Handler()
-                mHandler.postDelayed(displayOpponentMoves(tmpMoveList),1000)
+                mHandler.postDelayed(displayOpponentMoves(tmpMoveList, reset),1000)
 
 
         }
