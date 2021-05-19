@@ -7,8 +7,4 @@ class MultiPlayerMove(){
     var ball:Point = Point(0,0)
     var direction:Int = 100
     var user:Int = 3
-    var new = true
-
-
-
 }

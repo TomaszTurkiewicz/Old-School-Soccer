@@ -757,7 +757,7 @@ class SinglePlayerHardGameFragment : FragmentCoroutine() {
     private fun checkNextMove(direction: Int) {
         val nextMove = field.checkIfStuckAndNextMove(direction)
         if(nextMove.stuck){
-            gameLoopHandler.removeCallbacksAndMessages(this)
+            gameLoopHandler.removeCallbacksAndMessages(null)
             lostAnimation()
         }
         if(nextMove.nextMove){

@@ -7,6 +7,19 @@
     android:id="@+id/fragment_multi_player_match_layout"
     tools:context=".fragments.multiPlayer.MultiPlayerMatchFragment">
 
+    <TextView
+        android:id="@+id/prepare_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/game_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/fragment_multi_player_match_user_icon"
