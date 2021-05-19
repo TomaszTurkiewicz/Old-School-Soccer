@@ -18,7 +18,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tt.oldschoolsoccer.R
 import com.tt.oldschoolsoccer.classes.*
-import com.tt.oldschoolsoccer.database.PointOnField
 import com.tt.oldschoolsoccer.database.UserDBDatabase
 import com.tt.oldschoolsoccer.drawable.*
 import com.tt.oldschoolsoccer.fragments.MainFragment
@@ -163,29 +162,61 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         disableButtons()
         val ball = field.findBall()
         val availableMoves = field.checkIfMoveInDirectionIsAvailable(field.field[ball.x][ball.y])
-        if(availableMoves.up){
-            rootView.fragment_multi_player_match_move_up_btn.visibility=View.VISIBLE
+
+        if(invitation.orientation==Static.ORIENTATION_NORMAL) {
+
+            if (availableMoves.up) {
+                rootView.fragment_multi_player_match_move_up_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.upRight) {
+                rootView.fragment_multi_player_match_move_up_right_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.right) {
+                rootView.fragment_multi_player_match_move_right_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.downRight) {
+                rootView.fragment_multi_player_match_move_down_right_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.down) {
+                rootView.fragment_multi_player_match_move_down_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.downLeft) {
+                rootView.fragment_multi_player_match_move_down_left_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.left) {
+                rootView.fragment_multi_player_match_move_left_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.upLeft) {
+                rootView.fragment_multi_player_match_move_up_left_btn.visibility = View.VISIBLE
+            }
         }
-        if(availableMoves.upRight){
-            rootView.fragment_multi_player_match_move_up_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.right){
-            rootView.fragment_multi_player_match_move_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.downRight){
-            rootView.fragment_multi_player_match_move_down_right_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.down){
-            rootView.fragment_multi_player_match_move_down_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.downLeft){
-            rootView.fragment_multi_player_match_move_down_left_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.left){
-            rootView.fragment_multi_player_match_move_left_btn.visibility=View.VISIBLE
-        }
-        if(availableMoves.upLeft){
-            rootView.fragment_multi_player_match_move_up_left_btn.visibility=View.VISIBLE
+        else{
+
+            if (availableMoves.up) {
+                rootView.fragment_multi_player_match_move_down_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.upRight) {
+                rootView.fragment_multi_player_match_move_down_left_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.right) {
+                rootView.fragment_multi_player_match_move_left_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.downRight) {
+                rootView.fragment_multi_player_match_move_up_left_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.down) {
+                rootView.fragment_multi_player_match_move_up_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.downLeft) {
+                rootView.fragment_multi_player_match_move_up_right_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.left) {
+                rootView.fragment_multi_player_match_move_right_btn.visibility = View.VISIBLE
+            }
+            if (availableMoves.upLeft) {
+                rootView.fragment_multi_player_match_move_down_right_btn.visibility = View.VISIBLE
+            }
+
         }
 
     }
@@ -367,6 +398,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun checkWin():Boolean{
+        // todo for up side down orientation
+
         val ball = field.findBall()
         val lost1 = Point(5,21)
         val lost2 = Point(6,21)
@@ -411,39 +444,65 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
 
     private fun setOnClickListeners() {
-        //todo for orientation normal and up side down
 
-        rootView.fragment_multi_player_match_move_up_btn.setOnClickListener {
-            normalPress(field.moveUp(true),Static.UP)
-        }
-        rootView.fragment_multi_player_match_move_up_right_btn.setOnClickListener {
-            normalPress(field.moveUpRight(true),Static.UP_RIGHT)
+            rootView.fragment_multi_player_match_move_up_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveUp(true), Static.UP)
+                }else{
+                    normalPress(field.moveDown(true), Static.DOWN)
+                }
 
-        }
-        rootView.fragment_multi_player_match_move_right_btn.setOnClickListener {
-            normalPress(field.moveRight(true),Static.RIGHT)
+            }
+            rootView.fragment_multi_player_match_move_up_right_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveUpRight(true), Static.UP_RIGHT)
+                }else{
+                    normalPress(field.moveDownLeft(true), Static.DOWN_LEFT)
+                }
+            }
+            rootView.fragment_multi_player_match_move_right_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveRight(true), Static.RIGHT)
+                }else{
+                    normalPress(field.moveLeft(true), Static.LEFT)
+                }
+            }
+            rootView.fragment_multi_player_match_move_down_right_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveDownRight(true), Static.DOWN_RIGHT)
+                }else{
+                    normalPress(field.moveUpLeft(true), Static.UP_LEFT)
+                }
+            }
+            rootView.fragment_multi_player_match_move_down_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveDown(true), Static.DOWN)
+                }else{
+                    normalPress(field.moveUp(true), Static.UP)
+                }
+            }
+            rootView.fragment_multi_player_match_move_down_left_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveDownLeft(true), Static.DOWN_LEFT)
+                }else{
+                    normalPress(field.moveUpRight(true), Static.UP_RIGHT)
+                }
+            }
+            rootView.fragment_multi_player_match_move_left_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveLeft(true), Static.LEFT)
+                }else{
+                    normalPress(field.moveRight(true), Static.RIGHT)
+                }
+            }
+            rootView.fragment_multi_player_match_move_up_left_btn.setOnClickListener {
+                if(invitation.orientation==Static.ORIENTATION_NORMAL){
+                    normalPress(field.moveUpLeft(true), Static.UP_LEFT)
+                }else{
+                    normalPress(field.moveDownRight(true), Static.DOWN_RIGHT)
+                }
+            }
 
-        }
-        rootView.fragment_multi_player_match_move_down_right_btn.setOnClickListener {
-            normalPress(field.moveDownRight(true),Static.DOWN_RIGHT)
-
-        }
-        rootView.fragment_multi_player_match_move_down_btn.setOnClickListener {
-            normalPress(field.moveDown(true),Static.DOWN)
-
-        }
-        rootView.fragment_multi_player_match_move_down_left_btn.setOnClickListener {
-            normalPress(field.moveDownLeft(true),Static.DOWN_LEFT)
-
-        }
-        rootView.fragment_multi_player_match_move_left_btn.setOnClickListener {
-            normalPress(field.moveLeft(true),Static.LEFT)
-
-        }
-        rootView.fragment_multi_player_match_move_up_left_btn.setOnClickListener {
-            normalPress(field.moveUpLeft(true),Static.UP_LEFT)
-
-        }
 
         rootView.fragment_multi_player_match_back_button.setOnClickListener {
             goToMainMenu()
