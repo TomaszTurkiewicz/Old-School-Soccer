@@ -461,7 +461,11 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private fun updateMoves() {
         view?.let {
             val ball = field.findBall()
-            rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardDrawable(requireContext(),field,screenSize.screenUnit.toDouble(),ball))
+            if (invitation.orientation == Static.ORIENTATION_NORMAL) {
+                rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardDrawable(requireContext(), field, screenSize.screenUnit.toDouble(), ball))
+            } else {
+                rootView.fragment_multi_player_match_game_field.setImageDrawable(MovesHardUpSideDownDrawable(requireContext(), field, screenSize.screenUnit.toDouble(), ball))
+            }
         }
     }
 
