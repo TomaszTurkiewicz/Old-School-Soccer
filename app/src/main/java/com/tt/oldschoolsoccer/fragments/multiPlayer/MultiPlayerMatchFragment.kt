@@ -9,7 +9,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -66,6 +65,15 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     override fun onResume() {
         super.onResume()
         prepareMatch().run()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        prepareMatchHandler.removeCallbacksAndMessages(null)
+        playMatchHandler.removeCallbacksAndMessages(null)
+        endGameWinHandler.removeCallbacksAndMessages(null)
+        endGameLoseHandler.removeCallbacksAndMessages(null)
+        endGameTieHandler.removeCallbacksAndMessages(null)
     }
 
     override fun onCreateView(
@@ -316,6 +324,46 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         field.generate(Static.MULTI)
     }
 
+    private fun prepareMatch(): Runnable = Runnable {
+        prepareCounter+=1
+        rootView.prepare_counter.text=prepareCounter.toString()
+        if(invitationReady){
+            prepareMatchHandler.removeCallbacksAndMessages(null)
+            val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
+            matchRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
+                        moveList.clear()
+                        tmpMoveList.clear()
+                        //todo compare with field and display
+
+
+
+                        prepareMatchHandler.removeCallbacksAndMessages(null)
+                        play().run()
+
+
+
+                    }else{
+                        multiPlayerMatch.turn = 1
+                        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
+                        multiPlayerMatch.time = calendar.timeInMillis
+                        matchRef.setValue(multiPlayerMatch)
+                        prepareMatchHandler.removeCallbacksAndMessages(null)
+                        play().run()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
+        else{
+            prepareMatchHandler.postDelayed(prepareMatch(),500)
+        }
+    }
+
 
 
 
@@ -375,6 +423,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun winAnimation() {
         multiPlayerMatch.turn = setOpponentTurn()
+        multiPlayerMatch.endGame = invitation.orientation
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
         displayWinAnimation()
@@ -417,7 +466,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                 userName = user.name
                 endGameLoopCounter+=1
                 endGameWinHandler.postDelayed(endGameWinRunnable(),1000)
- // wa
             }
         }
     }
@@ -487,6 +535,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun lostAnimation() {
         multiPlayerMatch.turn = setOpponentTurn()
+        multiPlayerMatch.endGame = setOpponentTurn()
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
 
@@ -633,13 +682,12 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun displayMovesAndEnableButtons(): Runnable = Runnable {
         if(counter>=tmpMoveList.size){
-            //todo check win
-                val endGame = checkWinWithDeletingFirebase()
-            if(endGame){
-            }
-            else{
-                playMatchHandler.postDelayed(play(),100)
-            }
+                when(multiPlayerMatch.endGame){
+                    Static.TIE -> tieAnimationWithDeletingFirebase()
+                    invitation.orientation -> winAnimationWithDeletingFirebase()
+                    setOpponentTurn() -> lostAnimationWithDeletingFirebase()
+                    else -> playMatchHandler.postDelayed(play(),100)
+                }
         }
         else{
             moveList.add(tmpMoveList[counter])
@@ -649,6 +697,99 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
             val mHandler = Handler()
             mHandler.postDelayed(displayMovesAndEnableButtons(),1000)
         }
+    }
+
+    private fun tieAnimationWithDeletingFirebase() {
+        val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
+        dbRef.removeValue()
+        displayTieAnimation()
+
+    }
+
+    private fun displayTieAnimation() {
+        playMatchHandler.removeCallbacksAndMessages(null)
+        endGameTieRunnable().run()
+
+    }
+
+    private fun endGameTieRunnable()= Runnable {
+        when(endGameLoopCounter){
+            0 -> prepareUserNameTie()
+            1 -> displayTieAlertDialog()
+            2 -> doNothingTie()
+            3 -> removeDialogTie()
+            4 -> goToMainMenu()
+        }
+    }
+
+    private fun removeDialogTie() {
+        dialog.dismiss()
+        endGameLoopCounter+=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),100)
+    }
+
+    private fun doNothingTie() {
+        endGameLoopCounter+=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
+    }
+
+    private fun displayTieAlertDialog() {
+        val mBuilder = AlertDialog.Builder(requireContext())
+        val mView = layoutInflater.inflate(R.layout.alert_dialog_end_game,null)
+        mBuilder.setView(mView)
+        dialog = mBuilder.create()
+        val flags = View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        dialog.window!!.decorView.systemUiVisibility = flags
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        mView.background = TileDrawable((ContextCompat.getDrawable(requireContext(), R.drawable.background_yellow)!!),
+            Shader.TileMode.REPEAT,screenSize.screenUnit)
+
+        mView.alert_dialog_end_game_title.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenSize.screenUnit)
+        mView.alert_dialog_end_game_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenSize.screenUnit).toFloat())
+        mView.alert_dialog_end_game_title.text = "UNFORTUNATELY"
+        mView.alert_dialog_end_game_title.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_yellow_dark))
+
+        mView.alert_dialog_end_game_message.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,3*screenSize.screenUnit)
+        mView.alert_dialog_end_game_message.setTextSize(TypedValue.COMPLEX_UNIT_PX,(1.5*screenSize.screenUnit).toFloat())
+        mView.alert_dialog_end_game_message.text = "$userName WINS"
+        mView.alert_dialog_end_game_message.setTextColor(ContextCompat.getColor(requireContext(),R.color.icon_yellow_dark))
+
+
+        val set = ConstraintSet()
+        set.clone(mView.alert_dialog_end_game)
+
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.TOP,mView.alert_dialog_end_game.id,ConstraintSet.TOP,0)
+        set.connect(mView.alert_dialog_end_game_title.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.TOP,mView.alert_dialog_end_game_title.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_message.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.TOP,mView.alert_dialog_end_game_message.id,ConstraintSet.BOTTOM,0)
+        set.connect(mView.alert_dialog_end_game_dummy_tv.id,ConstraintSet.LEFT,mView.alert_dialog_end_game.id,ConstraintSet.LEFT,0)
+
+        set.applyTo(mView.alert_dialog_end_game)
+
+        dialog.show()
+
+        endGameLoopCounter +=1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
+
+    }
+
+    private fun prepareUserNameTie() {
+        userName = "NOBODY"
+        endGameLoopCounter += 1
+        endGameTieHandler.postDelayed(endGameTieRunnable(),1000)
+
     }
 
     private fun displayMoves(): Runnable = Runnable {
@@ -729,46 +870,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     }
 
-    private fun prepareMatch(): Runnable = Runnable {
-        prepareCounter+=1
-        rootView.prepare_counter.text=prepareCounter.toString()
-        if(invitationReady){
-            prepareMatchHandler.removeCallbacksAndMessages(null)
-            val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
-            matchRef.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
-                        moveList.clear()
-                        tmpMoveList.clear()
-                        //todo compare with field and display
-
-
-
-                        prepareMatchHandler.removeCallbacksAndMessages(null)
-                        play().run()
-
-
-
-                    }else{
-                        multiPlayerMatch.turn = 1
-                        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
-                        multiPlayerMatch.time = calendar.timeInMillis
-                        matchRef.setValue(multiPlayerMatch)
-                        prepareMatchHandler.removeCallbacksAndMessages(null)
-                        play().run()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
-        }
-        else{
-            prepareMatchHandler.postDelayed(prepareMatch(),500)
-        }
-    }
-
     private fun normalPress(move:PointsAfterMove, direction:Int){
         val points = move
         displayField()
@@ -788,9 +889,145 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         if (endGame){
             playMatchHandler.removeCallbacksAndMessages(null)
         }else{
+
             checkNextMove(direction)
 
+
+
+
+
         }
+    }
+
+    private fun checkingBothScores(nextMove:StuckAndNextMove) {
+        var myScoreAvailable = false
+        var phoneScoreAvailable = false
+        var tie = false
+
+        val list = ArrayList<BothScorePoint>()
+        val ball = field.findBall()
+        val firstPoint = BothScorePoint(ball,field)
+
+        list.add(firstPoint)
+
+        val tmpList = ArrayList<BothScorePoint>()
+        var loopChecker = true
+
+        while(loopChecker){
+            for(x in list){
+                if(!x.isChecked()){
+                    x.setCheck()
+                    val myScore = x.isMyScore()
+                    val phoneScore = x.isPhoneScore()
+
+                    if(myScore){
+                        myScoreAvailable=true
+                    }
+                    if(phoneScore){
+                        phoneScoreAvailable=true
+                    }
+                    if(myScore or (phoneScore)){
+                        //don't check availablemoves
+                    }else {
+                        if (x.availableMoves.down) {
+                            val newBall = field.testMoveDown(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.downLeft) {
+                            val newBall = field.testMoveDownLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.downRight) {
+                            val newBall = field.testMoveDownRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.left) {
+                            val newBall = field.testMoveLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.right) {
+                            val newBall = field.testMoveRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.upLeft) {
+                            val newBall = field.testMoveUpLeft(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.upRight) {
+                            val newBall = field.testMoveUpRight(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                        if (x.availableMoves.up) {
+                            val newBall = field.testMoveUp(field.field, x.currentBall)
+                            val newPoint = BothScorePoint(newBall, field)
+                            tmpList.add(newPoint)
+                        }
+                    }
+                }
+            }
+
+            //      list.clear()
+
+            if(myScoreAvailable or (phoneScoreAvailable)){
+                loopChecker=false
+            }
+            else {
+
+                if (tmpList.size == 0) {
+                    loopChecker = false
+                    tie=true
+                } else {
+                    for (x in tmpList) {
+                        var shouldBeAdded = true
+
+                        for(y in list){
+                            if(y.currentBall.x==x.currentBall.x && y.currentBall.y == x.currentBall.y){
+                                shouldBeAdded = false
+                            }
+                        }
+
+                        if(shouldBeAdded) {
+                            list.add(x)
+                        }
+                    }
+                    tmpList.clear()
+                }
+            }
+        }
+
+        field.clearTestMoves()
+
+        if(tie){
+            tieAnimation()
+        }
+        else{
+            if(nextMove.nextMove){
+                enableButtons()
+            }else{
+                multiPlayerMatch.turn = setOpponentTurn()
+                val multiRef = Firebase.database.getReference("Match").child(invitation.battleName)
+                multiRef.setValue(multiPlayerMatch)
+
+                checkFirebase().run()
+            }
+        }
+
+    }
+
+    private fun tieAnimation() {
+        multiPlayerMatch.turn = setOpponentTurn()
+        multiPlayerMatch.endGame = Static.TIE
+        val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
+        dbRef.setValue(multiPlayerMatch)
+        displayTieAnimation()
+
     }
 
     private fun checkNextMove(direction: Int) {
@@ -798,16 +1035,14 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         if(nextMove.stuck){
             playMatchHandler.removeCallbacksAndMessages(null)
             lostAnimation()
-        }
-        if(nextMove.nextMove){
-            enableButtons()
-        }else{
-            multiPlayerMatch.turn = setOpponentTurn()
-            val multiRef = Firebase.database.getReference("Match").child(invitation.battleName)
-            multiRef.setValue(multiPlayerMatch)
+        }else {
 
-            checkFirebase().run()
+            checkingBothScores(nextMove)
+
         }
+
+
+
 
     }
 
