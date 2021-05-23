@@ -58,6 +58,9 @@ class Static {
         const val EASY_SIZE_WIDTH_INDEX = 10
         const val EASY_SIZE_HEIGHT_INDEX = 14
 
+        const val TIE = 3
+        const val NOT_SET_UP = 0
+
 
     }
 }
