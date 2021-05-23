@@ -85,8 +85,6 @@ class MainActivity : AppCompatActivity(), UpdateHelper.OnUpdateNeededListener{
 /*
 
 * todo add admob
-* todo activity multiplayer
-todo ranking
 * todo samouczek koniecznie !!!
 * todo puchary (rozgrywki)
 * todo nagrody za strzelone branki i wygrane mecze

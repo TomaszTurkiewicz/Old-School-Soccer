@@ -814,4 +814,18 @@ class GameField {
         }
     }
 
+    fun makeMoves(multiPlayerMove: MultiPlayerMove, myIndex:Int){
+        val myMove = multiPlayerMove.user==myIndex
+        when(multiPlayerMove.direction){
+            Static.UP -> moveUp(myMove)
+            Static.UP_RIGHT -> moveUpRight(myMove)
+            Static.RIGHT -> moveRight(myMove)
+            Static.DOWN_RIGHT -> moveDownRight(myMove)
+            Static.DOWN -> moveDown(myMove)
+            Static.DOWN_LEFT -> moveDownLeft(myMove)
+            Static.LEFT -> moveLeft(myMove)
+            Static.UP_LEFT -> moveUpLeft(myMove)
+        }
+    }
+
 }

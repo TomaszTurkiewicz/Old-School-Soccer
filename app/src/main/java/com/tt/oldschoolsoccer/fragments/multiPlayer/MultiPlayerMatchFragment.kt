@@ -31,6 +31,13 @@ import kotlin.collections.ArrayList
 
 class MultiPlayerMatchFragment : FragmentCoroutine() {
 
+    /*
+    * todo add game counter to multiplayer
+    *  add score if win
+    *   add score if tie
+    *   add score if lose
+     */
+
     private var screenSize = ScreenSize()
     private var loggedInStatus = LoggedInStatus()
     private lateinit var rootView: View
@@ -43,8 +50,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private var counter = 0
     private val moveList = ArrayList<MultiPlayerMove>()
     private val tmpMoveList = ArrayList<MultiPlayerMove>()
-    private var gameCounter = 0
-    private var prepareCounter=0
     private val endGameWinHandler = Handler()
     private val endGameLoseHandler = Handler()
     private val endGameTieHandler = Handler()
@@ -194,12 +199,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
             ConstraintSet.LEFT,rootView.fragment_multi_player_match_vs_tv.id,
             ConstraintSet.LEFT,0)
 
-        set.connect(rootView.prepare_counter.id,ConstraintSet.LEFT,rootView.fragment_multi_player_match_layout.id,ConstraintSet.LEFT,screenSize.screenUnit)
-        set.connect(rootView.prepare_counter.id,ConstraintSet.TOP,rootView.fragment_multi_player_match_layout.id,ConstraintSet.TOP,screenSize.screenUnit)
-
-        set.connect(rootView.game_counter.id,ConstraintSet.RIGHT,rootView.fragment_multi_player_match_layout.id,ConstraintSet.RIGHT,screenSize.screenUnit)
-        set.connect(rootView.game_counter.id,ConstraintSet.TOP,rootView.fragment_multi_player_match_layout.id,ConstraintSet.TOP,screenSize.screenUnit)
-
         set.applyTo(rootView.fragment_multi_player_match_layout)
 
     }
@@ -325,8 +324,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
     private fun prepareMatch(): Runnable = Runnable {
-        prepareCounter+=1
-        rootView.prepare_counter.text=prepareCounter.toString()
         if(invitationReady){
             prepareMatchHandler.removeCallbacksAndMessages(null)
             val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
@@ -336,15 +333,20 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
                         moveList.clear()
                         tmpMoveList.clear()
-                        //todo compare with field and display
+                        if(multiPlayerMatch.moveList.size>0){
+                            for(i in multiPlayerMatch.moveList.indices){
+                                moveList.add(multiPlayerMatch.moveList[i])
+                            }
+                            if(moveList.size>0){
+                                for(i in moveList.indices){
 
-
-
+                                    field.makeMoves(moveList[i],invitation.orientation)
+                                }
+                            }
+                            displayField()
+                        }
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
-
-
-
                     }else{
                         multiPlayerMatch.turn = 1
                         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
@@ -354,7 +356,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         play().run()
                     }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
@@ -370,8 +371,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     /**-------------------------- PLAY ----------------------------**/
 
     private fun play(): Runnable = Runnable {
-        gameCounter+=1
-        rootView.game_counter.text=gameCounter.toString()
         playMatchHandler.removeCallbacksAndMessages(null)
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -427,15 +426,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
         displayWinAnimation()
-    }
-
-    private fun displayNormalWin() {
-        if (invitation.orientation == Static.ORIENTATION_NORMAL) {
-            winAnimationWithDeletingFirebase()
-        }
-        if (invitation.orientation == Static.ORIENTATION_UP_SIDE_DOWN) {
-            lostAnimationWithDeletingFirebase()
-        }
     }
 
     private fun winAnimationWithDeletingFirebase() {
@@ -542,15 +532,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         displayLoseAnimation()
     }
 
-    private fun displayNormalLost() {
-        if(invitation.orientation==Static.ORIENTATION_NORMAL){
-            lostAnimationWithDeletingFirebase()
-        }
-        if(invitation.orientation==Static.ORIENTATION_UP_SIDE_DOWN){
-            winAnimationWithDeletingFirebase()
-        }
-    }
-
     private fun lostAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
@@ -652,33 +633,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
 
     /**------------------------ GAME LOGIC ------------------------**/
-
-    private fun checkWinWithDeletingFirebase(): Boolean {
-        val ball = field.findBall()
-        val lost1 = Point(5,21)
-        val lost2 = Point(6,21)
-        val lost3 = Point(7,21)
-        val lost4 = Point(8,21)
-        val lost5 = Point(9,21)
-        val win1 = Point(5,1)
-        val win2 = Point(6,1)
-        val win3 = Point(7,1)
-        val win4 = Point(8,1)
-        val win5 = Point(9,1)
-        when(ball){
-            lost1,lost2,lost3,lost4,lost5 -> {
-                displayNormalLost()
-
-                return true
-            }
-            win1, win2, win3, win4, win5 -> {
-                displayNormalWin()
-
-                return true
-            }
-        }
-        return false
-    }
 
     private fun displayMovesAndEnableButtons(): Runnable = Runnable {
         if(counter>=tmpMoveList.size){
