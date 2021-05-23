@@ -345,13 +345,42 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                             }
                             displayField()
                         }
+
+                        val gameCounterAdded = checkIfPointAlreadyAdded()
+
+                        if(!gameCounterAdded){
+                            updateUserData()
+                            launch {
+                                requireContext().let {
+                                    val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                                    user.multiGameNumberOfGame+=1
+                                    UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+                                }
+                            }
+                        }
+                        matchRef.setValue(multiPlayerMatch)
+
+
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }else{
-                        multiPlayerMatch.turn = 1
+                        multiPlayerMatch.turn = Static.ORIENTATION_NORMAL
                         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
                         multiPlayerMatch.time = calendar.timeInMillis
+                        updateUserData()
+
                         matchRef.setValue(multiPlayerMatch)
+
+
+                        launch {
+                            requireContext().let {
+                                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                                user.multiGameNumberOfGame+=1
+                                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+                            }
+                        }
+
+
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }
@@ -365,7 +394,25 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         }
     }
 
+    private fun checkIfPointAlreadyAdded():Boolean {
+        return if(invitation.orientation==Static.NORMAL){
+            multiPlayerMatch.playerOne.matchCounterAdded
+        }else{
+            multiPlayerMatch.playerTwo.matchCounterAdded
+        }
 
+    }
+
+    private fun updateUserData() {
+        if(invitation.orientation==Static.NORMAL){
+            multiPlayerMatch.playerOne.matchCounterAdded=true
+            multiPlayerMatch.playerOne.gameReady=true
+        }else{
+            multiPlayerMatch.playerTwo.matchCounterAdded=true
+            multiPlayerMatch.playerTwo.gameReady=true
+        }
+
+    }
 
 
     /**-------------------------- PLAY ----------------------------**/
@@ -377,11 +424,16 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
                     multiPlayerMatch = snapshot.getValue(MultiPlayerMatch::class.java)!!
+                    if(multiPlayerMatch.playerTwo.gameReady&&multiPlayerMatch.playerOne.gameReady){
                     if(multiPlayerMatch.turn==invitation.orientation){
                         // my move
                         readDatabaseAndEnableButtons()
                     }else{
                         readDatabase()
+                    }
+                    }
+                    else{
+                     playMatchHandler.postDelayed(play(),1000)
                     }
                 }
             }
