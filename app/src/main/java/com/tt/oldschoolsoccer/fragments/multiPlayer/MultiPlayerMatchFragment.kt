@@ -32,10 +32,13 @@ import kotlin.collections.ArrayList
 class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     /*
-    * todo add game counter to multiplayer
+    * todo
     *  add score if win
     *   add score if tie
     *   add score if lose
+    *   add "WAITING FOR OPPONENT"
+    *   add green dot when opponent active
+    *
      */
 
     private var screenSize = ScreenSize()
@@ -477,17 +480,24 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         multiPlayerMatch.endGame = invitation.orientation
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
-        displayWinAnimation()
+        displayWinAnimationAndAddPoints()
     }
 
     private fun winAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
-        displayWinAnimation()
+        displayWinAnimationAndAddPoints()
     }
 
-    private fun displayWinAnimation() {
+    private fun displayWinAnimationAndAddPoints() {
         playMatchHandler.removeCallbacksAndMessages(null)
+        launch {
+            requireContext().let {
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                user.multiGameWin+=1
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+            }
+        }
         endGameWinRunnable().run()
     }
 
@@ -581,17 +591,24 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
 
-        displayLoseAnimation()
+        displayLoseAnimationAndAddPoints()
     }
 
     private fun lostAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
-        displayLoseAnimation()
+        displayLoseAnimationAndAddPoints()
     }
 
-    private fun displayLoseAnimation() {
+    private fun displayLoseAnimationAndAddPoints() {
         playMatchHandler.removeCallbacksAndMessages(null)
+        launch {
+            requireContext().let {
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                user.multiGameLose+=1
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+            }
+        }
         endGameLoseRunnable().run()
     }
 
@@ -708,12 +725,19 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private fun tieAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
-        displayTieAnimation()
+        displayTieAnimationAndAddPoints()
 
     }
 
-    private fun displayTieAnimation() {
+    private fun displayTieAnimationAndAddPoints() {
         playMatchHandler.removeCallbacksAndMessages(null)
+        launch {
+            requireContext().let {
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                user.multiGameTie+=1
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+            }
+        }
         endGameTieRunnable().run()
 
     }
@@ -1032,7 +1056,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         multiPlayerMatch.endGame = Static.TIE
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
-        displayTieAnimation()
+        displayTieAnimationAndAddPoints()
 
     }
 
