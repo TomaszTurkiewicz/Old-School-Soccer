@@ -2044,9 +2044,13 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
     private fun checkMultiGameState(invitation: Invitation, dbRef: DatabaseReference) {
 // todo przerobic tak jak mecz zakonczony a ja jeszcze nie sprawdzilem
 
+        // false, false ,empty
         if (!invitation.myAccept && !invitation.opponentAccept && invitation.opponent == "") {
             multiGameState = Static.MULTI_GAME_NOT_SET_UP
-        } else if (!invitation.myAccept && invitation.opponentAccept && invitation.opponent != "") {
+        }
+        // false, true, cos tam -> check if opponent has the same
+        else if
+                (!invitation.myAccept && invitation.opponentAccept && invitation.opponent != "") {
             val opponentDbRef =
                 Firebase.database.getReference("Invitations").child(invitation.opponent)
             opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -2076,7 +2080,10 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                 }
 
             })
-        } else if (invitation.myAccept && !invitation.opponentAccept && invitation.opponent != "") {
+        }
+        // true, false , cos tam -> check if opponent has the same
+        else if
+                (invitation.myAccept && !invitation.opponentAccept && invitation.opponent != "") {
             val opponentDbRef =
                 Firebase.database.getReference("Invitations").child(invitation.opponent)
             opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -2106,7 +2113,10 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                 }
 
             })
-        } else if (invitation.myAccept && invitation.opponentAccept && invitation.opponent != "") {
+        }
+        //true, true, cos tam -> sprawdz czy opponenet has the same if not check if match exists
+        else if
+                (invitation.myAccept && invitation.opponentAccept && invitation.opponent != "") {
             val opponentDbRef =
                 Firebase.database.getReference("Invitations").child(invitation.opponent)
             opponentDbRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -2131,23 +2141,32 @@ class ChooseGameTypeFragment : FragmentCoroutine() {
                                     multiGameState = Static.MULTI_GAME_MATCH_READY
                                 }
                             }
-                        } else {
-                            val newInvitation = Invitation()
-                            newInvitation.player = loggedInStatus.userid
-                            dbRef.setValue(newInvitation)
                         }
-
+                        else {
+                            val matchRef = Firebase.database.getReference("Match").child(invitation.battleName)
+                            matchRef.addListenerForSingleValueEvent(object : ValueEventListener{
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if(snapshot.exists()){
+                                        multiGameState = Static.MULTI_GAME_MATCH_READY
+                                    }
+                                    else{
+                                        val newInvitation = Invitation()
+                                        newInvitation.player = loggedInStatus.userid
+                                        dbRef.setValue(newInvitation)
+                                    }
+                                }
+                                override fun onCancelled(error: DatabaseError) {
+                                }
+                            })
+                        }
                     } else {
                         val newInvitation = Invitation()
                         newInvitation.player = loggedInStatus.userid
                         dbRef.setValue(newInvitation)
                     }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-
                 }
-
             })
         } else {
             val newInvitation = Invitation()

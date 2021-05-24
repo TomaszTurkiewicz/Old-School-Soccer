@@ -33,9 +33,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     /*
     * todo
-    *  add score if win
-    *   add score if tie
-    *   add score if lose
     *   add "WAITING FOR OPPONENT"
     *   add green dot when opponent active
     *
@@ -362,6 +359,13 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                             }
                         }
                         matchRef.setValue(multiPlayerMatch)
+
+
+                        when(multiPlayerMatch.endGame){
+                            Static.TIE -> tieAnimationWithDeletingFirebase()
+                            invitation.orientation -> winAnimationWithDeletingFirebase()
+                            setOpponentTurn() -> lostAnimationWithDeletingFirebase()
+                        }
 
 
                         prepareMatchHandler.removeCallbacksAndMessages(null)
