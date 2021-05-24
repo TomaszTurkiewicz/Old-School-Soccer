@@ -480,12 +480,14 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         multiPlayerMatch.endGame = invitation.orientation
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
+        clearInvitation()
         displayWinAnimationAndAddPoints()
     }
 
     private fun winAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
+        clearInvitation()
         displayWinAnimationAndAddPoints()
     }
 
@@ -591,12 +593,14 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
 
+        clearInvitation()
         displayLoseAnimationAndAddPoints()
     }
 
     private fun lostAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
+        clearInvitation()
         displayLoseAnimationAndAddPoints()
     }
 
@@ -725,8 +729,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private fun tieAnimationWithDeletingFirebase() {
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.removeValue()
+        clearInvitation()
         displayTieAnimationAndAddPoints()
-
     }
 
     private fun displayTieAnimationAndAddPoints() {
@@ -1056,6 +1060,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         multiPlayerMatch.endGame = Static.TIE
         val dbRef = Firebase.database.getReference("Match").child(invitation.battleName)
         dbRef.setValue(multiPlayerMatch)
+        clearInvitation()
         displayTieAnimationAndAddPoints()
 
     }
@@ -1070,10 +1075,6 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
             checkingBothScores(nextMove)
 
         }
-
-
-
-
     }
 
     private fun checkFirebase():Runnable= Runnable {
@@ -1154,6 +1155,14 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
 
     private fun goToMainMenu() {
         activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainFragment()).commit()
+    }
+
+    private fun clearInvitation(){
+        val invitationDbRef = Firebase.database.getReference("Invitations").child(loggedInStatus.userid)
+        val clearInvitation = Invitation()
+        clearInvitation.player = loggedInStatus.userid
+        invitationDbRef.setValue(clearInvitation)
+
     }
 
 }
