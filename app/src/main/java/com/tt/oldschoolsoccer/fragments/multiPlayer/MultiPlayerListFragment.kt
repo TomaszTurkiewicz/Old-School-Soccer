@@ -233,7 +233,7 @@ class MultiPlayerListFragment : Fragment() {
                                     }
                                     else{
                                         Toast.makeText(requireContext(),"Doesn't want to play with people",Toast.LENGTH_LONG).show()
-                                        // todo alert dialog opponent doesnt want to play with people anymore
+                                        // todo alert dialog opponent doesn't want to play with people anymore
                                     }
                                 }
                             }

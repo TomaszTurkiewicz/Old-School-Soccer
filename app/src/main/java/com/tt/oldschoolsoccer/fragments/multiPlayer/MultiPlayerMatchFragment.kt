@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -345,49 +346,27 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                             }
                             displayField()
                         }
-
                         val gameCounterAdded = checkIfPointAlreadyAdded()
-
                         if(!gameCounterAdded){
                             updateUserData()
-                            launch {
-                                requireContext().let {
-                                    val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
-                                    user.multiGameNumberOfGame+=1
-                                    UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
-                                }
-                            }
+                            addGameCounter()
+
                         }
                         matchRef.setValue(multiPlayerMatch)
-
-
                         when(multiPlayerMatch.endGame){
                             Static.TIE -> tieAnimationWithDeletingFirebase()
                             invitation.orientation -> winAnimationWithDeletingFirebase()
                             setOpponentTurn() -> lostAnimationWithDeletingFirebase()
                         }
-
-
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }else{
                         multiPlayerMatch.turn = Static.ORIENTATION_NORMAL
                         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
                         multiPlayerMatch.time = calendar.timeInMillis
-                        updateUserData()
-
                         matchRef.setValue(multiPlayerMatch)
-
-
-                        launch {
-                            requireContext().let {
-                                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
-                                user.multiGameNumberOfGame+=1
-                                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
-                            }
-                        }
-
-
+                        updateUserData()
+                        addGameCounter()
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }
@@ -398,6 +377,49 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         }
         else{
             prepareMatchHandler.postDelayed(prepareMatch(),500)
+        }
+    }
+
+
+    private fun addOpponent(history: MultiPlayerHistory?,historyRef:DatabaseReference) {
+        history!!.updateNoOfGames(invitation.opponent)
+
+        val a =100
+        historyRef.setValue(history)
+
+    }
+
+    private fun addGameCounter() {
+        addGameCounterInDatabase()
+        checkHistoryAndUpdate()
+    }
+
+    private fun checkHistoryAndUpdate() {
+        val historyRef = Firebase.database.getReference("History").child(loggedInStatus.userid)
+        historyRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val history = snapshot.getValue(MultiPlayerHistory::class.java)
+                    addOpponent(history,historyRef)
+                }else{
+                    val history = MultiPlayerHistory()
+                    addOpponent(history,historyRef)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+    }
+
+    private fun addGameCounterInDatabase() {
+        launch {
+            requireContext().let {
+                val user = UserDBDatabase(it).getUserDBDao().getUser(loggedInStatus.userid)
+                user.multiGameNumberOfGame+=1
+                UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
+            }
         }
     }
 
@@ -494,6 +516,7 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         clearInvitation()
         displayWinAnimationAndAddPoints()
     }
+
 
     private fun displayWinAnimationAndAddPoints() {
         playMatchHandler.removeCallbacksAndMessages(null)
