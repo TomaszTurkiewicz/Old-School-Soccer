@@ -5,6 +5,7 @@ import android.graphics.Point
 import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
+import android.provider.ContactsContract
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +58,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     private var endGameLoopCounter=0
     private lateinit var userName:String
     private lateinit var dialog: AlertDialog
+    private var historyRef: DatabaseReference? = null
+    private var history = MultiPlayerHistory()
 
 
     /**----------------- LIFE CYCLE ------------------------**/
@@ -65,6 +68,17 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
         super.onCreate(savedInstanceState)
         screenSize = Functions.readScreenSize(requireContext())
         loggedInStatus = Functions.readLoggedStateFromSharedPreferences(requireContext())
+        historyRef = Firebase.database.getReference("History").child(loggedInStatus.userid)
+
+        historyRef!!.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    history = snapshot.getValue(MultiPlayerHistory::class.java)!!
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
         createField()
     }
 
@@ -364,9 +378,9 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                         multiPlayerMatch.turn = Static.ORIENTATION_NORMAL
                         val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
                         multiPlayerMatch.time = calendar.timeInMillis
-                        matchRef.setValue(multiPlayerMatch)
                         updateUserData()
                         addGameCounter()
+                        matchRef.setValue(multiPlayerMatch)
                         prepareMatchHandler.removeCallbacksAndMessages(null)
                         play().run()
                     }
@@ -381,37 +395,18 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
     }
 
 
-    private fun addOpponent(history: MultiPlayerHistory?,historyRef:DatabaseReference) {
-        history!!.updateNoOfGames(invitation.opponent)
+    private fun addOpponent(history: MultiPlayerHistory,historyRef:DatabaseReference) {
+        history.updateNoOfGames(invitation.opponent)
 
-        val a =100
         historyRef.setValue(history)
 
     }
 
     private fun addGameCounter() {
         addGameCounterInDatabase()
-        checkHistoryAndUpdate()
+        addOpponent(history,historyRef!!)
     }
 
-    private fun checkHistoryAndUpdate() {
-        val historyRef = Firebase.database.getReference("History").child(loggedInStatus.userid)
-        historyRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()){
-                    val history = snapshot.getValue(MultiPlayerHistory::class.java)
-                    addOpponent(history,historyRef)
-                }else{
-                    val history = MultiPlayerHistory()
-                    addOpponent(history,historyRef)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        })
-    }
 
     private fun addGameCounterInDatabase() {
         launch {
@@ -527,6 +522,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
             }
         }
+        history.addWin(invitation.opponent)
+        historyRef!!.setValue(history)
         endGameWinRunnable().run()
     }
 
@@ -640,6 +637,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
             }
         }
+        history.addLose(invitation.opponent)
+        historyRef!!.setValue(history)
         endGameLoseRunnable().run()
     }
 
@@ -769,6 +768,8 @@ class MultiPlayerMatchFragment : FragmentCoroutine() {
                 UserDBDatabase(it).getUserDBDao().updateUserInDB(user)
             }
         }
+        history.addTie(invitation.opponent)
+        historyRef!!.setValue(history)
         endGameTieRunnable().run()
 
     }

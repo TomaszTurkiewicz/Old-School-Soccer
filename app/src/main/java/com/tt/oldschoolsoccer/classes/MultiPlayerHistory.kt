@@ -5,6 +5,36 @@ class MultiPlayerHistory (var history:ArrayList<SingleUserHistory>) {
         history = ArrayList<SingleUserHistory>()
     )
 
+    fun addWin(userId: String){
+        for(i in history.indices){
+            if(history[i].userId==userId) {
+                var win = history[i].win
+                win+=1
+                history[i].win = win
+            }
+        }
+    }
+
+    fun addTie(userId: String){
+        for(i in history.indices){
+            if(history[i].userId==userId) {
+                var tie = history[i].tie
+                tie+=1
+                history[i].tie = tie
+            }
+        }
+    }
+
+    fun addLose(userId: String){
+        for(i in history.indices){
+            if(history[i].userId==userId) {
+                var lose = history[i].lose
+                lose+=1
+                history[i].lose = lose
+            }
+        }
+    }
+
     fun updateNoOfGames(userId:String){
         val contain = contains(userId)
         if(contain){
