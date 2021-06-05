@@ -45,6 +45,7 @@ class MultiPlayerListFragment : Fragment() {
     private lateinit var tmpUserList: MutableList<UserRanking>
     private lateinit var invitationList: MutableList<Invitation>
     private lateinit var finalUserList: MutableList<UserRanking>
+    private lateinit var history: MultiPlayerHistory
     private lateinit var recyclerView: RecyclerView
     private var loggedInStatus = LoggedInStatus()
 
@@ -95,17 +96,59 @@ class MultiPlayerListFragment : Fragment() {
         setSizes()
         setButtonsUI()
         makeConstraintLayout()
-        prepareLists()
+        prepareAllList()
+        prepareHistoryList()
         setOnClickListeners()
+    }
+
+    private fun prepareHistoryList() {
+        val historyRef = Firebase.database.getReference("History").child(loggedInStatus.userid)
+        historyRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    history = snapshot.getValue(MultiPlayerHistory::class.java)!!
+                    for(i in history.history.indices){
+                        for(j in allUserList.indices){
+                            if(history.history[i].userId==allUserList[j].id){
+                                history.history[i].icon=allUserList[j].icon
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
     }
 
     private fun setOnClickListeners() {
        rootView.fragment_multi_player_list_back_button.setOnClickListener {
            activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ChooseGameTypeFragment()).commit()
        }
+
+        rootView.fragment_multi_player_list_all_button.setOnClickListener{
+            displayPressedButton(rootView.fragment_multi_player_list_all_button)
+            rootView.fragment_multi_player_list_search_input_text.text.clear()
+            initRecyclerViewForAllUsers(finalUserList)
+        }
+
+        rootView.fragment_multi_player_list_history_button.setOnClickListener{
+            displayPressedButton(rootView.fragment_multi_player_list_history_button)
+            initRecyclerViewForHistory(history)
+        }
     }
 
-    private fun prepareLists() {
+    private fun initRecyclerViewForHistory(history: MultiPlayerHistory) {
+        // todo add recyclerviewadapter for it!!!
+
+    }
+
+    private fun prepareAllList() {
         val invRef = Firebase.database.getReference("Invitations")
         invRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -155,16 +198,8 @@ class MultiPlayerListFragment : Fragment() {
                 })
             }
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
-
-
-
-
-        //todo prepare history list
-
-
     }
 
     private fun initRecyclerViewForAllUsers(userList:MutableList<UserRanking>) {
