@@ -30,6 +30,7 @@ import com.tt.oldschoolsoccer.drawable.TileDrawable
 import com.tt.oldschoolsoccer.fragments.ChooseGameTypeFragment
 import com.tt.oldschoolsoccer.fragments.MainFragment
 import com.tt.oldschoolsoccer.recyclerViews.MultiPlayerAllUserRecyclerViewAdapter
+import com.tt.oldschoolsoccer.recyclerViews.MultiPlayerHistoryRecyclerView
 import kotlinx.android.synthetic.main.fragment_multi_player_list.view.*
 import kotlinx.android.synthetic.main.fragment_ranking.view.*
 
@@ -111,6 +112,7 @@ class MultiPlayerListFragment : Fragment() {
                         for(j in allUserList.indices){
                             if(history.history[i].userId==allUserList[j].id){
                                 history.history[i].icon=allUserList[j].icon
+                                history.history[i].name=allUserList[j].userName
                             }
                         }
                     }
@@ -144,9 +146,17 @@ class MultiPlayerListFragment : Fragment() {
     }
 
     private fun initRecyclerViewForHistory(history: MultiPlayerHistory) {
-        // todo add recyclerviewadapter for it!!!
-
+        val a = 100
+        //todo change userHistory to not null icon and name
+        val adapter = MultiPlayerHistoryRecyclerView(requireContext(),history,screenSize.screenUnit){ view, singleUserHistory -> inviteFromHistory(view,singleUserHistory)}
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
+
+    private fun inviteFromHistory(view: View, singleUserHistory : SingleUserHistory){
+        //todo !!!!
+    }
+
 
     private fun prepareAllList() {
         val invRef = Firebase.database.getReference("Invitations")
