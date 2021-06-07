@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_ranking.view.*
 
 class MultiPlayerListFragment : Fragment() {
 
+    private var historyReady: Boolean = false
     private lateinit var rootView: View
     private var screenSize = ScreenSize()
     private var iconSize = 0
@@ -98,7 +99,7 @@ class MultiPlayerListFragment : Fragment() {
         setButtonsUI()
         makeConstraintLayout()
         prepareAllList()
-        prepareHistoryList()
+
         setOnClickListeners()
     }
 
@@ -116,6 +117,8 @@ class MultiPlayerListFragment : Fragment() {
                             }
                         }
                     }
+
+                    historyReady=true
 
                 }
             }
@@ -140,8 +143,10 @@ class MultiPlayerListFragment : Fragment() {
         }
 
         rootView.fragment_multi_player_list_history_button.setOnClickListener{
+            if(historyReady){
             displayPressedButton(rootView.fragment_multi_player_list_history_button)
             initRecyclerViewForHistory(history)
+            }
         }
     }
 
@@ -201,7 +206,9 @@ class MultiPlayerListFragment : Fragment() {
                                 }
                             }
                         }
+                        prepareHistoryList()
                         initRecyclerViewForAllUsers(finalUserList)
+
                     }
                     override fun onCancelled(error1: DatabaseError) {
                     }
